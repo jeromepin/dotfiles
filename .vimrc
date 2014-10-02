@@ -26,20 +26,22 @@ set t_Co=256
 colorscheme molokai
 let g:molokai_original = 1
 
-let g:syntastic_c_check_header = 1
-let g:syntastic_c_compiler = 'gcc'
-let g:syntastic_cpp_check_header = 1
-let g:syntastic_cpp_check_header = 'g++'
-let g:syntastic_check_on_open=1
-let g:syntastic_enable_signs=1
-let g:syntastic_error_symbol = '✗'
-let g:syntastic_warning_symbol = '!'
+let g:syntastic_c_check_header 		= 1
+let g:syntastic_c_compiler 		= 'gcc'
+let g:syntastic_cpp_check_header 	= 1
+let g:syntastic_cpp_check_header 	= 'g++'
+let g:syntastic_check_on_open 		= 1
+let g:syntastic_enable_signs 		= 1
+let g:syntastic_error_symbol 		= '✗'
+let g:syntastic_warning_symbol 		= '!'
 
 set lazyredraw
-let g:airline_theme             = 'powerlineish'
-let g:airline_enable_branch     = 1
-let g:airline_enable_syntastic  = 1
-let g:airline_powerline_fonts 	= 1
+let g:airline_theme             		= 'powerlineish'
+let g:airline_enable_branch     		= 1
+let g:airline_enable_syntastic  		= 1
+let g:airline_powerline_fonts 			= 1
+let g:airline#extensions#tabline#enabled 	= 1
+" set guifont=Droid\ Sans\ Mono\ for\ Powerline\ 12
 set laststatus=2
 
 if !exists('g:airline_symbols')
@@ -58,7 +60,7 @@ Plugin 'ervandew/supertab'
 Plugin 'vim-scripts/a.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'bling/vim-airline'
-Plugin 'https://github.com/kien/ctrlp.vim'
+Plugin 'bling/vim-bufferline'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
