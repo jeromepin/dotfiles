@@ -1,0 +1,53 @@
+# Look and feel
+# caption always "%{= bb}%{+b w}Screen: %n | %h %=%t %c"
+# hardstatus alwayslastline "%{.Kw}%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
+# hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %H %{-}%+w %=%{..G} - load avg: %l%{..Y}|%m.%d.%Y|%c "
+# hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %{..G}%t%{-}%+w %=%{..G} %H %{..G} %d/%m %C%a "
+# hardstatus alwayslastline '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
+# hardstatus alwayslastline '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+
+
+hardstatus alwayslastline "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= bW}%50> %n%f %t %{-}%+Lw%<"
+
+# Our warning of activity
+activity "Activity in %t(%n)"
+
+# setenv SSH_TEST="benoit"
+
+# escape ^oo      
+startup_message off
+msgminwait 0
+msgwait 0
+vbell off
+defscrollback 2000
+shell -$SHELL
+
+# Left Right meta key mods
+# ALT-Left and ALT-Right for aterm or xterm
+bindkey ^[[1;3D prev
+bindkey ^[[1;3C next
+bindkey ^[[1;3A focus up
+bindkey ^[[1;3B focus
+
+# for urxvt
+# bindkey ^[^[OD prev
+# bindkey ^[^[OC next
+# bindkey ^[^[OA focus up
+# bindkey ^[^[OB focus
+# bindkey ^[[11~ windowlist -b
+# bindkey ^[[12~ select 1
+
+# for gnome terminal
+# bindkey ^[[1;3D prev
+# bindkey ^[[1;3C next
+# bindkey ^[[1;3A focus up
+# bindkey ^[[1;3B focus
+# bindkey ^[[11~ windowlist -b
+
+
+bind 3 eval 'split -v' 'focus down' 'windowlist -b'
+bind 2 eval 'split' 'focus down' 'windowlist -b'
+bind 1 eval 'only'
+bind o eval 'focus'
+
+
