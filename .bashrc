@@ -1,6 +1,3 @@
-# Use vi(m)-like shortcut instead oh emacs shortcuts
-set -o vi
-
 # Enable autocomplete for sudo and man command
 complete -cf sudo
 complete -cf man
@@ -10,6 +7,9 @@ if [ "$(uname)" != "Darwin" ]
 then
 	shopt -s autocd
 fi
+
+shopt -s cdspell
+shopt -s nocaseglob
 
 # Prevent to append same command to history
 export HISTCONTROL=ignoredups
