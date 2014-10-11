@@ -1,20 +1,23 @@
 # Look and feel
 # caption always "%{= bb}%{+b w}Screen: %n | %h %=%t %c"
-# hardstatus alwayslastline "%{.Kw}%-Lw%{= BW}%50>%n%f* %t%{-}%+Lw%<"
-# hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %H %{-}%+w %=%{..G} - load avg: %l%{..Y}|%m.%d.%Y|%c "
-# hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %{..G}%t%{-}%+w %=%{..G} %H %{..G} %d/%m %C%a "
-# hardstatus alwayslastline '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
-# hardstatus alwayslastline '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
-
 
 hardstatus alwayslastline "%{b kw}%H %{r}%1` %{w}| %{g}%c %{w}| %{y}%d.%m.%Y %{w}| %{g}%l %{w}| %{-b kw}%u %-Lw%{= bW}%50> %n%f %t %{-}%+Lw%<"
 
 # Our warning of activity
 activity "Activity in %t(%n)"
 
-# setenv SSH_TEST="benoit"
+term screen-256color
+term xterm-256color
+term rxvt-unicode-256color
+attrcolor b ".I"
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
+defbce "on"
+term "screen-256color"
+terminfo xterm-color hs@:cs=\E[%i%p1%d;%p2%dr:im=\E[4h:ei=\E[4l
+term xterm-color
 
-# escape ^oo      
+termcapinfo xterm* ti@:te@
+
 startup_message off
 msgminwait 0
 msgwait 0
@@ -43,11 +46,3 @@ bindkey ^[[1;3B focus
 # bindkey ^[[1;3A focus up
 # bindkey ^[[1;3B focus
 # bindkey ^[[11~ windowlist -b
-
-
-bind 3 eval 'split -v' 'focus down' 'windowlist -b'
-bind 2 eval 'split' 'focus down' 'windowlist -b'
-bind 1 eval 'only'
-bind o eval 'focus'
-
-

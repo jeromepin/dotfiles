@@ -1,12 +1,17 @@
+# If we're on OS X
+if [ "$(uname)" == "Darwin" ]
+then
+	export PATH=$PATH:/opt/homebrew-cask/Caskroom
+	alias cask="brew cask"
+else
+	# Allow to change directory without 'cd' word, just path
+	shopt -s autocd
+fi
+
+
 # Enable autocomplete for sudo and man command
 complete -cf sudo
 complete -cf man
-
-# Allow to change directory without 'cd' word, just path
-if [ "$(uname)" != "Darwin" ]
-then
-	shopt -s autocd
-fi
 
 shopt -s cdspell
 shopt -s nocaseglob
