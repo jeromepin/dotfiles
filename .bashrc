@@ -6,6 +6,7 @@ then
 else
 	# Allow to change directory without 'cd' word, just path
 	shopt -s autocd
+	shopt -s dirspell
 fi
 
 
@@ -15,6 +16,12 @@ complete -cf man
 
 shopt -s cdspell
 shopt -s nocaseglob
+shopt -s checkhash
+shopt -s checkwinsize
+shopt -s cmdhist
+shopt -s hostcomplete
+shopt -s no_empty_cmd_completion
+shopt -s progcomp
 
 # Prevent to append same command to history
 export HISTCONTROL=ignoredups
