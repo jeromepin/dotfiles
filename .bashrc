@@ -37,6 +37,7 @@ alias grep="grep --color=auto"
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias tree="tree --dirsfirst -aAC"
+alias less="less -r"
 
 # Update PATH for local binaries
 export PATH=$PATH:/usr/local/bin
