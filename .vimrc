@@ -1,11 +1,37 @@
-set shell=/bin/bash
-set number
-set background=dark
-syntax on
 set nocompatible
 filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Plugin declaration
+Plugin 'gmarik/Vundle.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'ervandew/supertab'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'tomasr/molokai'
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+" Define colors
+syntax enable
+syntax on
+set t_Co=256
+colorscheme molokai
+let g:molokai_original = 1
+
+set shell=/bin/bash
+set number
+set mouse=
+autocmd BufEnter * set mouse=
+set background=dark
 set backspace=indent,eol,start
-:fixdel
+
+if has('vim')
+	fixdel
+endif
 set virtualedit=onemore
 set cursorline
 set showmatch
@@ -16,16 +42,20 @@ set wildmenu
 set wildmode=list:longest,full
 set nowrap
 set autoindent
+set lazyredraw
+set tabstop=4
+set sts=4
+set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
+set laststatus=2
+set showtabline=2
+set noshowmode
 
-nmap <C-t> :TagbarToggle<CR>
+" Airline configuration
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme='powerlineish'
 
-map <C-n> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
-set t_Co=256
-colorscheme molokai
-let g:molokai_original = 1
-
+" Syntastic
 let g:syntastic_c_check_header 		= 1
 let g:syntastic_c_compiler 		= 'gcc'
 let g:syntastic_cpp_check_header 	= 1
@@ -34,34 +64,8 @@ let g:syntastic_check_on_open 		= 1
 let g:syntastic_enable_signs 		= 1
 let g:syntastic_error_symbol 		= '✗'
 let g:syntastic_warning_symbol 		= '!'
-let g:syntastic_python_python_exec 	= '/usr/local/bin/python3'
+let g:syntastic_python_python_exec 	= '/usr/bin/python3'
 
-set lazyredraw
-let g:airline_theme             		= 'powerlineish'
-let g:airline_enable_branch     		= 1
-let g:airline_enable_syntastic  		= 1
-let g:airline_powerline_fonts 			= 1
-let g:airline#extensions#tabline#enabled 	= 1
-" set guifont=Droid\ Sans\ Mono\ for\ Powerline\ 12
-set laststatus=2
-
-if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
-endif
-let g:airline_symbols.space = "\ua0"
-let g:bufferline_echo = 0
-
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'gmarik/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'ervandew/supertab'
-Plugin 'vim-scripts/a.vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'bling/vim-airline'
-Plugin 'bling/vim-bufferline'
-
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Buffer keybinding
+nmap <C-n> :bnext<CR>
+nmap <C-p> :bprev<CR>

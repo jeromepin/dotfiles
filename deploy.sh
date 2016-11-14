@@ -1,16 +1,18 @@
 #! /bin/bash
 
-FILES=('.bashrc', '.inputrc', 'screenrc', '.vim', '.vimrc')
+dir=~/dotfiles
 
-# If we're on OS X
-if [ "$(uname)" == "Darwin" ]
-then
-	FILES=("${FILES[@]}", '.bashrc_bsd')
-else
-	FILES=("${FILES[@]}", '.bashrc_lin')
-fi
+function copyFile {
+	source="$1"; shift
+	destination="$1/$source"; shift
+	source="$dir/$source"
+	echo "Symlinking $source to $destination..."
+	ln -fs "$source" "$destination"
+}
 
-for file in "${FILE[@]}"
+for file in ".vimrc" ".bashrc" ".inputrc" ".screenrc" ".gitconfig" ".sshrc"
 do
-	ln -sf "~/dotfiles/$file" ~
+	copyFile $file ~
 done
+
+copyFile .vim/colors/molokai.vim ~/.vim/colors/molokai.vim
