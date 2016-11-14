@@ -1,7 +1,7 @@
 #! /bin/bash
 
 DIR=~/dotfiles
-FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".inputrc" ".screenrc" ".gitconfig" ".sshrc")
+FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".inputrc" ".screenrc" ".gitconfig" ".sshrc" ".tudurc")
 
 function required_binaries {
 	for BINARY in "vim"
