@@ -4,7 +4,7 @@ DIR=~/dotfiles
 FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".inputrc" ".screenrc" ".gitconfig" ".sshrc")
 
 function required_binaries {
-	for BINARY in "git" "vim"
+	for BINARY in "vim"
 	do
 		hash $BINARY 2>/dev/null || { echo >&2 "${BINARY} is not installed. Aborting."; exit 1; }
 	done
