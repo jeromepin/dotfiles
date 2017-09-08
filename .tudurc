@@ -5,7 +5,7 @@ hide_percent = no  # Whether to hide percentage display on tasks
 visual_tree  = no  # Toggle graphical tree. It shows (+) on parent's left side.
                    # Necessary in some shells that can not display bold characters.
 bold_parent  = yes # hilight the parents with children with bold letters
-loop_move    = no  # whether to jump to the beginning (or end) 
+loop_move    = yes # whether to jump to the beginning (or end) 
                    # when the end (or beginning) is reached
 days_warn    = 2   # how many days before the task is due
                    # will the deadline sport a warning remark
@@ -30,7 +30,7 @@ up           = k
 move_down    = J
 move_up      = K
              
-delete       = dd  # delete a todo
+delete       = r  # delete a todo
 delDeadline  = dt
 delPriority  = df
 delSched     = dS
@@ -76,9 +76,9 @@ quitNoSave   = Q
 
 [ theme ]
 # Columns of the tree window
-columns = title,priority,category,deadline
+columns = deadline,title,category,priority
 # Length of the category to be displayed
-category_length = 12
+category_length = 4
 
 # Size of the windows shown, given in number of rows and columns.
 # Syntax: row = height(width|win, width|win, ...)
@@ -87,9 +87,9 @@ category_length = 12
 # The help and info windows don't need to have a height, because is predefined as 1.
 # TuDu will try to guess the non given information.
 row = (help)
-row = 1(blank,vpipe,30|blank)
-row = 70%(tree,vpipe,30|schedule) # Show the schedule on the right side of screen
-# row = 70%(tree)                  # or, alternatively, do not show the schedule.
+row = 1(blank,vpipe,71|blank)
+#row = 70%(tree,vpipe,30|schedule) # Show the schedule on the right side of screen
+row = 70%(70%|tree,vpipe)                  # or, alternatively, do not show the schedule.
 row = (hpipe)
 row = (text)
 row = (info)

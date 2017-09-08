@@ -1,14 +1,5 @@
 #! /bin/bash
 
-command_not_found_handle () {
-	if [ "$SESSION" = "SCREEN" ]
-	then
-		\sshrc -AX -l root $1
-	else
-		printf "$1 : command not found\n"
-	fi
-	return 127
-}
 
 git_part () {
 	git rev-parse --is-inside-work-tree 2> /dev/null > /dev/null
@@ -79,6 +70,15 @@ alias tree="tree --dirsfirst -aAC"
 alias less="less -r"
 alias apt="sudo apt"
 alias grep='ack -s'
-alias ssh='ssh -AXl root'
-alias s='sshrc -AXl root'
-alias docker="sudo docker"
+alias s='sshrc -o "StrictHostKeyChecking no" -AXl root'
+export TERM=screen-256color
+
+command_not_found_handle () {
+	if [ "$SESSION" = "SCREEN" ]
+	then
+		\sshrc -o "StrictHostKeyChecking no" -AXl root $1
+	else
+		printf "$1 : command not found\n"
+	fi
+	return 127
+}

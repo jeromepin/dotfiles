@@ -27,8 +27,9 @@ export HISTCONTROL=erasedups
 export AUTOFEATURE=true autotest
 # Set default editor to vim
 export EDITOR="/usr/bin/vim"
-export TERM=xterm-256color vim
+# export TERM=xterm-256color vim
 
+unalias cd
 alias sl="ls"
 alias ll="ls -l"
 alias la="ls -lA"
@@ -44,3 +45,4 @@ alias rm="rm -f"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export TERM=screen-256color
