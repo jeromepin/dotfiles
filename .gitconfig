@@ -35,3 +35,6 @@
 	sort = version:refname
 [credential]
 	helper = cache --timeout=86400
+[user]
+	email = jerome@jeromepin.fr
+	name = Jerome Pin

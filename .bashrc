@@ -1,6 +1,5 @@
 #! /bin/bash
 
-
 git_part () {
 	git rev-parse --is-inside-work-tree 2> /dev/null > /dev/null
 	if [ $? -eq 0 ]; then
@@ -40,6 +39,10 @@ then
 	PROMPT_COMMAND='/bin/echo -ne "\033k$HOSTNAME\033\\"'
 fi
 
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+	eval `ssh-agent -s`
+	ssh-add
+fi
 
 # Enable autocomplete for sudo and man command
 complete -cf sudo
@@ -70,15 +73,28 @@ alias tree="tree --dirsfirst -aAC"
 alias less="less -r"
 alias apt="sudo apt"
 alias grep='ack -s'
-alias s='sshrc -o "StrictHostKeyChecking no" -AXl root'
+alias s="sshrc -A -l root"
 export TERM=screen-256color
 
-command_not_found_handle () {
-	if [ "$SESSION" = "SCREEN" ]
-	then
-		\sshrc -o "StrictHostKeyChecking no" -AXl root $1
-	else
-		printf "$1 : command not found\n"
-	fi
-	return 127
-}
+# command_not_found_handle () {
+# 	if [ "$SESSION" = "SCREEN" ]
+# 	then
+# 		\sshrc -o "StrictHostKeyChecking no" -AXl root $1
+# 	else
+# 		printf "$1 : command not found\n"
+# 	fi
+# 	return 127
+# }
+
+export PATH=~/bin:$PATH
+export NODE_ENV=dev
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source /home/jerome/Downloads/google-cloud-sdk/completion.bash.inc
+source /home/jerome/Downloads/google-cloud-sdk/path.bash.inc
+
+# added by travis gem
+[ -f /home/jerome/.travis/travis.sh ] && source /home/jerome/.travis/travis.sh

@@ -1,10 +1,16 @@
 #! /bin/bash
 
-DIR=~/dotfiles
-FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".inputrc" ".screenrc" ".gitconfig" ".sshrc" ".tudurc")
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [[ -n $1 ]]
+then
+	DIR=$1; shift
+fi
+
+FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".gitconfig" ".inputrc" ".sshrc" ".tmux.conf" ".tudurc")
 
 function required_binaries {
-	for BINARY in "vim"
+	for BINARY in "vim" "tmux"
 	do
 		hash $BINARY 2>/dev/null || { echo >&2 "${BINARY} is not installed. Aborting."; exit 1; }
 	done
