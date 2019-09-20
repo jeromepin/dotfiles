@@ -43,7 +43,8 @@ set wildmode=list:longest,full
 set nowrap
 set autoindent
 set lazyredraw
-set tabstop=4
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
+" set tabstop=4
 set sts=4
 set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
 set laststatus=2

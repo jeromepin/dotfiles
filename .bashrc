@@ -1,5 +1,7 @@
 #! /bin/bash
 
+export TERM=screen-256color
+
 git_part () {
 	git rev-parse --is-inside-work-tree 2> /dev/null > /dev/null
 	if [ $? -eq 0 ]; then
@@ -58,13 +60,18 @@ shopt -s no_empty_cmd_completion
 shopt -s progcomp
 shopt -s extglob
 shopt -s histappend
-shopt -s autocd
 shopt -s dirspell
 
+if hash exa 2>/dev/null; then
+    alias ls="exa"
+    alias la="ls -la"
+else
 alias ls="ls --color=auto"
+    alias la="ls -lA"
+fi
+
 alias sl="ls"
 alias ll="ls -l"
-alias la="ls -lA"
 alias rm="rm -f"
 alias grep="grep --color=auto"
 alias egrep='egrep --color=auto'
@@ -74,27 +81,8 @@ alias less="less -r"
 alias apt="sudo apt"
 alias grep='ack -s'
 alias s="sshrc -A -l root"
-export TERM=screen-256color
-
-# command_not_found_handle () {
-# 	if [ "$SESSION" = "SCREEN" ]
-# 	then
-# 		\sshrc -o "StrictHostKeyChecking no" -AXl root $1
-# 	else
-# 		printf "$1 : command not found\n"
-# 	fi
-# 	return 127
-# }
 
 export PATH=~/bin:$PATH
-export NODE_ENV=dev
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-source /home/jerome/Downloads/google-cloud-sdk/completion.bash.inc
-source /home/jerome/Downloads/google-cloud-sdk/path.bash.inc
-
 # added by travis gem
 [ -f /home/jerome/.travis/travis.sh ] && source /home/jerome/.travis/travis.sh
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

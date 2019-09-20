@@ -25,10 +25,9 @@ shopt -s dirspell
 export HISTCONTROL=ignoredups
 export HISTCONTROL=erasedups
 export AUTOFEATURE=true autotest
-# Set default editor to vim
 export EDITOR="/usr/bin/vim"
-# export TERM=xterm-256color vim
 
+alias ls="ls --color=auto"
 alias sl="ls"
 alias ll="ls -l"
 alias la="ls -lA"
@@ -37,9 +36,7 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias tree="tree --dirsfirst -aAC"
 alias less="less -r"
-alias s='sshrc -AX -l root'
-alias ls="ls --color=auto"
-alias rm="rm -f"
+alias ssh='sshrc -A'
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
