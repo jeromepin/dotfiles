@@ -66,7 +66,11 @@ if hash exa 2>/dev/null; then
     alias ls="exa"
     alias la="ls -la"
 else
+    if [ "$(uname)" == "Darwin" ]; then
+        alias ls="ls -G"
+    else
 alias ls="ls --color=auto"
+    fi
     alias la="ls -lA"
 fi
 
