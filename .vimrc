@@ -80,6 +80,10 @@ if expand('%:t') == "git-rebase-todo"
     nnoremap x 0ciwexec<ESC>0
     nnoremap d 0ciwdrop<ESC>0
 endif
+
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml " foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " Buffer keybinding
 nmap <C-n> :bnext<CR>
 nmap <C-p> :bprev<CR>
