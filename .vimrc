@@ -29,6 +29,9 @@ set mouse=
 autocmd BufEnter * set mouse=
 set background=dark
 set backspace=indent,eol,start
+set modeline
+set modelines=4
+
 
 if has('vim')
 	fixdel
