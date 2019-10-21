@@ -3,6 +3,7 @@
 [alias]
 	s = status
 	c = commit
+    ca = commit --amend --no-edit
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
 	oops = commit --amend --no-edit
 [core]
