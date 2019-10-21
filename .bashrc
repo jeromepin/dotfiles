@@ -10,11 +10,11 @@ git_part () {
 		git_branch="$(git symbolic-ref --short HEAD)"
 		git_status="$(git status --porcelain --untracked-files=all)"
 		git_status_full="$(git status)"
-		git_modified="$(echo "$git_status" | /bin/grep -co 'M')"
-		git_untracked="$(echo "$git_status" | /bin/grep -co '??')"
+		git_modified="$(echo "$git_status" | \grep -co 'M')"
+		git_untracked="$(echo "$git_status" | \grep -co '??')"
 		git_up2date="$(echo "$git_status")"
-		git_branch_ahead="$(echo "$git_status_full" | /bin/grep -c 'ahead')"
-		git_branch_behind="$(echo "$git_status_full" | /bin/grep -c 'behind')"
+		git_branch_ahead="$(echo "$git_status_full" | \grep -c 'ahead')"
+		git_branch_behind="$(echo "$git_status_full" | \grep -c 'behind')"
 
 		if [[ "$git_branch_ahead" = 1 ]]; then
 			git_remote="↑"
