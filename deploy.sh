@@ -10,7 +10,7 @@ fi
 FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".gitconfig" ".inputrc" ".sshrc" ".tmux.conf" ".tudurc")
 
 function required_binaries {
-	for BINARY in "vim" "tmux"
+	for BINARY in "vim"
 	do
 		hash $BINARY 2>/dev/null || { echo >&2 "${BINARY} is not installed. Aborting."; exit 1; }
 	done
