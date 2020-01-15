@@ -86,6 +86,11 @@ endif
 
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml " foldmethod=indent
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType tf setlocal ts=2 sts=2 sw=2 expandtab
+au BufRead,BufNewFile *.py set expandtab
+au BufRead,BufNewFile *.c set noexpandtab
+au BufRead,BufNewFile *.h set noexpandtab
+au BufRead,BufNewFile Makefile* set noexpandtab
 
 " Buffer keybinding
 nmap <C-n> :bnext<CR>
