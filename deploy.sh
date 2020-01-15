@@ -4,19 +4,19 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [[ -n $1 ]]
 then
-	DIR=$1; shift
+	DIR=$1
 fi
 
 FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".gitconfig" ".inputrc" ".sshrc" ".tmux.conf" ".tudurc")
 
-function required_binaries {
-	for BINARY in "vim"
+function ensure_binaries_are_installed {
+	for BINARY in "vim" "asdf"
 	do
 		hash $BINARY 2>/dev/null || { echo >&2 "${BINARY} is not installed. Aborting."; exit 1; }
 	done
 }
 
-function pre_copy {
+function prerequisites {
 	mkdir -p ~/.vim/colors
 	mkdir -p ~/.vim/bundle
 
@@ -31,16 +31,16 @@ function post_copy {
 }
 
 function copy {
-	source="$1"; shift
-	destination="$1/${source}"; shift
-	source="${DIR}/${source}"
+	destination="$2/${source}"
+	source="${DIR}/$1"
 	echo "Symlinking $source to $destination..."
 	ln -fs "$source" "$destination"
 }
 
 
-required_binaries
-pre_copy
+
+ensure_binaries_are_installed
+prerequisites
 
 for FILE in "${FILES[@]}"
 do
@@ -48,4 +48,5 @@ do
 done
 
 copy flake8 ~/.config
+
 post_copy
