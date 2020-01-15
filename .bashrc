@@ -91,6 +91,7 @@ complete -cf sudo
 complete -cf man
 complete -F __start_kubectl k
 
+export HISTCONTROL=ignoreboth:erasedups:ignorespace
 export GOPATH=$HOME/go
 export PATH=~/bin:/usr/local/bin:$GOPATH/bin:$PATH:/usr/local/go/bin
 
