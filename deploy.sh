@@ -47,4 +47,5 @@ do
 	copy "${FILE}" ~
 done
 
+copy flake8 ~/.config
 post_copy
