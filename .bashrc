@@ -46,10 +46,6 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
 	ssh-add
 fi
 
-# Enable autocomplete for sudo and man command
-complete -cf sudo
-complete -cf man
-
 shopt -s cdspell
 shopt -s nocaseglob
 shopt -s checkhash
@@ -91,6 +87,8 @@ alias grep='ack -s'
 alias s="sshrc -A -l root"
 alias k="kubectl"
 
+complete -cf sudo
+complete -cf man
 complete -F __start_kubectl k
 
 export GOPATH=$HOME/go
