@@ -74,6 +74,10 @@ alias ls="ls --color=auto"
     alias la="ls -lA"
 fi
 
+if hash gsed 2>/dev/null; then
+    alias sed="gsed"
+fi
+
 alias sl="ls"
 alias ll="ls -l"
 alias rm="rm -f"
