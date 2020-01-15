@@ -64,15 +64,25 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
 
 " Syntastic
-let g:syntastic_c_check_header 		= 1
-let g:syntastic_c_compiler 		= 'gcc'
-let g:syntastic_cpp_check_header 	= 1
-let g:syntastic_cpp_check_header 	= 'g++'
-let g:syntastic_check_on_open 		= 1
-let g:syntastic_enable_signs 		= 1
-let g:syntastic_error_symbol 		= '✗'
-let g:syntastic_warning_symbol 		= '!'
-let g:syntastic_python_python_exec 	= '/usr/bin/python3'
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list            = 1
+let g:syntastic_check_on_open            = 1
+let g:syntastic_check_on_wq              = 0
+let g:syntastic_c_check_header 		 = 1
+let g:syntastic_c_compiler 		 = 'gcc'
+let g:syntastic_cpp_check_header 	 = 1
+let g:syntastic_cpp_check_header 	 = 'g++'
+let g:syntastic_check_on_open 		 = 1
+let g:syntastic_enable_signs 		 = 1
+let g:syntastic_error_symbol 		 = '✗'
+let g:syntastic_warning_symbol 		 = '!'
+let g:syntastic_python_python_exec 	 = '/usr/bin/env python3'
+let g:syntastic_python_checkers          = ['flake8']
+let g:syntastic_python_flake8_args       = "--max-line-length=88" 
+let g:syntastic_aggregate_errors         = 1
 
 if expand('%:t') == "git-rebase-todo"
     nnoremap p 0ciwpick<ESC>0
