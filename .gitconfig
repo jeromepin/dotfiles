@@ -4,9 +4,13 @@
 	s = status
 	c = commit
     ca = commit --amend --no-edit
+    push-lease = push --force-with-lease
+    r = rebase origin/master
+    ri = rebase -i origin/master
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
     bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
     unstage = reset HEAD --
+    undo = reset HEAD~
 [core]
 	whitespace = -trailing-space
 	pager = diff-so-fancy | less --tabs=4 -RFX
