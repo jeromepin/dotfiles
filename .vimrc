@@ -92,6 +92,19 @@ au BufRead,BufNewFile *.c set noexpandtab
 au BufRead,BufNewFile *.h set noexpandtab
 au BufRead,BufNewFile Makefile* set noexpandtab
 
+" Move lines up or down. From:
+" https://vim.fandom.com/wiki/Moving_lines_up_or_down and
+" https://stackoverflow.com/a/24047539/5515387
+" Use Alt-Up and Alt-Down to move line (or block of lines) up and down
+" Needs to have Alt-Up and Alt-Down remapped to 'Send escape sequence [0;ALTUP'
+" and 'Send escape sequence [0;ALTDOWN' in Iterm2 Profiles > Keys
+nnoremap <Esc>[0;ALTUP :m .-2<CR>==
+nnoremap <Esc>[0;ALTDOWN :m .+1<CR>==
+inoremap <Esc>[0;ALTUP <Esc>:m .-2<CR>==gi
+inoremap <Esc>[0;ALTDOWN <Esc>:m .+1<CR>==gi
+vnoremap <Esc>[0;ALTUP :m '<-2<CR>gv=gv
+vnoremap <Esc>[0;ALTDOWN :m '>+1<CR>gv=gv
+
 " Buffer keybinding
 nmap <C-n> :bnext<CR>
 nmap <C-p> :bprev<CR>
