@@ -89,8 +89,9 @@ alias less="less -r"
 alias apt="sudo apt"
 alias grep='ack -s'
 alias s="sshrc -A -l root"
+alias k="kubectl"
 
-export HISTCONTROL=ignoreboth:erasedups
+complete -F __start_kubectl k
 
 export GOPATH=$HOME/go
 export PATH=~/bin:/usr/local/bin:$GOPATH/bin:$PATH:/usr/local/go/bin
