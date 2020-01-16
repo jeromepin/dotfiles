@@ -31,7 +31,7 @@ function post_copy {
 }
 
 function copy {
-	destination="$2/${source}"
+	destination="$2/${1}"
 	source="${DIR}/$1"
 	echo "Symlinking $source to $destination..."
 	ln -fs "$source" "$destination"
