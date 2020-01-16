@@ -32,7 +32,7 @@
 	keepTemporaries = false
 	prompt = false
 [push]
-	default = upstream
+	default = current
 [status]
 	submoduleSummary = true
 	showUntrackedFiles = all
