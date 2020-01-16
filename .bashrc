@@ -65,7 +65,7 @@ else
     if [ "$(uname)" == "Darwin" ]; then
         alias ls="ls -G"
     else
-alias ls="ls --color=auto"
+        alias ls="ls --color=auto"
     fi
     alias la="ls -lA"
 fi
@@ -93,8 +93,8 @@ complete -F __start_kubectl k
 
 export HISTCONTROL=ignoreboth:erasedups:ignorespace
 export GOPATH=$HOME/go
-export PATH=~/bin:/usr/local/bin:$GOPATH/bin:$PATH:/usr/local/go/bin
 
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$GOPATH/bin:/usr/local/go/bin:$PATH
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
