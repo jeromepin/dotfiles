@@ -7,7 +7,7 @@ then
 	DIR=$1
 fi
 
-FILES=(".vimrc" ".vim/colors/molokai.vim" ".bashrc" ".gitconfig" ".inputrc" ".sshrc" ".tmux.conf" ".tudurc")
+FILES=(".bashrc" ".config/flake8" ".gitconfig" ".inputrc" ".sshrc" ".tmux.conf" ".tudurc" ".vimrc" ".vim/colors/molokai.vim")
 
 function ensure_binaries_are_installed {
 	for BINARY in "vim" "asdf"
