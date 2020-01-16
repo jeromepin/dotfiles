@@ -37,7 +37,15 @@ function copy {
 	ln -fs "$source" "$destination"
 }
 
+function asdf_setup {
+	asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
+	asdf plugin-add python https://github.com/danhper/asdf-python.git
 
+	asdf install golang 1.13.4
+	asdf install python 3.6.9
+
+    echo -ne "Next run 'asdf global <PLUGIN> <VERSION>' to enable wanted version"
+}
 
 ensure_binaries_are_installed
 prerequisites
@@ -50,3 +58,4 @@ done
 touch ~/.bashrc_local && echo "Creating un-git-ed ~/.bashrc_local..."
 
 post_copy
+asdf_setup
