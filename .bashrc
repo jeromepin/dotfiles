@@ -98,3 +98,5 @@ export PATH=~/bin:/usr/local/bin:$GOPATH/bin:$PATH:/usr/local/go/bin
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+source ~/.bashrc_local

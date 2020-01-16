@@ -47,6 +47,6 @@ do
 	copy "${FILE}" ~
 done
 
-copy flake8 ~/.config
+touch ~/.bashrc_local && echo "Creating un-git-ed ~/.bashrc_local..."
 
 post_copy
