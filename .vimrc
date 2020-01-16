@@ -57,6 +57,7 @@ set rtp+=$HOME/.vim/bundle/powerline/powerline/bindings/vim/
 set laststatus=2
 set showtabline=2
 set noshowmode
+set foldmethod=manual
 
 " Airline configuration
 let g:airline#extensions#tabline#enabled = 1
