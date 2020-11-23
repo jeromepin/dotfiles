@@ -1,24 +1,33 @@
+[core]
+	whitespace = -trailing-space
+	editor = nvim
+[protocol]
+    version = 2
 [color]
 	ui = true
 [alias]
-	s = status
+	s = fuzzy status
+	ch = "!f(){ git fuzzy branch | xargs git checkout; };f"
 	c = commit
-    ca = commit --amend --no-edit
-    push-lease = push --force-with-lease
+    ca = commit --amend
+    cae = commit --amend --no-edit
+    p = push
+    pl = push --force-with-lease
     r = rebase origin/master
-    ri = rebase -i origin/master
+    ri = rebase --autosquash --interactive origin/master
+    ru = remote update
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
     bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
     unstage = reset HEAD --
-    undo = reset HEAD~
-[core]
-	whitespace = -trailing-space
-	pager = diff-so-fancy | less --tabs=4 -RFX
+    uncommit = reset HEAD~
+    sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
 [diff]
 	mnemonicPrefix = true
 	renames = true
 	wordRegex = .
 	submodule = log
+	colorMoved = plain
+	colormovedws = allow-indentation-change
 [fetch]
 	recurseSubmodules = on-demand
 [grep]
@@ -32,7 +41,9 @@
 	keepTemporaries = false
 	prompt = false
 [push]
-	default = current
+    default = current
+[pull]
+    rebase = true
 [status]
 	submoduleSummary = true
 	showUntrackedFiles = all
@@ -43,8 +54,8 @@
 [credential]
 	helper = cache --timeout=86400
 [user]
-	email = jerome@jeromepin.fr
-	name = Jerome Pin
+    name = "Jérôme Pin"
+	email = jeromepin@users.noreply.github.com
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52

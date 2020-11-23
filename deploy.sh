@@ -20,31 +20,64 @@ function prerequisites {
 	mkdir -p ~/.vim/colors
 	mkdir -p ~/.vim/bundle
 
-	if [ ! -d ~/.vim/bundle/Vundle.vim ]
-	then
-		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-	fi	
+	curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
+	sh ./installer.sh ~/.cache/dein
+	rm -f installer.sh
 }
 
 function post_copy {
-	vim +PluginInstall +qall
 }
 
 function copy {
-	destination="$2/${1}"
 	source="${DIR}/$1"
+	destination="$2"
 	echo "Symlinking $source to $destination..."
 	ln -fs "$source" "$destination"
 }
 
+function copy_vscode_settings {
+	if [ -d ${HOME}/Library/Application\ Support/Code ]
+	then
+		copy vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
+		copy vscode/keybindings.json ${HOME}/Library/Application\ Support/Code/User/keybindings.json
+		copy vscode/snippets ${HOME}/Library/Application\ Support/Code/User/snippets
+	fi
+}
+
+function copy_custom_scripts {
+	mkdir -p ~/bin
+	for FILE in bin/*
+	do
+		copy $FILE ~/bin
+	done
+	git clone https://github.com/bigH/git-fuzzy.git ~/bin/git-fuzzy
+	patch -d ~/bin/git-fuzzy < git-fuzzy-previous-commits-in-status.patch
+}
+
+function asdf_install_enable_version {
+    asdf install $1 $2
+    asdf global $1 $2
+}
+
 function asdf_setup {
-	asdf plugin-add golang https://github.com/kennyp/asdf-golang.git
-	asdf plugin-add python https://github.com/danhper/asdf-python.git
+    asdf plugin add fzf https://github.com/jeromepin/asdf-fzf
 
-	asdf install golang 1.13.4
-	asdf install python 3.6.9
+	for BINARY in "fd" "neovim" "nodejs" "python" "ripgrep" "yarn"
+	do
+        asdf plugin add $BINARY
+    done
 
-    echo -ne "Next run 'asdf global <PLUGIN> <VERSION>' to enable wanted version"
+    asdf_install_enable_version fd 8.1.1
+    asdf_install_enable_version fzf 0.24.3
+    asdf_install_enable_version neovim nightly
+    asdf_install_enable_version nodejs 15.2.1
+	asdf_install_enable_version python 3.7.9
+    asdf_install_enable_version ripgrep 12.1.1
+    asdf_install_enable_version yarn 1.22.10
+
+    pip3 install pynvim
+    npm install -g neovim
+	nvim -c 'CocInstall -sync coc-python coc-sh coc-pairs coc-actions coc-snippets|qa'
 }
 
 ensure_binaries_are_installed
@@ -54,6 +87,9 @@ for FILE in "${FILES[@]}"
 do
 	copy "${FILE}" ~
 done
+
+copy_vscode_settings
+copy_custom_scripts
 
 touch ~/.bashrc_local && echo "Creating un-git-ed ~/.bashrc_local..."
 

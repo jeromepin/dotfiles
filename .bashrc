@@ -34,6 +34,51 @@ git_part () {
 	fi
 }
 
+b64e () {
+    printf "$1" | base64
+    printf ""
+}
+
+b64d () {
+    printf "$1" | base64 --decode
+    printf "\n"
+}
+
+simple_http_server () {
+    python3 -m http.server 8000 --bind 127.0.0.1
+}
+
+fzf-git-branch() {
+    git rev-parse HEAD > /dev/null 2>&1 || return
+
+    git branch --color=always --all --sort=-committerdate |
+        grep -v HEAD |
+        fzf --height 50% --ansi --no-multi --preview-window right:45% \
+            --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
+        sed "s/.* //"
+}
+
+fzf-git-checkout() {
+    git rev-parse HEAD > /dev/null 2>&1 || return
+
+    local branch
+
+    branch=$(fzf-git-branch)
+    if [[ "$branch" = "" ]]; then
+        echo "No branch selected."
+        return
+    fi
+
+    # If branch name starts with 'remotes/' then it is a remote branch. By
+    # using --track and a remote branch name, it is the same as:
+    # git checkout -b branchName --track origin/branchName
+    if [[ "$branch" = 'remotes/'* ]]; then
+        git checkout --track $branch
+    else
+        git checkout $branch;
+    fi
+}
+
 export PS1="\033[38;5;2m\u\033[0m at \033[33m\h\033[0m in \033[36m\w\033[0m \$(git_part)\n\[\033[38;5;2m\]❭❭\[$(tput sgr0)\] "
 
 if [[ "$STY" ]]
@@ -83,20 +128,23 @@ alias fgrep='fgrep --color=auto'
 alias tree="tree --dirsfirst -aAC"
 alias less="less -r"
 alias apt="sudo apt"
-alias grep='ack -s'
-alias s="sshrc -A -l root"
+alias grep='rg'
 alias k="kubectl"
+alias s="sshrc -A -l root"
+alias vim="nvim"
+alias pip="python3 -m pip"
 
 complete -cf sudo
 complete -cf man
 complete -F __start_kubectl k
 
+export BAT_PAGER='less -R'
 export HISTCONTROL=ignoreboth:erasedups:ignorespace
 export GOPATH=$HOME/go
-
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$GOPATH/bin:/usr/local/go/bin:$PATH
+export FZF_DEFAULT_COMMAND='fd --follow --exclude .git'
+export PATH=$HOME/bin:$HOME/.local/bin:$GOPATH/bin:/usr/local/go/bin:/usr/local/opt/curl-openssl/bin/curl:$PATH
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-source ~/.bashrc_local
+. ~/.linuxify
+. ~/.bashrc_local
