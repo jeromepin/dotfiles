@@ -1,0 +1,57 @@
+{
+    "gitlens.statusBar.enabled": true,
+    "editor.fontFamily": "'Droid Sans Mono for Powerline', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "editor.scrollBeyondLastLine": false,
+    "window.zoomLevel": 0,
+    "python.formatting.provider": "black",
+    "python.insidersChannel": "off",
+    "python.linting.banditEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.globalModuleInstallation": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "[terraform]": {
+        "editor.tabSize": 2,
+        "editor.formatOnSave": true,
+    },
+    "terraform.languageServer": {
+        "external": true,
+        "args": [
+            "serve"
+        ]
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on"
+    },
+    "git.untrackedChanges": "separate",
+    "explorer.confirmDelete": false,
+    "editor.minimap.enabled": false,
+    "window.openFoldersInNewWindow": "on",
+    "window.newWindowDimensions": "maximized",
+    "explorer.autoReveal": false,
+    "workbench.colorTheme": "One Dark Pro",
+    "files.associations": {
+        "*.hcl": "makefile",
+        "*.yaml": "yaml"
+    },
+    "[tf]": {
+        "editor.tabSize": 2
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "[helm]": {
+        "editor.tabSize": 2
+    },
+    "explorer.compactFolders": false,
+    "files.watcherExclude": {
+        "**/.terraform/**": true,
+        "**/.terragrunt-cache/**": true
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    "python.showStartPage": false,
+    "python.defaultInterpreterPath": "~/.asdf/shims/python3",
+    "python.analysis.completeFunctionParens": true
+}

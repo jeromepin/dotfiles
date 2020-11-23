@@ -1,0 +1,12 @@
+--- i/lib/modules/status.sh
++++ w/lib/modules/status.sh
+@@ -15,6 +15,9 @@ Type to filter. '"${WHITE}Enter${NORMAL} to ${GREEN}ACCEPT${NORMAL}"'
+    '"${GREEN}all ☑${NORMAL}  ${WHITE}Alt-A${NORMAL}     ${GREEN}stage ${BOLD}⇡${NORMAL}  ${WHITE}$GIT_FUZZY_STATUS_ADD_KEY${NORMAL}     ${RED}${BOLD}discard ✗${NORMAL}  ${WHITE}$GIT_FUZZY_STATUS_DISCARD_KEY${NORMAL}"'
+   '"${GREEN}none ☐${NORMAL}  ${WHITE}Alt-D${NORMAL}     ${GREEN}reset ${RED}${BOLD}⇣${NORMAL}  ${WHITE}$GIT_FUZZY_STATUS_RESET_KEY${NORMAL}    * ${RED}${BOLD}commit ${NORMAL}${RED}⇧${NORMAL}  ${WHITE}$GIT_FUZZY_STATUS_COMMIT_KEY${NORMAL}"'
+ 
++  '"${GRAY}--${NORMAL}"'
++'$(git log --pretty=oneline --decorate=no origin/master..HEAD)'
++
+ '
+ 
+ gf_fzf_status() {
