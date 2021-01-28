@@ -17,15 +17,9 @@ function ensure_binaries_are_installed {
 }
 
 function prerequisites {
+	mkdir -p ~/.bashrc.d
 	mkdir -p ~/.vim/colors
 	mkdir -p ~/.vim/bundle
-
-	curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
-	sh ./installer.sh ~/.cache/dein
-	rm -f installer.sh
-}
-
-function post_copy {
 }
 
 function copy {
@@ -35,8 +29,21 @@ function copy {
 	ln -fs "$source" "$destination"
 }
 
+function copy_bashrc_parts {
+	for file in bashrc.d/*.sh
+	do
+		copy $file ~/.bashrc.d/
+	done
+}
+
 function copy_vscode_settings {
 	if [ -d ${HOME}/Library/Application\ Support/Code ]
+	then
+		copy vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
+		copy vscode/keybindings.json ${HOME}/Library/Application\ Support/Code/User/keybindings.json
+		copy vscode/snippets ${HOME}/Library/Application\ Support/Code/User/snippets
+	fi
+	if [ -d ${HOME}/Library/Application\ Support/Code\ \~\ Insiders ]
 	then
 		copy vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
 		copy vscode/keybindings.json ${HOME}/Library/Application\ Support/Code/User/keybindings.json
@@ -50,9 +57,12 @@ function copy_custom_scripts {
 	do
 		copy $FILE ~/bin
 	done
-	git clone https://github.com/bigH/git-fuzzy.git ~/bin/git-fuzzy
-	patch -d ~/bin/git-fuzzy < git-fuzzy-previous-commits-in-status.patch
+	git clone https://github.com/bigH/git-fuzzy.git ~/bin/git-fuzzy-dir
+    ln -s ~/bin/git-fuzzy-dir/bin/git-fuzzy ~/bin/git-fuzzy
+	# patch -d ~/bin/git-fuzzy < git-fuzzy-previous-commits-in-status.patch
 }
+
+# function post_copy {}
 
 function asdf_install_enable_version {
     asdf install $1 $2
@@ -73,7 +83,7 @@ function asdf_setup {
     asdf_install_enable_version nodejs 15.2.1
 	asdf_install_enable_version python 3.7.9
     asdf_install_enable_version ripgrep 12.1.1
-    asdf_install_enable_version yarn 1.22.10
+    # asdf_install_enable_version yarn 1.22.10
 
     pip3 install pynvim
     npm install -g neovim
@@ -88,10 +98,11 @@ do
 	copy "${FILE}" ~
 done
 
+copy_bashrc_parts
 copy_vscode_settings
 copy_custom_scripts
 
 touch ~/.bashrc_local && echo "Creating un-git-ed ~/.bashrc_local..."
 
-post_copy
+# post_copy
 asdf_setup
