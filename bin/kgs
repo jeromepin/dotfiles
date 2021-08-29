@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+
+import argparse
+import base64
+import json
+import subprocess
+from typing import List
+
+
+def _run_subcommand(command: List[str]):
+    output = subprocess.run(command, capture_output=True)
+    return output
+
+
+def get_current_namespace():
+    output = _run_subcommand(["kubens", "--current"])
+
+    return output.stdout.decode("utf-8").rstrip()
+
+
+def get_current_context():
+    output = _run_subcommand(["cat", "~/.kube/config", "|", "\grep", "'current-context'"])
+    return output.stdout.decode("utf-8").rstrip()
+
+
+def retrieve_secret(name: str, namespace: str, context: str):
+    output = _run_subcommand([
+        "kubectl",
+        "--context",
+        context,
+        "-n",
+        namespace,
+        "get",
+        "secrets",
+        "-o",
+        "json",
+        name
+    ])
+
+    return json.loads(output.stdout.decode("utf-8").rstrip())
+
+def display_secret(secret, indent: int, decode_base64_values: bool = False):
+    def _color_key(key: str):
+        return "{}{}{}".format("\033[0;36m", key, "\033[0m")
+
+    for k,v in secret.items():
+        if v.__class__.__name__ == "dict":
+            print("{}{}:".format(
+                " " * indent * 2,
+                _color_key(k)
+            ))
+            display_secret(v, indent=indent+1, decode_base64_values=bool(k == "data"))
+        else:
+            if decode_base64_values:
+                v = base64.b64decode(v).decode("utf-8").rstrip()
+
+            print("{}{}: {}".format(
+                " " * indent * 2,
+                _color_key(k),
+                "{}{}{}".format("\033[0;32m", v, "\033[0m")
+            ))
+
+parser = argparse.ArgumentParser(description='Read and decode a kubernetes secret.')
+parser.add_argument('-n', '--namespace')
+parser.add_argument('-c', '--context')
+parser.add_argument('secret', nargs="?")
+
+args = parser.parse_args()
+
+context: str = args.context
+if context is None:
+    context = get_current_context()
+
+namespace: str = args.namespace
+if namespace is None:
+    namespace = get_current_namespace()
+
+if args.secret:
+    secret = args.secret
+else:
+    secrets_list = subprocess.Popen(["kubectl", "get", "secrets", "-n", namespace, "--context", context, "--no-headers", "--output=custom-columns=:metadata.name"], stdout=subprocess.PIPE)
+    secret = subprocess.check_output(('fzf'), stdin=secrets_list.stdout).decode("utf-8").rstrip()
+
+display_secret(retrieve_secret(secret, namespace=namespace, context=context), indent=0)
