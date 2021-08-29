@@ -1,1 +1,5 @@
-/Users/jeromepin/git/github/jeromepin/dotfiles/bin/git-browse
+#!/bin/sh
+# remove remote git tag
+
+git branch -D $1
+git push origin --delete $1
