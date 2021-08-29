@@ -7,6 +7,7 @@
 	ui = true
 [alias]
 	s = fuzzy status
+	st = status
 	ch = "!f(){ git fuzzy branch | xargs git checkout; };f"
 	c = commit
     ca = commit --amend
@@ -21,6 +22,7 @@
     unstage = reset HEAD --
     uncommit = reset HEAD~
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
+    sri = "!f(){ git stash && git rebase --interactive && git stash pop; };f"
 [diff]
 	mnemonicPrefix = true
 	renames = true
