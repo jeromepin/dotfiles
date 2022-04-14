@@ -1,0 +1,8 @@
+snippet var_exists
+	if [ -z ${1+x} ]; then
+        echo "ERROR: missing \$1"
+        exit 1
+    fi
+
+snippet foo
+	Copyright `&enc[:2] == "utf" ? "©" : "(c)"` `strftime("%Y")` ${1:`g:snips_author`}. All Rights Reserved.
