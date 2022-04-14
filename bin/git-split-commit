@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# Splitting an "old" (i.e non HEAD~1) commit
+#   - Mark the commit as "edit" in git rebase --interactive
+#   - Choose files to be kept in the commit using FZF
+#   - Commit them using the same name as the original commit
+#   - Stash leftover files (that have been removed from the original commit)
+#   - Finish the rebase
+#   - Restore leftover files from the stash
+
+# Ensure FZF is installed
+! hash fzf && echo "ERROR: fzf binary not found in PATH" && exit 1
+
+# Ensure repository is clean
+[[ -n $(git status -s) ]] && echo "ERROR: repository must be clean" && exit 1
+
+function p {
+    echo -e "\e[36m==> $*\e[39m"
+}
+
+# Use FZF to choose the commit to split
+SHA1_TO_SPLIT=$(git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' master.. | fzf --ansi --height=20 | head -c 9)
+
+# Save the commit message
+ORIGINAL_COMMIT_MESSAGE="$(git log -1 --pretty=%B $SHA1_TO_SPLIT)"
+
+# Save the originally-commited files
+ORIGINAL_COMMIT_FILES=$(git diff-tree --no-commit-id --name-only -r $SHA1_TO_SPLIT)
+
+p "Will split commit \e[31m${SHA1_TO_SPLIT} '${ORIGINAL_COMMIT_MESSAGE}'\e[36m..."
+
+# Mark said commit as "edit" in an interactive rebase
+GIT_SEQUENCE_EDITOR="sed -ie 's/pick $SHA1_TO_SPLIT/edit $SHA1_TO_SPLIT/'" git rebase -i "$SHA1_TO_SPLIT^" >>/dev/null 2>&1
+
+p "Undoing commit \e[31m${SHA1_TO_SPLIT}\e[36m..."
+
+# Undo said commit
+git reset HEAD~ >>/dev/null 2>&1
+
+# Fakely add all files (in order to have new files shown in the diff later)
+# --intent-to-add adds a zero-length blob to the index at that location
+git add --intent-to-add .
+
+p "Asking for files to \e[31mKEEP\e[36m in the commit..."
+
+# Select files to be kept to the commit currently splitting
+FILES_TO_KEEP=$(git status --porcelain | sed s/^...// | fzf -m --ansi --height=20 --preview "git diff --color=always -- {-1}")
+
+# Stop everything if no files have been added
+if [ $? -eq 130 ]; then
+    p "No files kept in commit \e[31m${SHA1_TO_SPLIT}\e[36m. Reverting all operations..."
+    git rebase --abort
+    exit 1
+fi
+
+git add ${FILES_TO_KEEP}
+
+# Commit those files under the original commit message to appears seamless
+git commit --no-verify -m "${ORIGINAL_COMMIT_MESSAGE}" >>/dev/null 2>&1
+
+# We're left only with the files we wanted to remove from the original commit
+# Put them in stash to finish our rebase
+STASH_MESSAGE="git-split-commit:leftovers-from:${ORIGINAL_COMMIT_MESSAGE}"
+git stash push --message="${STASH_MESSAGE}" . >>/dev/null 2>&1
+STASH_NAME=$(git stash list | grep "${STASH_MESSAGE}" | cut -d: -f1)
+
+p "Completing the rebase operation..."
+git rebase --continue
+
+# Restore leftovers files that we splitted from the original commit
+git stash pop "${STASH_NAME}" >>/dev/null 2>&1
+
+git status
