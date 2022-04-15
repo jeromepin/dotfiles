@@ -1,0 +1,33 @@
+# Inserts a blank line between shell prompts
+add_newline = false
+
+# Timeout for commands executed by starship (in milliseconds).
+command_timeout = 1000
+
+format = """$kubernetes $username at $hostname in $directory$git_branch
+[❭❭](green) 
+"""
+
+[directory]
+truncation_symbol = "…/"
+fish_style_pwd_dir_length = 1
+
+[hostname]
+disabled = false
+format = '[$hostname](yellow)'
+ssh_only = false
+
+[kubernetes]
+disabled = false
+format = '\([$context](red):[$namespace](cyan)\)'
+
+[username]
+show_always = true
+format = '[$user](green)'
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+[git_branch]
+format = "on [$symbol$branch]($style) "
