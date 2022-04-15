@@ -11,12 +11,32 @@ DOTFILES_SOURCE_DIRECTORY = pathlib.Path(os.path.dirname(os.path.realpath(__file
 HOME = pathlib.Path(os.path.expanduser("~"))
 
 
-def run_shell_command(command: str):
+def _install_from_archive(
+    archive_url: str, archive_format: str, binary_name: str = None
+) -> None:
+    archive_name = archive_url.split("/")[-1]
+    download_path = f"{HOME}/Downloads/{archive_name}"
+    installation_path = f"{HOME}/bin/{binary_name}"
+
+    os.unlink(installation_path)
+    _run_shell_command(f"wget --no-check-certificate -O {download_path} {archive_url}")
+
+    if archive_format == "gz":
+        _run_shell_command(f"gunzip --to-stdout {download_path} >> {installation_path}")
+    elif archive_format == "zip":
+        _run_shell_command(f"tar -xvf {download_path}")
+        _run_shell_command(f"mv {binary_name} {installation_path}")
+
+    _run_shell_command(f"chmod u+x {installation_path}")
+    os.unlink(download_path)
+
+
+def _run_shell_command(command: str):
     print(f"Running command : {command}")
     return os.system(command)
 
 
-def link(file: pathlib.Path, destination: pathlib.Path):
+def _link(file: pathlib.Path, destination: pathlib.Path):
     if os.path.isfile(file) and os.path.isdir(destination):
         destination = destination / file
 
@@ -30,17 +50,18 @@ def link(file: pathlib.Path, destination: pathlib.Path):
     os.symlink(DOTFILES_SOURCE_DIRECTORY / file, destination)
 
 
-def link_directory_content(directory: pathlib.Path):
+def _link_directory_content(directory: pathlib.Path):
     (HOME / directory).mkdir(parents=True, exist_ok=True)
 
     for f in os.listdir(directory):
-        link(directory / f, HOME / directory / f)
+        _link(directory / f, HOME / directory / f)
 
 
 def prerequisites():
     ports = [
         "base64",
         "bash-completion",
+        "broot",
         "file",
         "git",
         "gnupg2",
@@ -48,16 +69,17 @@ def prerequisites():
         "kube-ps1",
         "kubectx",
         "most",
+        "neovim",
         "wget",
     ]
-    run_shell_command(f"sudo port install {' '.join(ports)}")
+    _run_shell_command(f"sudo port install {' '.join(ports)}")
 
 
 def bashrc():
-    link(pathlib.Path(".bashrc"), HOME)
-    link(pathlib.Path(".inputrc"), HOME)
+    _link(pathlib.Path(".bashrc"), HOME)
+    _link(pathlib.Path(".inputrc"), HOME)
 
-    link_directory_content(pathlib.Path(".bashrc.d"))
+    _link_directory_content(pathlib.Path(".bashrc.d"))
 
     print("Creating un-git-ed ~/.bashrc_local...")
     with open(HOME / ".bashrc_local", "w"):
@@ -65,11 +87,7 @@ def bashrc():
 
 
 def binaries():
-    link_directory_content(pathlib.Path("bin"))
-
-
-def ctags():
-    link_directory_content(pathlib.Path(".ctags.d"))
+    _link_directory_content(pathlib.Path("bin"))
 
 
 def asdf():
@@ -80,7 +98,6 @@ def asdf():
             "fd": {"versions": ["8.1.1"]},
             "fzf": {"versions": [FZF_VERSION]},
             "kubectl": {"versions": ["1.17.17"]},
-            "neovim": {"versions": ["nightly"]},
             "python": {"versions": ["3.7.9"]},
             "ripgrep": {"versions": ["12.1.1"]},
             "rust": {"versions": ["1.50.0"]},
@@ -88,40 +105,49 @@ def asdf():
     )
 
     if not os.path.isdir(HOME / ".asdf"):
-        run_shell_command(
+        _run_shell_command(
             "git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0"
         )
-        run_shell_command('echo ". $HOME/.asdf/asdf.sh" > ~/.bash_profile')
+        _run_shell_command('echo ". $HOME/.asdf/asdf.sh" > ~/.bash_profile')
 
     for plugin_name, plugin_def in plugins.items():
-        run_shell_command(f"asdf plugin add {plugin_name}")
+        _run_shell_command(f"asdf plugin add {plugin_name}")
 
         for version in plugin_def.get("versions"):
-            run_shell_command(f"asdf install {plugin_name} {version}")
-            run_shell_command(f"asdf global {plugin_name} {version}")
+            _run_shell_command(f"asdf install {plugin_name} {version}")
+            _run_shell_command(f"asdf global {plugin_name} {version}")
 
-    run_shell_command(f"~/.asdf/installs/fzf/{FZF_VERSION}/install")
-    run_shell_command(
+    _run_shell_command(f"~/.asdf/installs/fzf/{FZF_VERSION}/install")
+    _run_shell_command(
         "NODEJS_CHECK_SIGNATURES=no asdf_install_enable_version nodejs 15.11.0"
     )
 
 
 def vim():
-    link(pathlib.Path(".vimrc"), HOME)
-    link_directory_content(pathlib.Path(".config/nvim"))
-    run_shell_command("pip3 install pynvim")
-    run_shell_command("npm install -g neovim")
+    _link(pathlib.Path(".vimrc"), HOME)
+    _link_directory_content(pathlib.Path(".config/nvim"))
+    _run_shell_command("pip3 install pynvim")
+    _run_shell_command("npm install -g neovim")
+    _install_from_archive(
+        "https://github.com/tree-sitter/tree-sitter/releases/download/v0.18.3/tree-sitter-macos-x64.gz",
+        archive_format="gz",
+        binary_name="tree-sitter",
+    )
+    _run_shell_command("vim +LspInstall python")
+    # _run_shell_command("vim +LspInstall terraform")
+    _run_shell_command("vim +TSInstall bash comment hcl json python yaml")
 
 
 def misc():
-    link(pathlib.Path(".sshrc"), HOME)
+    _link(pathlib.Path(".sshrc"), HOME)
+    _link(pathlib.Path(".config/starship.toml"), HOME)
 
 
 def git():
-    link(pathlib.Path(".gitconfig"), HOME)
+    _link(pathlib.Path(".gitconfig"), HOME)
 
     if not os.path.isdir(HOME / "bin/git-fuzzy-dir"):
-        run_shell_command(
+        _run_shell_command(
             "git clone https://github.com/bigH/git-fuzzy.git ~/bin/git-fuzzy-dir"
         )
 

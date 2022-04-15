@@ -6,23 +6,27 @@
 [color]
 	ui = true
 [alias]
-	s = fuzzy status
-	st = status
-	ch = "!f(){ git fuzzy branch | xargs git checkout; };f"
+	a = "!f(){ git diff --name-only $@ | fzf -m --print0 --ansi --preview \"git diff --color=always -- {-1}\" | xargs -0 git add; };f"
+    bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
 	c = commit
     ca = commit --amend
     cae = commit --amend --no-edit
+	ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
+	d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
+    # fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' master.. | grep --color=auto \"$(git config --get 'user.name')\" | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup $@; };f"
+    fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' origin/master.. | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup; };f"
+	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
+    merged-branches = "!git branch --merged master"
     p = push
     pl = push --force-with-lease
     r = rebase origin/master
     ri = rebase --autosquash --interactive origin/master
     ru = remote update
-	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
-    bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
+    sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
+    sri = "!f(){ git remote update && git stash && git rebase --interactive origin/${1:-master} && git stash pop; };f"
+	st = status
     unstage = reset HEAD --
     uncommit = reset HEAD~
-    sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
-    sri = "!f(){ git stash && git rebase --interactive && git stash pop; };f"
 [diff]
 	mnemonicPrefix = true
 	renames = true
