@@ -22,6 +22,9 @@ def get_current_context():
     output = _run_subcommand(["cat", "~/.kube/config", "|", "\grep", "'current-context'"])
     return output.stdout.decode("utf-8").rstrip()
 
+def retrieve_namespaces(context: str):
+    namespaces_list = subprocess.Popen(["kubectl", "get", "namespaces", "--context", context, "--no-headers", "--output=custom-columns=:metadata.name"], stdout=subprocess.PIPE)
+    return subprocess.check_output(('fzf'), stdin=namespaces_list.stdout).decode("utf-8").rstrip()
 
 def retrieve_secret(name: str, namespace: str, context: str):
     output = _run_subcommand([
@@ -67,13 +70,25 @@ parser.add_argument('secret', nargs="?")
 
 args = parser.parse_args()
 
-context: str = args.context
-if context is None:
-    context = get_current_context()
+requested_context: str = args.context
+requested_namespace: str = args.namespace
 
-namespace: str = args.namespace
-if namespace is None:
-    namespace = get_current_namespace()
+if requested_context is None:
+    
+    context = get_current_context()
+    
+    if requested_namespace is None:
+        namespace = get_current_namespace()
+    else:
+        namespace = requested_namespace
+
+else:
+    context = requested_context
+
+    if requested_namespace is None:
+        namespace = retrieve_namespaces(context)
+    else:
+        namespace = requested_namespace
 
 if args.secret:
     secret = args.secret
