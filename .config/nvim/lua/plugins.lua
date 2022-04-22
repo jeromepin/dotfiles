@@ -79,6 +79,9 @@ require('packer').startup({
                 'nvim-orgmode/orgmode',
                 config = [[require('plugins.orgmode')]],
                 after = 'nvim-treesitter',
+                requires = {
+                    { 'akinsho/org-bullets.nvim' },
+                }
             },
 
             -- Tabline

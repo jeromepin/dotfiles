@@ -41,3 +41,7 @@ require('orgmode').setup({
         DELEGATED = ':slant italic :underline on',
     },
 })
+
+require("org-bullets").setup({
+    symbols = { "◉", "○", "✸", "✿" }
+})
