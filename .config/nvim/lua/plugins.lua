@@ -77,10 +77,12 @@ require('packer').startup({
             -- Orgmode clone written in Lua
             {
                 'nvim-orgmode/orgmode',
+                tag = '0.2.1',
                 config = [[require('plugins.orgmode')]],
                 after = 'nvim-treesitter',
                 requires = {
                     { 'akinsho/org-bullets.nvim' },
+                    { 'nvim-treesitter/nvim-treesitter' },
                 }
             },
 
