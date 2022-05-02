@@ -22,7 +22,8 @@ vim.cmd([[
     " Disable folding in orgmode
     autocmd FileType org setlocal nofoldenable
     
-    autocmd FileType hcl :lua vim.api.nvim_buf_set_option(0, "commentstring", "# %s")
+    " Disable autowrap for gitcommit
+    autocmd FileType gitcommit setlocal textwidth=0
 
     augroup END 
 ]])
