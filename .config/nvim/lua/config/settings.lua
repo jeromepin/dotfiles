@@ -1,21 +1,17 @@
 -- vim.api.nvim_set_option('smarttab', false)
 -- print(vim.api.nvim_get_option('smarttab')) -- false
-
 -- vim.o                                                   *vim.o*
 --         Get or set editor options, like |:set|. Invalid key is an error.
 --         Example:
 --             vim.o.cmdheight = 4
 --             print(vim.o.columns)
-
-
-
 -- Line numbers
 vim.o.number = true
 
 -- Disable mouse
 vim.o.mouse = ''
 
---Save undo history
+-- Save undo history
 vim.opt.undofile = true
 
 -- Case insensitive searching UNLESS /C or capital in search
@@ -33,7 +29,7 @@ vim.o.timeoutlen = 500
 vim.o.termguicolors = true
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'menu,menuone,noinsert'
 
 -- Enable auto completion menu after pressing TAB.
 vim.o.wildmenu = true
@@ -60,7 +56,6 @@ vim.o.inccommand = "nosplit"
 
 -- Dont' wrap lines
 vim.o.wrap = false
-
 
 vim.o.autoindent = true
 

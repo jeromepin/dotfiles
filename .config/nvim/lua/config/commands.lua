@@ -8,3 +8,15 @@ vim.cmd([[
 ]])
 
 vim.cmd([[command Broot FloatermNew --width=0.8 --height=0.8 broot]])
+
+vim.cmd([[
+function! MultipleEdit(p_list)
+    for p in a:p_list
+        for c in glob(p, 0, 1)
+        execute 'edit ' . c
+        endfor
+    endfor
+endfunction
+
+command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
+]])
