@@ -187,6 +187,11 @@ require('packer').startup({
                 'voldikss/vim-floaterm',
                 config = [[vim.g.floaterm_opener = 'edit']],
             },
+
+            -- An incremental narrowing engine for (neo)vim inspired by emacs helm/ivy/ido
+            {
+                'conweller/findr.vim',
+            },
         }
 
         -- Search and replace
