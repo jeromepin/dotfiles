@@ -122,10 +122,8 @@ require('packer').startup({
             -- Neovim's syntax parser and highlighter
             {
                 'nvim-treesitter/nvim-treesitter',
-                -- commit = 'ecd9efd48611c42d7e51b50028788bf2b74b5c91',
                 run = ':TSUpdate',
                 config = [[require('plugins.treesitter')]],
-                event = "BufRead",
             },
 
             -- Render markdown on the CLI
@@ -175,6 +173,7 @@ require('packer').startup({
                 requires = {
                     { 'nvim-lua/popup.nvim' },
                     { 'nvim-lua/plenary.nvim' },
+                    { 'nvim-treesitter/nvim-treesitter' },
                     -- file browser extension for telescope.nvim
                     { 'nvim-telescope/telescope-file-browser.nvim' },
                     -- FZF sorter for telescope written in c
