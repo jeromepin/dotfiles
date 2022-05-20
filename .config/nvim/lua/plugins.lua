@@ -208,19 +208,18 @@ require('packer').startup({
                 commit = 'e79f0a516e2e2a33a4493df4b9eac47013f37b69',
             },
 
+            -- nvim-cmp & plugins
             {
-                'ms-jpq/coq_nvim',
-                branch = 'coq',
-                run = ":COQdeps",
-                -- event = "InsertEnter",
+                'hrsh7th/nvim-cmp',
+                config = [[require('plugins.completion')]],
                 requires = {
                     { 'onsails/lspkind-nvim' },
-                    { 'ms-jpq/coq.artifacts' },
-                    { 'ms-jpq/coq.thirdparty' },
+                    { 'neovim/nvim-lspconfig' },
+                    { 'hrsh7th/cmp-cmdline' },
+                    { 'hrsh7th/cmp-buffer' },
+                    { 'hrsh7th/cmp-nvim-lsp' },
+                    { 'hrsh7th/cmp-path' },
                 },
-                -- config = [[require('plugins.coq')]],
-                -- after = 'nvim-lsp-installer'
-
             },
             
             -- A collection of common configurations for Neovim's built-in language server client.
