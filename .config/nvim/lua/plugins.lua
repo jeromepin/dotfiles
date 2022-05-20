@@ -39,7 +39,7 @@ require('packer').startup({
                 config = [[require('onedark').load()]],
                 -- after = "packer.nvim",
             },
-            
+
             -- Speed up loading Lua modules in Neovim to improve startup time
             {
                 'lewis6991/impatient.nvim',
@@ -64,15 +64,6 @@ require('packer').startup({
             {
                 'antoinemadec/FixCursorHold.nvim',
             },
-
-            -- Foldtext customization and folded region preview in Neovim
-            -- {
-            --     'anuvyklack/pretty-fold.nvim',
-            --     config = function()
-            --         require('pretty-fold').setup{}
-            --         require('pretty-fold.preview').setup()
-            --     end,
-            -- },
 
             -- Orgmode clone written in Lua
             {
@@ -139,10 +130,19 @@ require('packer').startup({
                 event = "InsertEnter",
             },
 
+            -- A comment toggler for Neovim, written in Lua
             {
                 'terrortylor/nvim-comment',
                 config = [[require('plugins.comment')]],
             },
+
+            -- Ultimate smart pairs written in lua!
+            {
+                'ZhiyuanLck/smart-pairs',
+                event = 'InsertEnter',
+                config = [[require('pairs'):setup()]],
+            }
+
         }
 
         -- Git

@@ -1,1 +1,1 @@
-/Users/jeromepin/git/github/jeromepin/dotfiles/.config/nvim/after/syntax/gitcommit.vim
+syn match   gitcommitSummary	"^.*\%<101v." contained containedin=gitcommitFirstLine nextgroup=gitcommitOverflow contains=@Spell
