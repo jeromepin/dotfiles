@@ -26,9 +26,9 @@ export GOPATH=$HOME/go
 export CARGO_INSTALL_ROOT=$HOME/.cargo
 
 
-if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-	. /opt/local/etc/profile.d/bash_completion.sh
-fi
+source /opt/local/etc/profile.d/bash_completion.sh
+
+source /opt/local/share/fzf/shell/key-bindings.bash
 
 if [ -f $HOME/lib/azure-cli ]; then
 	source $HOME/lib/azure-cli/az.completion
@@ -41,8 +41,6 @@ if [ -f $HOME/google-cloud-sdk/path.bash.inc ]; then
 	. $HOME/google-cloud-sdk/path.bash.inc
 	. $HOME/google-cloud-sdk/completion.bash.inc
 fi
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Visual Studio Code's binaries
 PATH=/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin:$PATH

@@ -28,12 +28,13 @@
     unstage = reset HEAD --
     uncommit = reset HEAD~
 [diff]
-	mnemonicPrefix = true
-	renames = true
-	wordRegex = .
-	submodule = log
 	colorMoved = plain
 	colormovedws = allow-indentation-change
+	# external = "difft"
+	mnemonicPrefix = true
+	renames = true
+	submodule = log
+	wordRegex = .
 [fetch]
 	recurseSubmodules = on-demand
 [grep]

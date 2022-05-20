@@ -62,7 +62,10 @@ def prerequisites():
         "base64",
         "bash-completion",
         "broot",
+        "difftastic",
+        "fd",
         "file",
+        "fzf",
         "git",
         "gnupg2",
         "jq",
@@ -70,6 +73,8 @@ def prerequisites():
         "kubectx",
         "most",
         "neovim",
+        "ripgrep",
+        "tree-sitter-cli",
         "wget",
     ]
     _run_shell_command(f"sudo port install {' '.join(ports)}")
@@ -91,15 +96,10 @@ def binaries():
 
 
 def asdf():
-    FZF_VERSION = "0.24.3"
-
     plugins = collections.OrderedDict(
         {
-            "fd": {"versions": ["8.1.1"]},
-            "fzf": {"versions": [FZF_VERSION]},
             "kubectl": {"versions": ["1.17.17"]},
             "python": {"versions": ["3.7.9"]},
-            "ripgrep": {"versions": ["12.1.1"]},
             "rust": {"versions": ["1.50.0"]},
         }
     )
@@ -161,29 +161,6 @@ def git():
     os.symlink(HOME / "bin/git-fuzzy-dir/bin/git-fuzzy", git_fuzzy_bin_path)
 
 
-# TODO: port to Python
-#
-# function copy_vscode_settings {
-# 	if [ -d ${HOME}/Library/Application\ Support/Code ]
-# 	then
-# 		copy vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
-# 		copy vscode/keybindings.json ${HOME}/Library/Application\ Support/Code/User/keybindings.json
-# 		copy vscode/snippets ${HOME}/Library/Application\ Support/Code/User/snippets
-# 	fi
-# 	if [ -d ${HOME}/Library/Application\ Support/Code\ \~\ Insiders ]
-# 	then
-# 		copy vscode/settings.json ${HOME}/Library/Application\ Support/Code/User/settings.json
-# 		copy vscode/keybindings.json ${HOME}/Library/Application\ Support/Code/User/keybindings.json
-# 		copy vscode/snippets ${HOME}/Library/Application\ Support/Code/User/snippets
-# 	fi
-
-# 	for EXTENSION in "ms-python.python" "zhuangtongfa.material-theme" "editorconfig.editorconfig" "ms-python.vscode-pylance" "hashicorp.terraform" "wwm.better-align" "wayou.vscode-todo-highlight"
-# 	do
-# 		/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --install-extension "${EXTENSION}"
-# 	done
-# }
-
-
 STAGES: Dict[str, str] = collections.OrderedDict(
     {
         "prerequisites": "prerequisites",
@@ -191,7 +168,6 @@ STAGES: Dict[str, str] = collections.OrderedDict(
         "misc": "misc",
         "bin": "binaries",
         "git": "git",
-        "ctags": "ctags",
         "asdf": "asdf",
         "vim": "vim",
     }
