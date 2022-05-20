@@ -90,3 +90,6 @@ vim.o.splitright = true
 vim.o.guicursor = "n-i-ci-ve:ver100-iCursor-blinkwait150-blinkon150-blinkoff150"
 
 -- let g:python3_host_prog = '/Users/jeromepin/.asdf/shims/python3'
+
+-- Enable single global statusline for the current windows
+vim.o.laststatus = 3
