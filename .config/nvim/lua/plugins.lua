@@ -53,11 +53,14 @@ require('packer').startup({
                 tag = 'v2.12.1',
             },
 
-            -- A minimal, stylish and customizable statusline for Neovim written in Lua
+            -- Life in the fast lane. Don't wait around. Life's too short for you to wait on your statusline.
             {
-                'feline-nvim/feline.nvim',
-                config = [[require('feline').setup()]],
-                tag = 'v1.0.0',
+                'tjdevries/express_line.nvim',
+                config = [[require('plugins.statusline')]],
+                requires = {
+                    {'nvim-lua/plenary.nvim'},
+                    {'kyazdani42/nvim-web-devicons'},
+                },
             },
 
             -- Fix CursorHold Performance
