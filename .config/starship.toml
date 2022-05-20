@@ -4,7 +4,7 @@ add_newline = false
 # Timeout for commands executed by starship (in milliseconds).
 command_timeout = 1000
 
-format = """$kubernetes $username at $hostname in $directory$git_branch
+format = """$python $kubernetes $username at $hostname in $directory$git_branch
 [❭❭](green) 
 """
 
@@ -31,3 +31,6 @@ disabled = true
 
 [git_branch]
 format = "on [$symbol$branch]($style) "
+
+[python]
+format = '(\($virtualenv\))'
