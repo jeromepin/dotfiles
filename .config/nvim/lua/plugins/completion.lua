@@ -46,7 +46,7 @@ cmp.setup({
             else
                 fallback()
             end
-        end, {"i", "s"}),
+        end, { "i" }),
 
         ["<CR>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -61,38 +61,38 @@ cmp.setup({
             else
                 fallback()
             end
-        end, {"i", "s"}),
+        end, { "i" }),
 
         ["<Left>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.close()
             end
             fallback()
-        end, {"i", "s"}),
+        end, { "i" }),
 
         ["<Right>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.close()
             end
             fallback()
-        end, {"i", "s"}),
+        end, { "i" }),
     }),
-    sources = cmp.config.sources({{
+    sources = cmp.config.sources({ {
         name = 'nvim_lsp'
-    }}, {{
+    } }, { {
         name = 'buffer'
-    }}, {{
+    } }, { {
         name = 'orgmode'
-    }})
+    } })
 })
 
 -- Set configuration for specific filetype.
 cmp.setup.filetype('gitcommit', {
-    sources = cmp.config.sources({{
+    sources = cmp.config.sources({ {
         name = 'cmp_git'
-    }}, {{
+    } }, { {
         name = 'buffer'
-    }})
+    } })
 })
 
 cmp.setup.filetype('org', {
@@ -101,7 +101,7 @@ cmp.setup.filetype('org', {
 
 cmp.setup.cmdline('/', {
     mapping = cmp.mapping.preset.cmdline(),
-    sources = {{
+    sources = { {
         name = 'buffer'
-    }}
+    } }
 })
