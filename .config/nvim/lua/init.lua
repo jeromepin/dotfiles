@@ -16,8 +16,8 @@ require 'plugins'
 
 -- https://github.com/nanotee/nvim-lua-guide#setting-up-linterslanguage-servers
 require 'config.abbreviations'
-require 'config.autocommands'
 require 'config.commands'
+require 'config.autocommands'
 require 'config.mappings'
 require 'config.settings'
 -- require 'config.terraform'

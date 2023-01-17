@@ -4,7 +4,7 @@
 -- " command! -nargs=* BrowseGithub !open "https://github.com/lumapps/"
 -- vim.cmd([[command Org vsplit ~/org/lumapps.org]])
 vim.cmd([[
-    command! -nargs=* TerraformFmt execute 'silent !cat % | ~/.asdf/installs/terraform/1.0.1/bin/terraform fmt - | tee % >> /dev/null'
+    command! -nargs=* TerraformFmt execute 'silent !~/.asdf/installs/terraform/1.0.1/bin/terraform fmt - < % | tee tmpfile >> /dev/null; mv tmpfile %'
 ]])
 
 vim.cmd([[command Broot FloatermNew --width=0.8 --height=0.8 broot]])
@@ -19,4 +19,8 @@ function! MultipleEdit(p_list)
 endfunction
 
 command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
+]])
+
+vim.cmd([[
+    command! TerragruntGrepModule lua require('config.terraform').TerragruntGrepInModule(require("telescope.themes").get_dropdown{})
 ]])

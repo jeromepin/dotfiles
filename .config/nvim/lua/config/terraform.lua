@@ -1,23 +1,32 @@
--- function! s:get_current_file_path() abort
---     return expand('%:p')
--- endfunction
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local conf = require("telescope.config").values
+local actions = require "telescope.actions"
+local action_state = require "telescope.actions.state"
 
--- function! s:find_module_source() abort
---     " Loop over every line in the current file and try to find one matching `source = "${local.git_root}/...`
---     for line in readfile(s:get_current_file_path())
---         let l:matches = filter(matchlist(line, ' \+source \+= \+\"\${local.git_root}\/\(.\+\)\"'), 'v:val !=# ""')
---         if len(l:matches) == 2
---             return l:matches[1]
---         endif
---     endfor
--- endfunction
+local M = {}
 
--- function! s:terragrunt_show_module_variables() abort
---     let l:source_module_absolute_path = system("git rev-parse --show-toplevel | tr -d '\\n'") . '/' . s:find_module_source()
---     execute 'vsplit ' l:source_module_absolute_path . '/variables.tf'
--- endfunction
+M.TerragruntGrepInModule = function(opts)
+    opts = opts or {}
+    pickers.new(opts, {
+        prompt_title = "Find Directory",
+        finder = finders.new_oneshot_job({ "fd", "--exact-depth=1", "--type=d", "--base-directory=modules/terragrunt",
+            "--strip-cwd-prefix" }),
+        sorter = conf.generic_sorter(opts),
+        attach_mappings = function(prompt_bufnr, map)
+            actions.select_default:replace(function()
+                actions.close(prompt_bufnr)
+                local selection = action_state.get_selected_entry()
+                print(vim.inspect(selection[1]))
+                if selection ~= nil then
+                    require('telescope.builtin').live_grep({
+                        cwd = "modules/terragrunt/" .. selection[1]
+                    })
+                end
+            end)
+            return true
+        end
+    }):find()
+end
 
--- function! s:terragrunt_explore_module() abort
---     let l:source_module_absolute_path = system("git rev-parse --show-toplevel | tr -d '\\n'") . '/' . s:find_module_source()
---     execute 'Telescope file_browser cwd=' . l:source_module_absolute_path
--- endfunction
+return M

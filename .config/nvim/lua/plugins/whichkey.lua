@@ -42,7 +42,8 @@ wk.register({
 
         t = {
             name = "Terragrunt",
-            b = {"<CMD>Telescope file_browser cwd=modules/terragrunt<CR>", "Browse Modules"}
+            b = {"<CMD>Telescope file_browser cwd=modules/terragrunt<CR>", "Browse Modules"},
+            l = {"<CMD>TerragruntGrepModule<CR>", "Live Grep"},
         },
 
         ["/"] = {"<CMD>CommentToggle<CR>", "Comment"}

@@ -1,4 +1,5 @@
 local cmp = require('cmp')
+local luasnip = require("luasnip")
 
 local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -43,6 +44,10 @@ cmp.setup({
                 else
                     cmp.confirm()
                 end
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            elseif has_words_before() then
+                cmp.complete()
             else
                 fallback()
             end
