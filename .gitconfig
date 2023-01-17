@@ -24,6 +24,7 @@
     ru = remote update
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
     sri = "!f(){ git remote update && git stash && git rebase --interactive origin/${1:-master} && git stash pop; };f"
+	s = "!f(){ gitui; };f"
 	st = status
     unstage = reset HEAD --
     uncommit = reset HEAD~
