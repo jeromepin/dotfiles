@@ -25,12 +25,12 @@ wk.register({
         f = {
             name = "Find files & strings",
             b = {"<CMD>Telescope file_browser<CR>", "Browse Directories"},
-            c = {"<CMD>Telescope file_browser cwd=%:p:h<CR>", "Browse Current Directory"},
-            d = {"<CMD>Telescope grep_string<CR>", "Find Word Under Cursor In Cwd"},
+            c = {"<CMD>Telescope file_browser cwd=%:p:h<CR>", "Browse CWD"},
+            d = {"<CMD>Telescope grep_string<CR>", "Find Word Under Cursor"},
             f = {"<CMD>Telescope current_buffer_fuzzy_find<CR>", "Search In Current File"},
             g = {"<CMD>Telescope git_files<CR>", "Git Files"},
             i = {"<CMD>Findr<CR>", "Incremental Browser"},
-            l = {"<CMD>Telescope live_grep cwd=%:p:h<CR>", "Live Grep in Cwd"},
+            l = {"<CMD>Telescope live_grep cwd=%:p:h<CR>", "Live Grep"},
             m = {"<CMD>Telescope oldfiles<CR>", "Recently Used Files"}
         },
 
