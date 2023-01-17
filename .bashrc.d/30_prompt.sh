@@ -38,9 +38,9 @@
 
 # PS1="\033[38;5;2m\u\033[0m at \033[33m\h\033[0m in \033[36m\w\033[0m \$(git_part)\n\[\033[38;5;2m\]❭❭\[$(tput sgr0)\] "
 
-# if [ -f /opt/local/share/kube-ps1/kube-ps1.sh ]
+# if [ -f /usr/local/share/kube-ps1/kube-ps1.sh ]
 # then
-# 	source /opt/local/share/kube-ps1/kube-ps1.sh
+# 	source /usr/local/share/kube-ps1/kube-ps1.sh
 # 	PS1='$(kube_ps1)'$PS1
 # fi
 

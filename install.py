@@ -60,6 +60,7 @@ def _link_directory_content(directory: pathlib.Path):
 def prerequisites():
     ports = [
         "base64",
+        "bash",
         "bash-completion",
         "broot",
         "difftastic",
@@ -67,6 +68,7 @@ def prerequisites():
         "file",
         "fzf",
         "git",
+        "gnu-sed",
         "gnupg2",
         "jq",
         "kube-ps1",
@@ -74,10 +76,11 @@ def prerequisites():
         "most",
         "neovim",
         "ripgrep",
+        "starship",
         "tree-sitter-cli",
         "wget",
     ]
-    _run_shell_command(f"sudo port install {' '.join(ports)}")
+    _run_shell_command(f"brew install {' '.join(ports)}")
 
 
 def bashrc():

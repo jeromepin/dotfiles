@@ -14,8 +14,8 @@ export HISTCONTROL=ignoreboth:erasedups:ignorespace
 export FZF_DEFAULT_COMMAND='fd --follow --exclude .git'
 export GOPATH=$HOME/go
 
-export LDFLAGS="-L/opt/local/lib/openssl-1.0/"
-export CPPFLAGS="-I/opt/local/include/openssl"
+export LDFLAGS="-L/usr/local/lib/openssl-1.0/"
+export CPPFLAGS="-I/usr/local/include/openssl"
 
 # MacPorts's ports
 PATH=/opt/local/bin:/opt/local/sbin:/opt/local/libexec/gnubin/:$PATH
@@ -30,8 +30,8 @@ export PATH
 
 # export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 
-if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-	. /opt/local/etc/profile.d/bash_completion.sh
+if [ -f /usr/local/etc/profile.d/bash_completion.sh ]; then
+	. /usr/local/etc/profile.d/bash_completion.sh
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

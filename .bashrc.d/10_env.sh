@@ -46,9 +46,9 @@ fi
 PATH=/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin:$PATH
 
 # MacPorts's ports
-PATH=/opt/local/bin:/opt/local/sbin:/opt/local/libexec/gnubin/:$PATH
+PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Homebrew's binaries
-PATH=/usr/local/bin:$PATH
+PATH=/usr/local/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/gnu-getopt/bin:$PATH
 
 # ASDF shims
 . $HOME/.asdf/asdf.sh

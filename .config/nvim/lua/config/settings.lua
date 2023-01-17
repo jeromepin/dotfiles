@@ -44,7 +44,7 @@ vim.o.showtabline = 2
 -- vim.o.t_8f = "<Esc>[38;2;%lu;%lu;%lum"
 -- vim.o.t_8b = "<Esc>[48;2;%lu;%lu;%lum"
 
-vim.o.shell = "/opt/local/bin/bash"
+vim.o.shell = "/usr/local/bin/bash"
 
 vim.o.cursorline = true
 vim.o.showmatch = true
@@ -89,7 +89,7 @@ vim.o.splitright = true
 
 vim.o.guicursor = "n-i-ci-ve:ver100-iCursor-blinkwait150-blinkon150-blinkoff150"
 
--- let g:python3_host_prog = '/Users/jeromepin/.asdf/shims/python3'
+vim.g.python3_host_prog = "~/neovim-venv/bin/python3"
 
 -- Enable single global statusline for the current windows
 vim.o.laststatus = 3
