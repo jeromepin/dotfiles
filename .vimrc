@@ -5,7 +5,7 @@ syntax on
 set t_Co=256
 set termguicolors
 
-set shell=/usr/local/bin/bash
+set shell=/run/current-system/sw/bin/bash
 set number
 set mouse=
 autocmd BufEnter * set mouse=
