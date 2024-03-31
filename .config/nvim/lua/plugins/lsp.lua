@@ -4,12 +4,12 @@ local lspsaga = require('lspsaga')
 
 lsp_installer.on_server_ready(function(server)
     local opts = {
-        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+        -- capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
     }
 
     if server.name == "terraformls" then
         opts.init_options = {
-            ignoreDirectoryNames = {".terragrunt-cache", "haussmann", "internal", "monolith"}
+            ignoreDirectoryNames = { ".terragrunt-cache", "haussmann", "internal", "monolith" }
         }
     end
 
@@ -24,9 +24,9 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.s
     border = 'rounded'
 })
 
--------------------------------------------------------- 
+--------------------------------------------------------
 --                     LSPSaga
--------------------------------------------------------- 
+--------------------------------------------------------
 lspsaga.setup({
     finder_action_keys = {
         open = "<CR>",
@@ -42,15 +42,15 @@ lspsaga.setup({
     }
 })
 
--------------------------------------------------------- 
+--------------------------------------------------------
 --                Symbols Outline
--------------------------------------------------------- 
+--------------------------------------------------------
 vim.g.symbols_outline = {
     auto_preview = false,
     show_symbol_details = false,
     auto_close = false,
     keymaps = { -- These keymaps can be a string or a table for multiple keys
-        close = {"<Esc>", "q"},
+        close = { "<Esc>", "q" },
         goto_location = "<Cr>",
         focus_location = "o",
         hover_symbol = "<C-space>",

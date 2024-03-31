@@ -1,10 +1,3 @@
-[core]
-	whitespace = -trailing-space
-	editor = nvim
-[protocol]
-    version = 2
-[color]
-	ui = true
 [alias]
 	a = "!f(){ git diff --name-only $@ | fzf -m --print0 --ansi --preview \"git diff --color=always -- {-1}\" | xargs -0 git add; };f"
     bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
@@ -13,13 +6,14 @@
     cae = commit --amend --no-edit
 	ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
 	d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
-    # fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' master.. | grep --color=auto \"$(git config --get 'user.name')\" | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup $@; };f"
     fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' origin/master.. | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup; };f"
+    gen = "!f(){ git commit --message=\"$(git show-branch --no-name HEAD | sed -E 's/^[a-z]{1,5}/gen/')\"; };f"
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
     merged-branches = "!git branch --merged master"
     p = push
     pl = push --force-with-lease
     r = rebase origin/master
+	radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
     ri = rebase --autosquash --interactive origin/master
     ru = remote update
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
@@ -28,7 +22,32 @@
 	st = status
     unstage = reset HEAD --
     uncommit = reset HEAD~
+[color]
+	ui = true
+[color "branch"]
+	upstream = cyan
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[commit]
+	verbose = true
+[core]
+	whitespace = -trailing-space
+	editor = nvim
+	excludesfile = /Users/jeromepin/.gitignore_global
+[credential]
+	helper = cache --timeout=86400
 [diff]
+	algorithm = histogram
 	colorMoved = plain
 	colormovedws = allow-indentation-change
 	# external = "difft"
@@ -38,41 +57,35 @@
 	wordRegex = .
 [fetch]
 	recurseSubmodules = on-demand
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
 [grep]
 	extendedRegexp = true
 [log]
 	abbrevCommit = true
 [merge]
-	conflictStyle = diff3
+	conflictStyle = zdiff3
 [mergetool]
 	keepBackup = false
 	keepTemporaries = false
 	prompt = false
-[push]
-    default = current
+[protocol]
+    version = 2
 [pull]
     rebase = true
+[push]
+    default = current
+[rebase]
+	autosquash = true
+	autostash = true
 [status]
 	submoduleSummary = true
 	showUntrackedFiles = all
-[color "branch"]
-	upstream = cyan
 [tag]
 	sort = version:refname
-[credential]
-	helper = cache --timeout=86400
 [user]
     name = "Jérôme Pin"
 	email = jeromepin@users.noreply.github.com
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
-[color "diff"]
-	meta = yellow
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse

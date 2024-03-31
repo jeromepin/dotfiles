@@ -24,3 +24,7 @@ command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
 vim.cmd([[
     command! TerragruntGrepModule lua require('config.terraform').TerragruntGrepInModule(require("telescope.themes").get_dropdown{})
 ]])
+
+vim.cmd([[
+    command! TerraformOpenDoc lua require('config.terraform').TerraformOpenResourceDocumentation()
+]])

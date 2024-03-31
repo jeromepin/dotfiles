@@ -7,6 +7,7 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
 	ssh-add
 fi
 
+export SHELL=/usr/local/bin/bash
 export EDITOR=nvim
 export BAT_PAGER='less -R'
 export PAGER=less
@@ -25,15 +26,6 @@ export FZF_DEFAULT_COMMAND='fd --follow --exclude .git'
 export GOPATH=$HOME/go
 export CARGO_INSTALL_ROOT=$HOME/.cargo
 
-
-source /opt/local/etc/profile.d/bash_completion.sh
-
-source /opt/local/share/fzf/shell/key-bindings.bash
-
-if [ -f $HOME/lib/azure-cli ]; then
-	source $HOME/lib/azure-cli/az.completion
-fi
-
 #########################################################
 #						PATH
 #########################################################
@@ -48,7 +40,7 @@ PATH=/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin:$PATH
 # MacPorts's ports
 PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Homebrew's binaries
-PATH=/usr/local/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/gnu-getopt/bin:$PATH
+PATH=/usr/local/bin:/usr/local/opt/curl/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/gnu-getopt/bin:$PATH
 
 # ASDF shims
 . $HOME/.asdf/asdf.sh
@@ -67,10 +59,26 @@ PATH=$HOME/bin:$PATH
 
 export PATH
 
+eval "$(/usr/local/bin/rtx activate bash)"
+
 #########################################################
 #					COMPILATION FLAGS
 #########################################################
-export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/bzip2/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib"
-export CFLAGS="-I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/bzip2/include -I/usr/local/opt/readline/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include" 
+export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib -L/usr/local/opt/bzip2/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/curl/lib"
+export CFLAGS="-I/usr/local/opt/openssl@1.1/include -I/usr/local/opt/bzip2/include -I/usr/local/opt/readline/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include -I/usr/local/opt/curl/include" 
 export CPPFLAGS=$CFLAGS
-export RUSTFLAGS="-L/opt/local/lib"
+export RUSTFLAGS="-L/usr/local/lib"
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig"
+
+#########################################################
+#					SHELL COMPLETION
+#########################################################
+source /usr/local/etc/profile.d/bash_completion.sh
+
+source <(kubectl completion bash)
+
+source /usr/local/opt/fzf/shell/key-bindings.bash
+
+if [ -f $HOME/lib/azure-cli ]; then
+	source $HOME/lib/azure-cli/az.completion
+fi

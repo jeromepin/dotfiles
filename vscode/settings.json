@@ -3,26 +3,11 @@
     "editor.fontFamily": "'Droid Sans Mono for Powerline', Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": true,
     "editor.scrollBeyondLastLine": false,
-    "window.zoomLevel": 0,
-    "python.formatting.provider": "black",
-    "python.insidersChannel": "off",
-    "python.linting.banditEnabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.pylintEnabled": false,
-    "python.globalModuleInstallation": true,
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
     "workbench.startupEditor": "newUntitledFile",
     "[terraform]": {
         "editor.tabSize": 2,
         "editor.formatOnSave": true,
-    },
-    "terraform.languageServer": {
-        "external": true,
-        "args": [
-            "serve"
-        ]
     },
     "[markdown]": {
         "editor.wordWrap": "on"
@@ -36,7 +21,8 @@
     "workbench.colorTheme": "One Dark Pro",
     "files.associations": {
         "*.hcl": "makefile",
-        "*.yaml": "yaml"
+        "*.yaml": "yaml",
+        "*.vim": "viml"
     },
     "[tf]": {
         "editor.tabSize": 2
@@ -50,8 +36,54 @@
         "**/.terraform/**": true,
         "**/.terragrunt-cache/**": true
     },
+    "python.formatting.provider": "black",
+    "python.linting.banditEnabled": true,
+    "python.linting.flake8Enabled": false,
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.globalModuleInstallation": true,
     "python.analysis.typeCheckingMode": "basic",
     "python.showStartPage": false,
-    "python.defaultInterpreterPath": "~/.asdf/shims/python3",
-    "python.analysis.completeFunctionParens": true
+    "python.analysis.completeFunctionParens": true,
+    "python.languageServer": "Pylance",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "timeline.excludeSources": [
+        "git-history"
+    ],
+    "extensions.ignoreRecommendations": true,
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "Lua.telemetry.enable": true,
+    "[lua]": {
+        "editor.defaultFormatter": "sumneko.lua"
+    },
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "explorer.confirmDragAndDrop": false,
+    "extensions.autoUpdate": false,
+    "zig.zls.path": "/Users/jeromepin/Library/Application Support/Code/User/globalStorage/ziglang.vscode-zig/zls_install/zls",
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "/usr/local/bin/bash",
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        }
+    },
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "zig.zigPath": "/Users/jeromepin/.local/share/rtx/installs/zig/master/bin/zig",
+    "zig.zls.inlayHintsExcludeSingleArgument": false,
+    "zig.zls.warnStyle": true,
+    "zig.zls.enableInlayHints": false,
+    "zig.zls.inlayHintsShowBuiltin": false,
+    "workbench.editor.empty.hint": "hidden",
+    "zig.initialSetupDone": true,
+    "zig.path": "/Users/jeromepin/Library/Application Support/Code/User/globalStorage/ziglang.vscode-zig/zig_install/zig",
 }

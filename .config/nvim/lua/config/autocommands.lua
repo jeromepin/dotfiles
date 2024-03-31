@@ -17,7 +17,7 @@ vim.cmd([[
     autocmd FileType hcl,terraform :lua vim.api.nvim_buf_set_option(0, "commentstring", "# %s")
 
     " Format Terraform files on save
-    autocmd BufWritePost *.hcl,*.tf TerraformFmt <bar> redraw
+    " autocmd BufWritePost *.hcl,*.tf TerraformFmt <bar> redraw
     
     " Disable folding in orgmode
     autocmd FileType org setlocal nofoldenable

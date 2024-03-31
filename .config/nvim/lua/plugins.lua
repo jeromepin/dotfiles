@@ -28,12 +28,23 @@ require("lazy").setup({
 
     -- Vim & UI
     {
-        -- OneDark colorscheme
+        -- colorscheme
         {
-            'navarasu/onedark.nvim',
+            'tomasr/molokai',
+            priority = 1000,
+            lazy = false,
+            -- config = function()
+            --     vim.cmd('colorscheme molokai')
+            -- end
+        },
+
+        {
+           "navarasu/onedark.nvim",
+            priority = 1000,
+            lazy = false,
             config = function()
-                require('onedark').load()
-            end,
+                vim.cmd('colorscheme onedark')
+            end
         },
 
         -- Speed up loading Lua modules in Neovim to improve startup time
@@ -51,17 +62,6 @@ require("lazy").setup({
             tag = 'v2.12.1',
         },
 
-        -- Life in the fast lane. Don't wait around. Life's too short for you to wait on your statusline.
-        {
-            'tjdevries/express_line.nvim',
-            config = function()
-                require('plugins.statusline')
-            end,
-            dependencies = {
-                'nvim-lua/plenary.nvim',
-                'kyazdani42/nvim-web-devicons',
-            },
-        },
 
         -- Fix CursorHold Performance
         {
@@ -71,7 +71,7 @@ require("lazy").setup({
         -- Orgmode clone written in Lua
         {
             'nvim-orgmode/orgmode',
-            tag = '0.2.1',
+            -- tag = '0.2.1',
             config = function()
                 require('plugins.orgmode')
             end,
@@ -83,10 +83,25 @@ require("lazy").setup({
         },
 
         -- Tabline
+        -- https://github.com/akinsho/bufferline.nvim
         {
-            'romgrk/barbar.nvim',
-            commit = 'be65945626fb6bf6058cae61d5176d156f923c11',
-            dependencies = { 'kyazdani42/nvim-web-devicons' },
+            'akinsho/bufferline.nvim',
+            tag = 'v3.1.0',
+            dependencies = { 'nvim-tree/nvim-web-devicons' },
+            config = function()
+                require("bufferline").setup {
+                    options = {
+                        -- close_command = "bdelete! %d",
+                        close_command = "Sayonara %d",
+                        show_close_icon = false,
+                        indicator = {
+                            -- icon = '▎', -- this should be omitted if indicator style is not 'icon'
+                            style = 'underline', -- 'icon',
+                        },
+                        always_show_bufferline = true,
+                    }
+                }
+            end,
         },
 
         -- Neovim plugin with collection of minimal, independent, and fast Lua modules
@@ -111,10 +126,21 @@ require("lazy").setup({
             url = 'https://gitlab.com/yorickpeterse/nvim-window.git',
         },
 
-        -- {
-        --     'glepnir/dashboard-nvim',
-        --     config = [[require('plugins.dashboard')]],
-        -- }
+        -- Sane buffer/window deletion
+        -- https://github.com/mhinz/vim-sayonara
+        {
+            'mhinz/vim-sayonara',
+        },
+
+        -- A blazing fast and easy to configure neovim statusline plugin written in pure lua.
+        -- https://github.com/nvim-lualine/lualine.nvim
+        {
+            'nvim-lualine/lualine.nvim',
+            dependencies = { "nvim-tree/nvim-web-devicons" },
+            config = function()
+                require('plugins.statusline')
+            end,
+        }
     },
 
     -- Lanugages
@@ -126,6 +152,11 @@ require("lazy").setup({
             config = function()
                 require('plugins.treesitter')
             end,
+        },
+
+        {
+            'nvim-treesitter/playground',
+            dependencies = { 'nvim-treesitter/nvim-treesitter' }
         },
 
         -- Render markdown on the CLI
@@ -149,13 +180,14 @@ require("lazy").setup({
             end,
         },
 
-        -- Ultimate smart pairs written in lua!
+        -- Auto close pairs
         {
-            'ZhiyuanLck/smart-pairs',
-            event = 'InsertEnter',
-            config = function()
-                require('pairs'):setup()
-            end,
+            'cohama/lexima.vim',
+            commit = 'b1e1b1bde07c1efc97288c98c5912eaa644ee6e1',
+            event = {'InsertEnter','CmdlineEnter'},
+            -- config = function()
+            --     require('pairs'):setup()
+            -- end,
         }
 
     },
@@ -229,7 +261,25 @@ require("lazy").setup({
         -- An incremental narrowing engine for (neo)vim inspired by emacs helm/ivy/ido
         {
             'conweller/findr.vim',
-        }
+        },
+
+        -- A tiny project + sessions manager
+        -- https://github.com/GnikDroy/projections.nvim
+        {
+            'gnikdroy/projections.nvim',
+            dependencies = { 'nvim-telescope/telescope.nvim' },
+            branch = 'pre_release',
+            config = function()
+                require("projections").setup({
+                    workspaces = {
+                        { "~/git/github/lumapps",   { ".git" } },
+                        { "~/git/github/jeromepin", { ".git" } },
+                    },
+                })
+
+                require('telescope').load_extension('projections')
+            end
+        },
     },
 
     -- Search and replace
@@ -297,7 +347,38 @@ require("lazy").setup({
                 require('lspsaga').init_lsp_saga()
             end,
             -- branch = 'nvim6.0' or 'nvim51'
-        }
+        },
+
+        -- A pretty diagnostics, references, telescope results, quickfix and location list
+        -- https://github.com/folke/trouble.nvim
+        {
+            "folke/trouble.nvim",
+            dependencies = { "nvim-tree/nvim-web-devicons" },
+        },
+
+        -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
+        -- https://github.com/williamboman/mason.nvim
+        {
+            'williamboman/mason.nvim',
+            config = function()
+                require("mason").setup()
+            end,
+        },
+
+        -- Extension to mason.nvim that makes it easier to use lspconfig with mason.nvim
+        -- https://github.com/williamboman/mason-lspconfig.nvim
+        {
+            'williamboman/mason-lspconfig.nvim',
+            dependencies = { 'neovim/nvim-lspconfig' },
+            config = function()
+                require("mason-lspconfig").setup {
+                    ensure_installed = {
+                        "pyright",
+                        -- "terraform-ls"
+                    },
+                }
+            end
+        },
     },
 
     -- Snippets
@@ -312,18 +393,14 @@ require("lazy").setup({
         }
     },
 
-    -- -- File Manager for Neovim
-    -- -- Open: Enter
-    -- -- Collapse/Expand: Tab
-    -- -- Filter in directory: f
-    -- -- Change focus to folder at cursor: c
-    -- -- Change focus to parent dir: C
-    -- use {
-    --     'ms-jpq/chadtree',
-    --     branch = 'chad',
-    --     build = 'python3 -m chadtree deps',
-    --     config = [[require('plugins.tree')]],
-    -- }
-
+    -- File Manager for Neovim
+    {
+        -- Neovim file explorer: edit your filesystem like a buffer
+        -- https://github.com/stevearc/oil.nvim
+        {
+            'stevearc/oil.nvim',
+            config = function() require('oil').setup() end
+        },
+    },
 
 })

@@ -20,11 +20,13 @@ require 'config.commands'
 require 'config.autocommands'
 require 'config.mappings'
 require 'config.settings'
--- require 'config.terraform'
 
-require 'jcommandpalette'
+local ok, _ = pcall(require, 'config.local')
+if not ok then
+    -- not loaded
+end
 
 -- Set barbar's options
 vim.g.bufferline = {
-    icons = false,
+    icons = false
 }

@@ -93,3 +93,8 @@ vim.g.python3_host_prog = "~/neovim-venv/bin/python3"
 
 -- Enable single global statusline for the current windows
 vim.o.laststatus = 3
+
+-- Automatically set the global current directory to match the location of the current file
+vim.o.autochdir = true
+
+vim.o.clipboard = "unnamed"

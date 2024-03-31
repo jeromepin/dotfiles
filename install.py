@@ -98,52 +98,61 @@ def binaries():
     _link_directory_content(pathlib.Path("bin"))
 
 
-def asdf():
-    plugins = collections.OrderedDict(
-        {
-            "kubectl": {"versions": ["1.17.17"]},
-            "python": {"versions": ["3.7.9"]},
-            "rust": {"versions": ["1.50.0"]},
-        }
-    )
+# def asdf():
+#     plugins = collections.OrderedDict(
+#         {
+#             "kubectl": {"versions": ["1.17.17"]},
+#             "python": {"versions": ["3.7.9"]},
+#             "rust": {"versions": ["1.50.0"]},
+#         }
+#     )
 
-    if not os.path.isdir(HOME / ".asdf"):
-        _run_shell_command(
-            "git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0"
-        )
-        _run_shell_command('echo ". $HOME/.asdf/asdf.sh" > ~/.bash_profile')
+#     if not os.path.isdir(HOME / ".asdf"):
+#         _run_shell_command(
+#             "git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0"
+#         )
+#         _run_shell_command('echo ". $HOME/.asdf/asdf.sh" > ~/.bash_profile')
 
-    for plugin_name, plugin_def in plugins.items():
-        _run_shell_command(f"asdf plugin add {plugin_name}")
+#     for plugin_name, plugin_def in plugins.items():
+#         _run_shell_command(f"asdf plugin add {plugin_name}")
 
-        for version in plugin_def.get("versions"):
-            _run_shell_command(f"asdf install {plugin_name} {version}")
-            _run_shell_command(f"asdf global {plugin_name} {version}")
+#         for version in plugin_def.get("versions"):
+#             _run_shell_command(f"asdf install {plugin_name} {version}")
+#             _run_shell_command(f"asdf global {plugin_name} {version}")
 
-    _run_shell_command(f"~/.asdf/installs/fzf/{FZF_VERSION}/install")
-    _run_shell_command(
-        "NODEJS_CHECK_SIGNATURES=no asdf_install_enable_version nodejs 15.11.0"
-    )
+#     _run_shell_command(
+#         "NODEJS_CHECK_SIGNATURES=no asdf_install_enable_version nodejs 15.11.0"
+#     )
 
 
 def vim():
+    CONFIG_NVIM_SOURCE = pathlib.Path(".config/nvim")
     _link(pathlib.Path(".vimrc"), HOME)
-    _link_directory_content(pathlib.Path(".config/nvim"))
+    _link_directory_content(CONFIG_NVIM_SOURCE.joinpath("after", "syntax"))
+    _link(CONFIG_NVIM_SOURCE.joinpath("init.vim"), HOME)
+    _link_directory_content(CONFIG_NVIM_SOURCE.joinpath("lua", "config"))
+    _link_directory_content(CONFIG_NVIM_SOURCE.joinpath("lua", "plugins"))
+    _link_directory_content(CONFIG_NVIM_SOURCE.joinpath("lua", "jcommandpalette"))
+    _link(
+        CONFIG_NVIM_SOURCE.joinpath("lua", "plugins.lua"),
+        HOME.joinpath(CONFIG_NVIM_SOURCE, "lua", "plugins.lua"),
+    )
+    _link(
+        CONFIG_NVIM_SOURCE.joinpath("lua", "init.lua"),
+        HOME.joinpath(CONFIG_NVIM_SOURCE, "lua", "init.lua"),
+    )
+    _link_directory_content(CONFIG_NVIM_SOURCE.joinpath("snippets"))
     _run_shell_command("pip3 install pynvim")
     _run_shell_command("npm install -g neovim")
-    _install_from_archive(
-        "https://github.com/tree-sitter/tree-sitter/releases/download/v0.18.3/tree-sitter-macos-x64.gz",
-        archive_format="gz",
-        binary_name="tree-sitter",
-    )
-    _run_shell_command("vim +LspInstall python")
+    # _run_shell_command("vim +LspInstall python")
     # _run_shell_command("vim +LspInstall terraform")
-    _run_shell_command("vim +TSInstall bash comment hcl json python yaml")
+    # _run_shell_command("vim +TSInstall bash comment hcl json python yaml")
 
 
 def misc():
     _link(pathlib.Path(".sshrc"), HOME)
     _link(pathlib.Path(".config/starship.toml"), HOME)
+    _link(pathlib.Path(".tigrc"), HOME)
 
 
 def git():
@@ -171,7 +180,6 @@ STAGES: Dict[str, str] = collections.OrderedDict(
         "misc": "misc",
         "bin": "binaries",
         "git": "git",
-        "asdf": "asdf",
         "vim": "vim",
     }
 )
