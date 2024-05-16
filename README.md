@@ -2,5 +2,5 @@ dotfiles
 ========
 
 ```
-$ nix run nix-darwin -- switch --flake nix/
+$ darwin-rebuild switch --flake nix/
 ```

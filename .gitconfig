@@ -43,7 +43,7 @@
 [core]
 	whitespace = -trailing-space
 	editor = nvim
-	excludesfile = /Users/jeromepin/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [credential]
 	helper = cache --timeout=86400
 [diff]

@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
+ssh-add --apple-use-keychain
+
 export TERM=screen-256color
-
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-	eval `ssh-agent -s`
-	ssh-add
-fi
-
 export EDITOR="nvim"
 export BAT_PAGER='less -R'
 export PAGER=most
@@ -23,3 +19,5 @@ PATH=$HOME/.cargo/bin:$PATH
 PATH=$HOME/bin:$PATH
 
 export PATH
+
+eval "$(fzf --bash)"
