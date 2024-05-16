@@ -2,9 +2,34 @@ local wk = require("which-key")
 
 -- nnoremap
 wk.register({
-    -- Leader is \
+    -- Leader is <space>
     ["<leader>"] = {
-        ["<leader>"] = { "<CMD>vsplit ~/org/refile.org<CR>", "Orgmode" },
+        ["/"] = { "<CMD>CommentToggle<CR>", "Comment" },
+
+        b = { "<CMD>Telescope buffers<CR>", "List Buffers" },
+        c = { "<CMD>Telescope commands<CR>", "List Vim Commands" },
+
+        g = {
+            name = "Git",
+            a = { "<CMD>Gitsigns stage_hunk<CR>", "Stage current hunk" },
+            b = { "<CMD>Gitsigns blame_line<CR>", "Current line blame" },
+            d = { "<CMD>Gitsigns preview_hunk_inline<CR>", "Current line diff" },
+            h = { "<CMD>DiffviewFileHistory %<CR>", "Current file history" },
+            l = { "<CMD>Telescope git_commits<CR>", "Log" },
+            s = { "<CMD>Neogit<CR>", "Status (using Magit)" }
+        },
+
+        s = { "<CMD>Telescope projections<CR>", "Switch projects" },
+
+        t = {
+            name = "Terraform",
+            b = { "<CMD>Telescope file_browser cwd=modules/terragrunt<CR>", "Browse Modules" },
+            l = { "<CMD>TerragruntGrepModule<CR>", "Live Grep" },
+            d = { "<CMD>TerraformOpenDoc<CR>", "Open Terraform Documentation" },
+        }
+    },
+    ["\\"] = {
+        ["\\"] = { "<CMD>vsplit ~/org/refile.org<CR>", "Orgmode" },
         c = {
             name = "Orgmode",
             t = { "Cycle TODO Keywords" }
@@ -17,10 +42,11 @@ wk.register({
             r = { "Refile To" }
         }
     },
+    ["<C-p>"] = { "<CMD>lua require('jcommandpalette').command_palette()<CR>", "Command Palette" },
     ["="] = {
         name = "Filesystem operations",
-        ["-"] = { "<CMD>Oil<CR>", "Oil" },
-        b = { "<CMD>Telescope file_browser<CR>", "Browse Directories" },
+        ["="] = { "<CMD>Oil<CR>", "Oil" },
+        b = { "<CMD>lua require('telescope').extensions.file_browser.file_browser({cwd=vim.api.nvim_eval(\"finddir('.git/..', expand('%:p:h').';')\")})<CR>", "Browse Project" },
         c = { "<CMD>Telescope file_browser cwd=%:p:h<CR>", "Browse Current Directory" },
         d = { "<CMD>Telescope grep_string<CR>", "Find Word Under Cursor In Current File" },
         f = { "<CMD>Telescope current_buffer_fuzzy_find<CR>", "Search In Current File" },
@@ -29,29 +55,6 @@ wk.register({
         l = { "<CMD>Telescope live_grep cwd=%:p:h<CR>", "Grep In Current Directory" },
         m = { "<CMD>Telescope oldfiles<CR>", "Recently Used Files" },
         s = { "<CMD>Telescope git_status<CR>", "Git Status" },
-    },
-    [";"] = {
-        b = { "<CMD>Telescope buffers<CR>", "List Buffers" },
-        c = { "<CMD>Telescope commands<CR>", "List Vim Commands" },
-        p = { "<CMD>lua require('jcommandpalette').command_palette()<CR>", "Command Palette" },
-
-        g = {
-            name = "Git",
-            d = { "<CMD>Gitsigns preview_hunk_inline<CR>", "Current line diff" },
-            l = { "<CMD>Telescope git_commits<CR>", "Log" },
-            s = { "<CMD>Neogit<CR>", "Status (using Magit)" }
-        },
-
-        s = { "<CMD>Telescope projections<CR>", "Switch projects" },
-
-        t = {
-            name = "Terraform",
-            b = { "<CMD>Telescope file_browser cwd=modules/terragrunt<CR>", "Browse Modules" },
-            l = { "<CMD>TerragruntGrepModule<CR>", "Live Grep" },
-            d = { "<CMD>TerraformOpenDoc<CR>", "Open Terraform Documentation" },
-        },
-
-        ["/"] = { "<CMD>CommentToggle<CR>", "Comment" }
     },
     ["b"] = {
         name = "Buffers",
@@ -68,7 +71,6 @@ wk.register({
         r = { "<CMD>lua require('lspsaga.provider').lsp_finder()<CR>", "Go To References" },
         t = { "<CMD>Telescope lsp_workspace_symbols symbols='class'<CR>", "List Symbols" }
     },
-    ["t"] = { "<CMD>FloatermToggle<CR>", "Toggle Flotaing Terminal" }
 }, {
     mode = "n",
     silent = true,
@@ -95,10 +97,10 @@ wk.register({
 
 -- vnoremap
 wk.register({
-    [";"] = {
-        p = { "<CMD>lua require('jcommandpalette').command_palette()<CR>", "Command Palette" },
-        ["/"] = { ":'<,'>CommentToggle<CR>", "Comment" }
-    }
+    ["<leader>"] = {
+        ["/"] = { "<CMD>'<,'>CommentToggle<CR>", "Comment" }
+    },
+    ["<C-p>"] = { "<CMD>lua require('jcommandpalette').command_palette()<CR>", "Command Palette" }
 }, {
     mode = "v"
 })

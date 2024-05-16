@@ -5,8 +5,10 @@
 --         Example:
 --             vim.o.cmdheight = 4
 --             print(vim.o.columns)
+
 -- Line numbers
 vim.o.number = true
+vim.o.relativenumber = true
 
 -- Disable mouse
 vim.o.mouse = ''
@@ -98,3 +100,5 @@ vim.o.laststatus = 3
 vim.o.autochdir = true
 
 vim.o.clipboard = "unnamed"
+
+vim.g.mapleader = " "

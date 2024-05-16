@@ -8,9 +8,10 @@ local M = {}
 
 M.TerragruntGrepInModule = function(opts)
     opts = opts or {}
+    local git_root = finddir('.git/..', expand('%:p:h').';')
     pickers.new(opts, {
         prompt_title = "Find Directory",
-        finder = finders.new_oneshot_job({ "fd", "--exact-depth=1", "--type=d", "--base-directory=modules/terragrunt",
+        finder = finders.new_oneshot_job({ "fd", "--exact-depth=1", "--type=d", "--base-directory=" .. git_root .. "/modules/terragrunt",
             "--strip-cwd-prefix" }),
         sorter = conf.generic_sorter(opts),
         attach_mappings = function(prompt_bufnr, map)
@@ -20,7 +21,7 @@ M.TerragruntGrepInModule = function(opts)
                 -- print(vim.inspect(selection[1]))
                 if selection ~= nil then
                     require('telescope.builtin').live_grep({
-                        cwd = "modules/terragrunt/" .. selection[1]
+                        cwd = git_root .. "/modules/terragrunt/" .. selection[1]
                     })
                 end
             end)

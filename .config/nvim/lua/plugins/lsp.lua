@@ -1,20 +1,4 @@
-local lsp_installer = require("nvim-lsp-installer")
-local lspconfig = require('lspconfig')
 local lspsaga = require('lspsaga')
-
-lsp_installer.on_server_ready(function(server)
-    local opts = {
-        -- capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    }
-
-    if server.name == "terraformls" then
-        opts.init_options = {
-            ignoreDirectoryNames = { ".terragrunt-cache", "haussmann", "internal", "monolith" }
-        }
-    end
-
-    server:setup(opts)
-end)
 
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = 'rounded'

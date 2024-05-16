@@ -43,7 +43,3 @@ vim.cmd([[
     ino <silent><expr> <S-Tab> pumvisible() ? "<C-n><C-y>" : "<S-Tab>"
     ino <silent><expr> <CR>    pumvisible() ? "<C-n><C-y>" : "<CR>"
 ]])
-
--- Ensure d and D copy to the blackhole register (i.e don't copy) to prevent altering the current buffer content
-vim.keymap.set('n', 'd', '"_d')
-vim.keymap.set('n', 'D', '"_D')

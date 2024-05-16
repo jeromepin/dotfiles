@@ -183,7 +183,7 @@ local function path_from_git_root()
 
     local full_path_to_file = vim.fn.expand('%:p')
     local git_root_path = vim.fn.fnamemodify(vim.fn.finddir(".git"), ":p:h:h")
-    local path_from_git_root, _ = string.replace(full_path_to_file, git_root_path, "")
+    local path_from_git_root, _ = string.replace(full_path_to_file, git_root_path .. "/", "")
     return path_from_git_root
 end
 
@@ -223,7 +223,30 @@ ins_left {
 }
 
 -- current line and column
-ins_right { 'location' }
+ins_right {
+    'location',
+    fmt = function(str)
+        function split(source, sep)
+            local result, i = {}, 1
+            while true do
+                local a, b = source:find(sep)
+                if not a then break end
+                local candidat = source:sub(1, a - 1)
+                if candidat ~= "" then 
+                    result[i] = candidat
+                end i=i+1
+                source = source:sub(b + 1)
+            end
+            if source ~= "" then 
+                result[i] = source
+            end
+            return result
+        end
+
+        local result = split(str, ":")
+        return "Ln " .. result[1] .. ", Col " .. result[2]
+    end,
+}
 
 -- Percentage of file scrolled
 ins_right { 'progress', color = { fg = colors.fg, gui = 'bold' } }

@@ -12,6 +12,8 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+vim.loader.enable()
+
 require 'plugins'
 
 -- https://github.com/nanotee/nvim-lua-guide#setting-up-linterslanguage-servers

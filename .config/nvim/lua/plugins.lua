@@ -29,15 +29,7 @@ require("lazy").setup({
     -- Vim & UI
     {
         -- colorscheme
-        {
-            'tomasr/molokai',
-            priority = 1000,
-            lazy = false,
-            -- config = function()
-            --     vim.cmd('colorscheme molokai')
-            -- end
-        },
-
+        -- https://github.com/navarasu/onedark.nvim
         {
            "navarasu/onedark.nvim",
             priority = 1000,
@@ -47,31 +39,21 @@ require("lazy").setup({
             end
         },
 
-        -- Speed up loading Lua modules in Neovim to improve startup time
-        {
-            'lewis6991/impatient.nvim',
-            tag = 'v0.1',
-        },
-
         -- adds indentation guides to all lines
         {
             'lukas-reineke/indent-blankline.nvim',
+            version = '3.5.*',
+            main = "ibl",
             config = function()
-                require("indent_blankline").setup { show_current_context = true, show_current_context_start = true, }
+                require("ibl").setup {}
             end,
-            tag = 'v2.12.1',
-        },
-
-
-        -- Fix CursorHold Performance
-        {
-            'antoinemadec/FixCursorHold.nvim',
         },
 
         -- Orgmode clone written in Lua
+        -- https://github.com/nvim-orgmode/orgmode
         {
             'nvim-orgmode/orgmode',
-            -- tag = '0.2.1',
+            version = '0.3.*',
             config = function()
                 require('plugins.orgmode')
             end,
@@ -86,7 +68,7 @@ require("lazy").setup({
         -- https://github.com/akinsho/bufferline.nvim
         {
             'akinsho/bufferline.nvim',
-            tag = 'v3.1.0',
+            version = '4.*',
             dependencies = { 'nvim-tree/nvim-web-devicons' },
             config = function()
                 require("bufferline").setup {
@@ -105,17 +87,20 @@ require("lazy").setup({
         },
 
         -- Neovim plugin with collection of minimal, independent, and fast Lua modules
+        -- https://github.com/echasnovski/mini.nvim
         {
             'echasnovski/mini.nvim',
-            tag = 'v0.3.0',
+            version = '0.3.*',
             config = function()
                 require('plugins.mini')
             end,
         },
 
         -- displays a popup with possible keybindings of the command you started typing
+        -- https://github.com/folke/which-key.nvim
         {
             'folke/which-key.nvim',
+            version = '1.6.*',
             config = function()
                 require('plugins.whichkey')
             end,
@@ -140,12 +125,43 @@ require("lazy").setup({
             config = function()
                 require('plugins.statusline')
             end,
+        },
+
+        -- displays available actions like 'Go to Definition' and 'Go to Reference(s)' when available
+        -- https://github.com/roobert/action-hints.nvim
+        {
+            "roobert/action-hints.nvim",
+            config = function()
+                require("action-hints").setup({
+                    template = {
+                        definition = { text = " ⊛", color = "#add8e6" },
+                        references = { text = " ↱%s", color = "#ff6666" },
+                    },
+                    use_virtual_text = true,
+                })
+            end,
+        },
+
+        -- apply window-local or global highlights on mode changes or on window entering/leaving.
+        -- https://github.com/rasulomaroff/reactive.nvim
+        {
+            'rasulomaroff/reactive.nvim',
+            config = function()
+                require('reactive').setup {
+                    builtin = {
+                      cursorline = true,
+                      cursor = true,
+                      modemsg = true
+                    }
+                }
+            end,
         }
     },
 
     -- Lanugages
     {
         -- Neovim's syntax parser and highlighter
+        -- https://github.com/nvim-treesitter/nvim-treesitter
         {
             'nvim-treesitter/nvim-treesitter',
             build = ':TSUpdate',
@@ -166,13 +182,15 @@ require("lazy").setup({
         },
 
         -- A simple, easy-to-use Vim alignment plugin
+        -- https://github.com/junegunn/vim-easy-align
         {
             'junegunn/vim-easy-align',
-            tag = '2.10.0',
+            version = '2.10.*',
             event = "InsertEnter",
         },
 
         -- A comment toggler for Neovim, written in Lua
+        -- https://github.com/terrortylor/nvim-comment
         {
             'terrortylor/nvim-comment',
             config = function()
@@ -181,15 +199,27 @@ require("lazy").setup({
         },
 
         -- Auto close pairs
+        -- https://github.com/cohama/lexima.vim
         {
             'cohama/lexima.vim',
-            commit = 'b1e1b1bde07c1efc97288c98c5912eaa644ee6e1',
+            version = '2.*',
             event = {'InsertEnter','CmdlineEnter'},
             -- config = function()
             --     require('pairs'):setup()
             -- end,
-        }
+        },
 
+        -- basic vim/terraform integration
+        -- https://github.com/hashivim/vim-terraform
+        {
+            'hashivim/vim-terraform',
+            dependencies = { 'godlygeek/tabular' },
+            config = function()
+                -- https://github.com/hashivim/vim-terraform/blob/master/doc/terraform.txt
+                vim.g.terraform_align = 1
+                vim.g.terraform_fmt_on_save = 1
+            end,
+        }
     },
 
     -- Git
@@ -197,7 +227,7 @@ require("lazy").setup({
         -- Super fast git decorations
         {
             'lewis6991/gitsigns.nvim',
-            tag = 'v0.6',
+            version = '0.8.*',
             dependencies = { 'nvim-lua/plenary.nvim' },
             config = function()
                 require('gitsigns').setup()
@@ -205,19 +235,23 @@ require("lazy").setup({
             event = "BufRead",
         },
 
-        -- A Git wrapper so awesome, it should be illegal
+        -- Single tabpage interface for easily cycling through diffs
+        -- https://github.com/sindrets/diffview.nvim
         {
-            'tpope/vim-fugitive',
-            tag = 'v3.6',
-            dependencies = { 'tpope/vim-rhubarb' }
+            'sindrets/diffview.nvim',
+            config = function()
+                vim.opt.fillchars:append { diff = "╱" }
+            end
         },
 
         -- Magit for NeoVim
+        -- https://github.com/NeogitOrg/neogit
         {
-            'TimUntersberger/neogit',
+            'NeogitOrg/neogit',
             dependencies = {
-                'nvim-lua/plenary.nvim',
-                'sindrets/diffview.nvim',
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim",
+                "sindrets/diffview.nvim", -- Diff integration
             },
             config = function()
                 require('plugins.git')
@@ -228,9 +262,10 @@ require("lazy").setup({
     -- Telescope & File exploration/browser
     {
         -- highly extendable fuzzy finder over lists
+        -- https://github.com/nvim-telescope/telescope.nvim
         {
             'nvim-telescope/telescope.nvim',
-            tag = 'nvim-0.5.1',
+            version = '0.1.*',
             dependencies = {
                 'nvim-lua/popup.nvim',
                 'nvim-lua/plenary.nvim',
@@ -250,15 +285,8 @@ require("lazy").setup({
             build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
         },
 
-        -- Terminal manager for (neo)vim
-        {
-            'voldikss/vim-floaterm',
-            config = function()
-                vim.g.floaterm_opener = 'edit'
-            end,
-        },
-
         -- An incremental narrowing engine for (neo)vim inspired by emacs helm/ivy/ido
+        -- https://github.com/conweller/findr.vim
         {
             'conweller/findr.vim',
         },
@@ -285,49 +313,21 @@ require("lazy").setup({
     -- Search and replace
     {
         {
-            'brooth/far.vim',
-            commit = '611d9c221c370a64f582c3dc4c38f9ea7b29f441',
-        },
-
-        {
-            'windwp/nvim-spectre',
+            'MagicDuck/grug-far.nvim',
+            commit = 'da8b0d56d4d74982bd852b2baffec222b08adc75',
             config = function()
-                require('spectre').setup()
-            end,
-            dependencies = {
-                'nvim-lua/plenary.nvim',
-            },
-        }
+                require('grug-far').setup({});
+              end
+        },
     },
 
     -- Completion & LSP
     {
-        -- seamlessly manage LSP servers with :LspInstall
-        {
-            'williamboman/nvim-lsp-installer',
-            commit = 'e79f0a516e2e2a33a4493df4b9eac47013f37b69',
-        },
-
-        -- -- nvim-cmp & plugins
-        -- {
-        --     'hrsh7th/nvim-cmp',
-        --     config = function()
-        --         require('plugins.completion')
-        --     end,
-        --     dependencies = {
-        --         'onsails/lspkind-nvim',
-        --         'neovim/nvim-lspconfig',
-        --         'hrsh7th/cmp-cmdline',
-        --         'hrsh7th/cmp-buffer',
-        --         'hrsh7th/cmp-nvim-lsp',
-        --         'hrsh7th/cmp-path',
-        --     },
-        -- },
-
         -- A collection of common configurations for Neovim's built-in language server client.
+        -- https://github.com/neovim/nvim-lspconfig
         {
             'neovim/nvim-lspconfig',
-            tag = 'v0.1.2',
+            version = '0.1.*',
             dependencies = {
                 -- A tree like view for symbols in Neovim using LSP.
                 'simrat39/symbols-outline.nvim'
@@ -335,24 +335,23 @@ require("lazy").setup({
             config = function()
                 require('plugins.lsp')
             end,
-            -- After COQ because plugins.lsp requires coq
-            after = 'nvim-lsp-installer',
         },
 
         -- A light-weight lsp plugin based on neovim built-in lsp with highly a performant UI
+        -- https://github.com/kkharji/lspsaga.nvim
         {
             'tami5/lspsaga.nvim',
             dependencies = { 'neovim/nvim-lspconfig' },
             config = function()
                 require('lspsaga').init_lsp_saga()
             end,
-            -- branch = 'nvim6.0' or 'nvim51'
         },
 
         -- A pretty diagnostics, references, telescope results, quickfix and location list
         -- https://github.com/folke/trouble.nvim
         {
             "folke/trouble.nvim",
+            version = '2.*',
             dependencies = { "nvim-tree/nvim-web-devicons" },
         },
 
@@ -360,6 +359,7 @@ require("lazy").setup({
         -- https://github.com/williamboman/mason.nvim
         {
             'williamboman/mason.nvim',
+            version = '1.10.*',
             config = function()
                 require("mason").setup()
             end,
@@ -369,11 +369,18 @@ require("lazy").setup({
         -- https://github.com/williamboman/mason-lspconfig.nvim
         {
             'williamboman/mason-lspconfig.nvim',
-            dependencies = { 'neovim/nvim-lspconfig' },
+            version = '1.*',
+            dependencies = {
+                'neovim/nvim-lspconfig',
+                'williamboman/mason.nvim',
+            },
             config = function()
                 require("mason-lspconfig").setup {
                     ensure_installed = {
                         "pyright",
+                        "ruff",
+                        "ruff_lsp",
+                        "zls",
                         -- "terraform-ls"
                     },
                 }
@@ -382,14 +389,15 @@ require("lazy").setup({
     },
 
     -- Snippets
+    -- https://github.com/L3MON4D3/LuaSnip
     {
         'L3MON4D3/LuaSnip',
+        version = '2.*',
         config = function()
             require('plugins.snippets')
         end,
         dependencies = {
             'honza/vim-snippets',
-            -- { 'rafamadriz/friendly-snippets' },
         }
     },
 
@@ -399,7 +407,9 @@ require("lazy").setup({
         -- https://github.com/stevearc/oil.nvim
         {
             'stevearc/oil.nvim',
-            config = function() require('oil').setup() end
+            version = '2.*',
+            config = function() require('oil').setup() end,
+            dependencies = { "nvim-tree/nvim-web-devicons" },
         },
     },
 

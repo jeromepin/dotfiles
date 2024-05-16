@@ -35,3 +35,17 @@ vim.cmd([[
 
     augroup END 
 ]])
+
+-- Hybrid (relative + absolute) numbering is always on by settings 
+vim.cmd([[
+    augroup numbertoggle
+
+    " When focusing a buffer, enable the relative line numbering
+    " This command is important to reset to default when we focus a buffer again after the other command has been executed (otherwise nornu stays)
+    autocmd BufEnter,FocusGained,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+
+    " When losing focus over a buffer, disable the relative line numbering to only have absolute numbers
+    autocmd BufLeave,FocusLost,WinLeave   * if &nu                  | set nornu | endif
+    
+    augroup END 
+]])

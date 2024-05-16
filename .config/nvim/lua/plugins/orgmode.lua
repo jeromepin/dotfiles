@@ -1,5 +1,3 @@
-require('orgmode').setup_ts_grammar()
-
 -- Doc : https://github.com/nvim-orgmode/orgmode/blob/master/DOCS.md#global-settings
 -- Reference : https://github.com/nvim-orgmode/orgmode/blob/master/lua/orgmode/config/defaults.lua#L50
 
@@ -50,7 +48,7 @@ require('orgmode').setup({
 
     org_default_notes_file = "~/org/refile.org",
 
-    org_indent_mode = "noindent",
+    org_startup_indented = "noindent",
 
     org_todo_keywords = {'TODO(t)', 'WAITING(w)', '|', 'DONE(d)', 'DELEGATED(e)'},
     org_todo_keyword_faces = {
