@@ -22,6 +22,8 @@
     casks = [
       "firefox"
       "iterm2"
+      "lunar"
+      "music-decoy"
       "orbstack"
       "rectangle"
       "slack"
