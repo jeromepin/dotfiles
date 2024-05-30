@@ -56,6 +56,7 @@
       unstable.git-absorb
       unstable.gitu
       unstable.hexyl
+      unstable.hyperfine
       unstable.htop
       unstable.jq
       unstable.kubectx
