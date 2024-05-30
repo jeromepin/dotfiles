@@ -323,6 +323,24 @@ require("lazy").setup({
 
     -- Completion & LSP
     {
+        -- A completion plugin for neovim coded in Lua.
+        -- https://github.com/hrsh7th/nvim-cmp
+        {
+            'hrsh7th/nvim-cmp',
+            dependencies = {
+                'neovim/nvim-lspconfig',
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-path',
+                'hrsh7th/cmp-cmdline',
+                'nvim-orgmode/orgmode',
+                'lukas-reineke/cmp-rg',
+            },
+            config = function()
+                require('plugins.completion')
+            end,
+        },
+
         -- A collection of common configurations for Neovim's built-in language server client.
         -- https://github.com/neovim/nvim-lspconfig
         {
