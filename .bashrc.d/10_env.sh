@@ -21,3 +21,5 @@ PATH=$HOME/bin:$PATH
 export PATH
 
 eval "$(fzf --bash)"
+eval "$(kubectl completion bash)"
+complete -F __start_kubectl k
