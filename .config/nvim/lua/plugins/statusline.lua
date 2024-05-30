@@ -1,4 +1,5 @@
 local lualine = require('lualine')
+local lspconfig = require('lspconfig')
 
 -- Color table for highlights
 -- stylua: ignore
@@ -181,10 +182,22 @@ local function path_from_git_root()
             ))
     end
 
+    function exists(file)
+        local f = io.open(file)
+        return f and io.close(f)
+    end
+
+    function find_git_root(dir)
+        while #dir>0 and not exists(dir .. "/.git") do
+            dir=dir:gsub("/+[^/]*$","")
+        end
+        return #dir>0 and dir
+    end
+
     local full_path_to_file = vim.fn.expand('%:p')
-    local git_root_path = vim.fn.fnamemodify(vim.fn.finddir(".git"), ":p:h:h")
-    local path_from_git_root, _ = string.replace(full_path_to_file, git_root_path .. "/", "")
-    return path_from_git_root
+    local git_root_path = find_git_root(full_path_to_file)
+    local path, _ = string.replace(full_path_to_file, git_root_path .. "/", "")
+    return path
 end
 
 -- filename/path
