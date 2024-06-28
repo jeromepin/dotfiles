@@ -29,14 +29,10 @@
       kubectl
       kubelogin
       kubernetes-helm
-      neovim
-      nodejs_21 # for neovim
-      nodePackages.neovim # for neovim
       pipx
       postgresql_16
       python3
       python311Packages.pip
-      python311Packages.pynvim # for neovim
       sops
       starship
       tree
@@ -44,7 +40,7 @@
       unixtools.watch
       wireguard-go
       wireguard-tools
-      zig
+      zig_0_11
     ] ++ [
       unstable.bat
       unstable.cargo
@@ -65,8 +61,12 @@
       unstable.jq
       unstable.kubectx
       unstable.most
+      unstable.neovim
+      unstable.nodejs_22 # for neovim
+      unstable.nodePackages.neovim # for neovim
       unstable.pdm
       unstable.pre-commit
+      unstable.python311Packages.pynvim # for neovim
       unstable.python311Packages.virtualenv # for pdm
       unstable.ripgrep
       unstable.wabt
