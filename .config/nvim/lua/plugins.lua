@@ -49,21 +49,6 @@ require("lazy").setup({
             end,
         },
 
-        -- Orgmode clone written in Lua
-        -- https://github.com/nvim-orgmode/orgmode
-        {
-            'nvim-orgmode/orgmode',
-            version = '0.3.*',
-            config = function()
-                require('plugins.orgmode')
-            end,
-            after = 'nvim-treesitter',
-            dependencies = {
-                'akinsho/org-bullets.nvim',
-                'nvim-treesitter/nvim-treesitter',
-            }
-        },
-
         -- Tabline
         -- https://github.com/akinsho/bufferline.nvim
         {
@@ -332,8 +317,6 @@ require("lazy").setup({
                 'hrsh7th/cmp-nvim-lsp',
                 'hrsh7th/cmp-buffer',
                 'hrsh7th/cmp-path',
-                'hrsh7th/cmp-cmdline',
-                'nvim-orgmode/orgmode',
                 'lukas-reineke/cmp-rg',
             },
             config = function()
