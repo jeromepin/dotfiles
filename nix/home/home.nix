@@ -47,6 +47,7 @@
       zig
     ] ++ [
       unstable.bat
+      unstable.cargo
       unstable.coreutils
       unstable.delta
       unstable.difftastic
@@ -80,7 +81,7 @@
         recursive = true;
       };
       ".bashrc".source = ../../.bashrc;
-      ".config/fish/completions/fzf.fish".source = ../../.config/fish/completions/fzf.fish;
+      # ".config/fish/completions/fzf.fish".source = ../../.config/fish/completions/fzf.fish;
       ".config/fish/conf.d/10_aliases.fish".source = ../../.config/fish/conf.d/10_aliases.fish;
       ".config/fish/conf.d/20_env.fish".source = ../../.config/fish/conf.d/20_env.fish;
       ".config/fish/conf.d/30_path.fish".source = ../../.config/fish/conf.d/30_path.fish;
