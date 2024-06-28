@@ -32,6 +32,22 @@
     ];
   };
 
+  # From https://www.danielcorin.com/til/nix-darwin/launch-agents/
+  launchd = {
+    user = {
+      agents = {
+        # Ensure the private key is loaded into the keychain on session login
+        add-to-ssh-agent = {
+          command = "ssh-add --apple-use-keychain";
+          serviceConfig = {
+            KeepAlive = false;
+            RunAtLoad = true;
+          };
+        };
+      };
+    };
+  };
+
   nix = {
     extraOptions = ''
       extra-platforms = x86_64-darwin aarch64-darwin
