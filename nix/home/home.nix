@@ -18,6 +18,7 @@
     # https://search.nixos.org/packages
     packages = with pkgs; [
       bash-completion
+      cmake
       file
       getopt
       git-crypt
@@ -58,6 +59,7 @@
       unstable.hexyl
       unstable.hyperfine
       unstable.htop
+      unstable.ijq
       unstable.jq
       unstable.kubectx
       unstable.most
@@ -69,6 +71,7 @@
       unstable.python311Packages.pynvim # for neovim
       unstable.python311Packages.virtualenv # for pdm
       unstable.ripgrep
+      unstable.serpl
       unstable.wabt
       unstable.wasmtime
       unstable.wget
