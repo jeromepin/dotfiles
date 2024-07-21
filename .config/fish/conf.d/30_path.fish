@@ -1,14 +1,19 @@
+# Paths are prepended to $PATH, therefore deeper in this file means lower "priority"
+
 # Nix
-fish_add_path $HOME/.nix-profile/bin
-fish_add_path /etc/profiles/per-user/jpin/bin
-fish_add_path /run/current-system/sw/bin
-fish_add_path /nix/var/nix/profiles/default/bin
+fish_add_path --move $HOME/.nix-profile/bin
+fish_add_path --move /etc/profiles/per-user/$USER/bin
+fish_add_path --move /run/current-system/sw/bin
+fish_add_path --move /nix/var/nix/profiles/default/bin
 
 # Homebrew
-fish_add_path /opt/homebrew/bin
+fish_add_path --move /opt/homebrew/bin
 
 # Cargo-installed binaries
-fish_add_path $HOME/.cargo/bin
+fish_add_path --move $HOME/.cargo/bin
+
+# OrbStack's binaries (docker)
+fish_add_path --move $HOME/.orbstack/bin/docker
 
 # Personal scripts
-fish_add_path $HOME/bin
+fish_add_path --move $HOME/bin
