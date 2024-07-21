@@ -21,6 +21,7 @@
     brews = [];
     casks = [
       "firefox"
+      "google-chrome"
       "iterm2"
       "lunar"
       "music-decoy"
