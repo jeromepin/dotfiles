@@ -39,11 +39,29 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               verbose = false;
-              users.jpin = import ./home/home.nix;
+              users.jpin = import ./home/218300622L.nix;
             };
             users.users.jpin = {
               name = "jpin";
               home = "/Users/jpin";
+            };
+          }
+        ];
+      };
+      "Jeromes-MacBook-Air" = nix-darwin.lib.darwinSystem {
+        modules = [
+          ./darwin/darwin.nix
+          home-manager.darwinModules.home-manager {
+            home-manager = {
+              extraSpecialArgs = { inherit unstable; };
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              verbose = false;
+              users.jerome = import ./home/Jeromes-MacBook-Air.nix;
+            };
+            users.users.jerome = {
+              name = "jerome";
+              home = "/Users/jerome";
             };
           }
         ];
