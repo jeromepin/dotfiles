@@ -30,6 +30,7 @@
       "slack"
       "spotify"
       "visual-studio-code"
+      "vlc"
     ];
   };
 
