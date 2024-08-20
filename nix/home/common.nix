@@ -72,6 +72,10 @@
         recursive = true;
       };
       ".config/starship.toml".source = ../../.config/starship.toml;
+      ".config/wezterm" = {
+        source = ../../.config/wezterm;
+        recursive = true;
+      };
       ".gitconfig".source = ../../.gitconfig;
       ".gitignore".source = ../../global_gitignore;
       ".inputrc".source = ../../.inputrc;

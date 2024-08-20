@@ -31,6 +31,7 @@
       "spotify"
       "visual-studio-code"
       "vlc"
+      "wezterm"
     ];
   };
 
