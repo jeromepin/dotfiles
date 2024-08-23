@@ -1,7 +1,18 @@
--- Import the wezterm module
 local wezterm = require 'wezterm'
--- Creates a config object which we will be adding our config to
 local config = wezterm.config_builder()
+
+function file_exists(name)
+  local f = io.open(name, "r")
+  if f ~= nil then io.close(f) return true else return false end
+end
+
+local constants = {
+  default_cwd = wezterm.home_dir
+}
+
+if file_exists(wezterm.config_dir .. '/wezterm_local.lua') then
+  constants = require('wezterm_local').constants()  
+end
 
 -- https://wezfurlong.org/wezterm/colorschemes/o/index.html
 config.color_scheme = 'One Half Black (Gogh)'
@@ -71,15 +82,25 @@ config.default_cursor_style = 'SteadyBar'
 config.window_decorations = 'RESIZE'
 
 config.default_prog = { '/etc/profiles/per-user/jpin/bin/fish' }
+config.default_cwd = constants.default_cwd
 
 -- Table mapping keypresses to actions
 config.keys = {
+  -- CMD+t is already assigned to SpawnCommandInNewTab but now we enforce the cwd
+  {
+    key = 't',
+    mods = 'CMD',
+    action = wezterm.action.SpawnCommandInNewTab {
+      cwd = constants.default_cwd,
+    },
+  },
+
   -- Pressing CMD+, opens Wezterm's configuration in Neovim
   {
     key = ',',
     mods = 'CMD',
     action = wezterm.action.SpawnCommandInNewTab {
-      cwd = wezterm.home_dir,
+      cwd = constants.default_cwd,
       args = { '/etc/profiles/per-user/jpin/bin/nvim', wezterm.config_file },
     },
   },
