@@ -85,7 +85,12 @@ require("lazy").setup({
         -- https://github.com/folke/which-key.nvim
         {
             'folke/which-key.nvim',
-            version = '1.6.*',
+            version = '3.3.*',
+            event = "VeryLazy",
+            dependencies = {
+                "nvim-tree/nvim-web-devicons",
+                "echasnovski/mini.icons",
+            },
             config = function()
                 require('plugins.whichkey')
             end,
