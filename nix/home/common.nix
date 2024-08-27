@@ -6,6 +6,8 @@
       bash-completion
       cmake
       file
+      fira-code
+      fira-code-nerdfont
       getopt
       gnused
       gnupg

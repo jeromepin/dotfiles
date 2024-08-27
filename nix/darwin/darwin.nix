@@ -13,6 +13,11 @@
     pkgs.home-manager
   ];
 
+  fonts.packages = [
+    pkgs.fira-code
+    pkgs.fira-code-nerdfont
+  ];
+
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
