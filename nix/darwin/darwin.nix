@@ -83,21 +83,28 @@
 
   # Use TouchID to sudo
   security.pam.enableSudoTouchIdAuth = true;
-  system.defaults.dock.orientation = "bottom"; # test
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
-  # Not working
+  # Inspiration from https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
   system = {
-    # defaults = {
-    #   dock = {
-    #     autohide = true;
-    #     orientation = "left"; # For test purpose
+    # This should avoid a logout/login cycle to take into account system.* changes
+    activationScripts.postUserActivation.text = ''
+      #! /run/current-system/sw/bin/bash
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+      killall Finder
+      killall Dock
+    '';
+
+    defaults = {
+      dock = {
+        autohide = true;
+        orientation = "bottom";
     #     show-process-indicators = false;
     #     show-recents = false;
     #     static-only = true;
-    #   };
+      };
     #   finder = {
     #     AppleShowAllExtensions = true;
     #     ShowPathbar = true;
@@ -108,7 +115,7 @@
     #     "com.apple.keyboard.fnState" = true;
     #     NSAutomaticWindowAnimationsEnabled = false;
     #   };
-    # };
+    };
     
     # Used for backwards compatibility, please read the changelog before changing.
     # $ darwin-rebuild changelog

@@ -21,6 +21,7 @@
       unixtools.watch
       zig_0_11
     ] ++ [
+      unstable.ast-grep
       unstable.bat
       unstable.cargo
       unstable.coreutils
@@ -34,6 +35,7 @@
       unstable.git
       unstable.git-absorb
       unstable.gitu
+      unstable.glow
       unstable.hexyl
       unstable.hyperfine
       unstable.htop
