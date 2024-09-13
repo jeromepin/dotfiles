@@ -136,6 +136,7 @@ require("lazy").setup({
         -- https://github.com/rasulomaroff/reactive.nvim
         {
             'rasulomaroff/reactive.nvim',
+            event = "InsertEnter",
             config = function()
                 require('reactive').setup {
                     builtin = {
@@ -144,6 +145,29 @@ require("lazy").setup({
                       modemsg = true
                     }
                 }
+            end,
+        },
+
+        -- A pretty diagnostics, references, telescope results, quickfix and location list
+        -- https://github.com/folke/trouble.nvim
+        {
+            'folke/trouble.nvim',
+            event = "VeryLazy",
+            version = '3.4.*',
+            opts = {},
+            cmd = "Trouble",
+            keys = {},
+            dependencies = { "nvim-tree/nvim-web-devicons" },
+        },
+
+        {
+            "gh-liu/fold_line.nvim",
+            event = "VeryLazy",
+            init = function()
+                vim.g.fold_line_char_open_start = "╭"
+                vim.g.fold_line_char_open_end = "╰"
+                vim.api.nvim_set_hl(0, "FoldLine", { fg = "Gray" })
+                vim.api.nvim_set_hl(0, "FoldLineCurrent", { fg = "Yellow" })
             end,
         }
     },
@@ -177,15 +201,6 @@ require("lazy").setup({
             'junegunn/vim-easy-align',
             version = '2.10.*',
             event = "InsertEnter",
-        },
-
-        -- A comment toggler for Neovim, written in Lua
-        -- https://github.com/terrortylor/nvim-comment
-        {
-            'terrortylor/nvim-comment',
-            config = function()
-                require('plugins.comment')
-            end,
         },
 
         -- Auto close pairs
@@ -274,30 +289,6 @@ require("lazy").setup({
             'nvim-telescope/telescope-fzf-native.nvim',
             build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
         },
-
-        -- An incremental narrowing engine for (neo)vim inspired by emacs helm/ivy/ido
-        -- https://github.com/conweller/findr.vim
-        {
-            'conweller/findr.vim',
-        },
-
-        -- A tiny project + sessions manager
-        -- https://github.com/GnikDroy/projections.nvim
-        {
-            'gnikdroy/projections.nvim',
-            dependencies = { 'nvim-telescope/telescope.nvim' },
-            branch = 'pre_release',
-            config = function()
-                require("projections").setup({
-                    workspaces = {
-                        { "~/git/github/lumapps",   { ".git" } },
-                        { "~/git/github/jeromepin", { ".git" } },
-                    },
-                })
-
-                require('telescope').load_extension('projections')
-            end
-        },
     },
 
     -- Search and replace
@@ -343,24 +334,6 @@ require("lazy").setup({
             end,
         },
 
-        -- A light-weight lsp plugin based on neovim built-in lsp with highly a performant UI
-        -- https://github.com/kkharji/lspsaga.nvim
-        {
-            'tami5/lspsaga.nvim',
-            dependencies = { 'neovim/nvim-lspconfig' },
-            config = function()
-                require('lspsaga').init_lsp_saga()
-            end,
-        },
-
-        -- A pretty diagnostics, references, telescope results, quickfix and location list
-        -- https://github.com/folke/trouble.nvim
-        {
-            "folke/trouble.nvim",
-            version = '2.*',
-            dependencies = { "nvim-tree/nvim-web-devicons" },
-        },
-
         -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
         -- https://github.com/williamboman/mason.nvim
         {
@@ -383,15 +356,12 @@ require("lazy").setup({
             config = function()
                 require("mason-lspconfig").setup {
                     ensure_installed = {
-                        "pyright",
                         "ruff",
-                        "ruff_lsp",
                         "zls",
-                        -- "terraform-ls"
                     },
                 }
             end
-        },
+        }
     },
 
     -- Snippets
