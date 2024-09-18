@@ -224,6 +224,15 @@ require("lazy").setup({
                 vim.g.terraform_align = 1
                 vim.g.terraform_fmt_on_save = 1
             end,
+        },
+
+        {
+            "OXY2DEV/markview.nvim",
+            lazy = false,
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "nvim-tree/nvim-web-devicons"
+            }
         }
     },
 

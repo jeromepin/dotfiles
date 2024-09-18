@@ -1,5 +1,19 @@
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "bash", "go", "hcl", "json", "org", "python", "query", "terraform", "yaml" },
+  ensure_installed = {
+    "bash",
+    "go",
+    "hcl",
+    "html",
+    "json",
+    "latex",
+    "markdown",
+    "markdown_inline",
+    "org",
+    "python",
+    "query",
+    "terraform",
+    "yaml"
+  },
 
   highlight = {
     enable = true,
