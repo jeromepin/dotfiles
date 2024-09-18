@@ -14,6 +14,10 @@ update:
 	cd nix/ && nix flake update --commit-lock-file
 	$(MAKE) install
 
+update-unstable:
+	cd nix/ && nix flake update nixpkgs-unstable --commit-lock-file
+	$(MAKE) install
+
 gc:
 	nix-store --gc
 	nix-collect-garbage
