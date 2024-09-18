@@ -30,6 +30,7 @@
       "iterm2"
       "lunar"
       "music-decoy"
+      "obsidian"
       "orbstack"
       "rectangle"
       "slack"

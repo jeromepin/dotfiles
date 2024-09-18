@@ -51,6 +51,7 @@
       unstable.python311Packages.virtualenv # for pdm
       unstable.ripgrep
       unstable.serpl
+      unstable.tree-sitter
       unstable.wabt
       unstable.wasmtime
       unstable.wget
