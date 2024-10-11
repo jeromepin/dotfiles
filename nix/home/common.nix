@@ -76,6 +76,7 @@
         source = ../../.config/nvim;
         recursive = true;
       };
+      ".config/.ripgreprc".source = ../../.config/.ripgreprc;
       ".config/starship.toml".source = ../../.config/starship.toml;
       ".config/wezterm" = {
         source = ../../.config/wezterm;

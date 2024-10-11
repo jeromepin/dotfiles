@@ -4,3 +4,4 @@ set -gx BAT_PAGER 'less -R'
 set -gx PAGER most
 set -gx FZF_DEFAULT_COMMAND 'fd --follow --exclude .git'
 set -gx GOPATH $HOME/go
+set -gx RIPGREP_CONFIG_PATH $HOME/.config/.ripgreprc
