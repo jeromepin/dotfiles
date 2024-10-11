@@ -6,6 +6,7 @@
     cae = commit --amend --no-edit
 	ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
 	d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
+	dc = diff --cached
     fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' origin/master.. | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup; };f"
     gen = "!f(){ git commit --message=\"$(git show-branch --no-name HEAD | sed -E 's/^[a-z]{1,5}/gen/')\"; };f"
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
@@ -18,7 +19,7 @@
     ru = remote update
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
     sri = "!f(){ git remote update && git stash && git rebase --interactive origin/${1:-master} && git stash pop; };f"
-	s = "!f(){ gitui; };f"
+	s = "!f(){ gitu; };f"
 	st = status
     unstage = reset HEAD --
     uncommit = reset HEAD~
