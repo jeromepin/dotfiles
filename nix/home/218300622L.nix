@@ -24,6 +24,7 @@ in
       gnupg
       (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
       gcsfuse
+      ipcalc
       kubectl
       kubelogin
       kubernetes-helm
