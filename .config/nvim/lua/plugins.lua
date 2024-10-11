@@ -158,17 +158,6 @@ require("lazy").setup({
             cmd = "Trouble",
             keys = {},
             dependencies = { "nvim-tree/nvim-web-devicons" },
-        },
-
-        {
-            "gh-liu/fold_line.nvim",
-            event = "VeryLazy",
-            init = function()
-                vim.g.fold_line_char_open_start = "╭"
-                vim.g.fold_line_char_open_end = "╰"
-                vim.api.nvim_set_hl(0, "FoldLine", { fg = "Gray" })
-                vim.api.nvim_set_hl(0, "FoldLineCurrent", { fg = "Yellow" })
-            end,
         }
     },
 
@@ -370,19 +359,6 @@ require("lazy").setup({
                     },
                 }
             end
-        }
-    },
-
-    -- Snippets
-    -- https://github.com/L3MON4D3/LuaSnip
-    {
-        'L3MON4D3/LuaSnip',
-        version = '2.*',
-        config = function()
-            require('plugins.snippets')
-        end,
-        dependencies = {
-            'honza/vim-snippets',
         }
     },
 

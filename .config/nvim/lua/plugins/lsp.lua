@@ -1,29 +1,9 @@
-local lspsaga = require('lspsaga')
-
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = 'rounded'
 })
 
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
     border = 'rounded'
-})
-
---------------------------------------------------------
---                     LSPSaga
---------------------------------------------------------
-lspsaga.setup({
-    finder_action_keys = {
-        open = "<CR>",
-        quit = "<Esc>"
-    },
-    code_action_keys = {
-        quit = "<Esc>",
-        exec = "<CR>"
-    },
-    rename_action_keys = {
-        quit = "<Esc>",
-        exec = "<CR>"
-    }
 })
 
 --------------------------------------------------------
@@ -43,3 +23,5 @@ vim.g.symbols_outline = {
         code_actions = "a"
     }
 }
+
+require('lspconfig').ruff.setup({})
