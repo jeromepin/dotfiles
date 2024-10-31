@@ -1,0 +1,10 @@
+--theme="Coldark-Dark"
+
+# Never use a pager (to prevent paging small files)
+--paging=never
+
+# Force colors, even when piping through a pager
+--color=always
+
+# Disable all niceties except syntax hightlight
+--style=plain

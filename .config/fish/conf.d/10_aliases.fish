@@ -1,3 +1,4 @@
+alias cat="bat"
 alias ls="eza"
 alias la="ls -la"
 alias sl="ls"
