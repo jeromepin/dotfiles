@@ -23,6 +23,7 @@
     ] ++ [
       unstable.ast-grep
       unstable.bat
+      unstable.bun
       unstable.cargo
       unstable.coreutils
       unstable.delta
