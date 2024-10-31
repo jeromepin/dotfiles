@@ -80,6 +80,8 @@ config.default_cursor_style = 'SteadyBar'
 
 -- Removes the title bar leaving only the tab bar
 config.window_decorations = 'RESIZE'
+-- This is a temporary hack to prevent MacOS lagging when using Mission Control. According to https://github.com/wez/wezterm/issues/2669
+config.window_background_opacity = 0.999
 
 config.default_prog = { '/etc/profiles/per-user/jpin/bin/fish' }
 config.default_cwd = constants.default_cwd
