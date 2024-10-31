@@ -42,36 +42,38 @@ def retrieve_secret(name: str, namespace: str, context: str):
 
     return json.loads(output.stdout.decode("utf-8").rstrip())
 
-def display_secret(secret, indent: int, decode_base64_values: bool = False):
-    def _color_key(key: str):
-        return "{}{}{}".format("\033[0;36m", key, "\033[0m")
+def display_secret(secret, indent: int, decode_base64_values: bool = False, output_coloring: bool = True):
+    def _color_key(key: str, output_coloring: bool = True):
+        return "{}{}{}".format("\033[0;36m", key, "\033[0m") if output_coloring else str(key)
 
     for k,v in secret.items():
         if v.__class__.__name__ == "dict":
             print("{}{}:".format(
                 " " * indent * 2,
-                _color_key(k)
+                _color_key(k, output_coloring)
             ))
-            display_secret(v, indent=indent+1, decode_base64_values=bool(k == "data"))
+            display_secret(v, indent=indent+1, decode_base64_values=bool(k == "data"), output_coloring=output_coloring)
         else:
             if decode_base64_values:
                 v = base64.b64decode(v).decode("utf-8").rstrip()
 
             print("{}{}: {}".format(
                 " " * indent * 2,
-                _color_key(k),
-                "{}{}{}".format("\033[0;32m", v, "\033[0m")
+                _color_key(k, output_coloring),
+                "{}{}{}".format("\033[0;32m", v, "\033[0m") if output_coloring else str(v)
             ))
 
 parser = argparse.ArgumentParser(description='Read and decode a kubernetes secret.')
 parser.add_argument('-n', '--namespace')
 parser.add_argument('-c', '--context')
+parser.add_argument('--no-color', action='store_true', help="Disable output coloring")
 parser.add_argument('secret', nargs="?")
 
 args = parser.parse_args()
 
 requested_context: str = args.context
 requested_namespace: str = args.namespace
+no_color: bool = args.no_color
 
 if requested_context is None:
     
@@ -96,4 +98,4 @@ else:
     secrets_list = subprocess.Popen(["kubectl", "get", "secrets", "-n", namespace, "--context", context, "--no-headers", "--output=custom-columns=:metadata.name"], stdout=subprocess.PIPE)
     secret = subprocess.check_output(('fzf'), stdin=secrets_list.stdout).decode("utf-8").rstrip()
 
-display_secret(retrieve_secret(secret, namespace=namespace, context=context), indent=0)
+display_secret(retrieve_secret(secret, namespace=namespace, context=context), indent=0, output_coloring=not no_color)
