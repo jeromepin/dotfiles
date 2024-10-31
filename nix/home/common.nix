@@ -50,10 +50,11 @@
       unstable.pdm
       unstable.pre-commit
       unstable.python311Packages.pynvim # for neovim
-      unstable.python311Packages.virtualenv # for pdm
       unstable.ripgrep
+      unstable.ruff
       unstable.serpl
       unstable.tree-sitter
+      unstable.uv
       unstable.wabt
       unstable.wasmtime
       unstable.wget
