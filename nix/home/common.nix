@@ -41,6 +41,7 @@
       unstable.hyperfine
       unstable.htop
       unstable.ijq
+      unstable.jujutsu
       unstable.jq
       unstable.most
       unstable.neovim
