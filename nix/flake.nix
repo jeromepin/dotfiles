@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    
+    # This should point to the channel (or commit) right before the one used by `nixpkgs.url` above
+    # as a way to keep some packages working until they work in the new channel.
+    nixpkgs-oldstable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
 
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
@@ -21,6 +25,7 @@
     nix-darwin,
     nixpkgs,
     nixpkgs-unstable,
+    nixpkgs-oldstable,
     home-manager,
     ...
   }@inputs :
@@ -31,8 +36,16 @@
   in {
     darwinConfigurations = {
       "218300622L" = nix-darwin.lib.darwinSystem {
+        specialArgs = {
+          # From https://nixos-and-flakes.thiscute.world/nixos-with-flakes/downgrade-or-upgrade-packages and https://nixos-and-flakes.thiscute.world/nixpkgs/overlays
+          nixpkgs-oldstable = import nixpkgs-oldstable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
         modules = [
           ./darwin/darwin.nix
+          (import ./overlays)
           home-manager.darwinModules.home-manager {
             home-manager = {
               extraSpecialArgs = { inherit unstable; };
