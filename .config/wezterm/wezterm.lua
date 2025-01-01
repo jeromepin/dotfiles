@@ -1,5 +1,6 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
+local username = os.getenv('USER') or os.getenv('LOGNAME') or os.getenv('USERNAME')
 
 function file_exists(name)
   local f = io.open(name, "r")
@@ -78,12 +79,17 @@ config.line_height = 1.2
 
 config.default_cursor_style = 'SteadyBar'
 
+scrollback_lines = 100000
+
 -- Removes the title bar leaving only the tab bar
 config.window_decorations = 'RESIZE'
 -- This is a temporary hack to prevent MacOS lagging when using Mission Control. According to https://github.com/wez/wezterm/issues/2669
 config.window_background_opacity = 0.999
 
-config.default_prog = { '/etc/profiles/per-user/jpin/bin/fish' }
+-- See https://www.reddit.com/r/neovim/comments/1gthknw/wezterm_max_fps_240_is_crazy/
+config.max_fps = 120
+
+config.default_prog = { '/etc/profiles/per-user/' .. username .. '/bin/fish' }
 config.default_cwd = constants.default_cwd
 
 -- Table mapping keypresses to actions
@@ -103,7 +109,7 @@ config.keys = {
     mods = 'CMD',
     action = wezterm.action.SpawnCommandInNewTab {
       cwd = constants.default_cwd,
-      args = { '/etc/profiles/per-user/jpin/bin/nvim', wezterm.config_file },
+      args = { '/etc/profiles/per-user/' .. username .. '/bin/nvim', wezterm.config_file },
     },
   },
 
