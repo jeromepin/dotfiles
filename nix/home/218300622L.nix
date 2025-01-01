@@ -35,6 +35,7 @@ in
     ] ++ [
       unstable.helix
       unstable.kubectx
+      unstable.nmap
     ];
 
     file = common.home.files;
