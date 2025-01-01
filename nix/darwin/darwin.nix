@@ -29,6 +29,7 @@
       "google-chrome"
       "iterm2"
       "lunar"
+      "mark-text"
       "music-decoy"
       "obsidian"
       "orbstack"
@@ -79,7 +80,7 @@
   programs = {
     zsh.enable = true;  # default shell on catalina
     bash.enable = true;
-    bash.enableCompletion = true;
+    bash.completion.enable = true;
   };
 
   # Use TouchID to sudo
