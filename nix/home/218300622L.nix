@@ -36,6 +36,9 @@ in
       unstable.helix
       unstable.kubectx
       unstable.nmap
+      unstable.vit
+      unstable.taskwarrior3
+      unstable.taskwarrior-tui
     ];
 
     file = common.home.files;
