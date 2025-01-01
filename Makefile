@@ -8,14 +8,14 @@ check:
 	nix flake check nix/
 
 install:
-	nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --flake nix/
+	nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --show-trace --flake nix/
 
 update:
-	cd nix/ && nix flake update --commit-lock-file
+	cd nix/ && nix flake update --commit-lock-file --show-trace
 	$(MAKE) install
 
 update-unstable:
-	cd nix/ && nix flake update nixpkgs-unstable --commit-lock-file
+	cd nix/ && nix flake update nixpkgs-unstable --commit-lock-file --show-trace
 	$(MAKE) install
 
 gc:
