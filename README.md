@@ -1,17 +1,25 @@
-dotfiles
-========
-
-# On a new machine
+## On a new machine
 
 * Clone this repository
 * Run `make init`
 * Run `make install`
 
+## Upgrading packages
 
-# Common issues
+If wanted, change the version in `nix/flake.nix` first
 
-## Nix : `Error: It seems there is already an App at '/Applications/...'`
+```
+make update # or update-unstable
+```
+
+## Common issues
+
+### Nix : `Error: It seems there is already an App at '/Applications/...'`
 
 ```
 brew remove --force --cask ...
 ```
+
+## Useful links
+
+- https://nixos-and-flakes.thiscute.world/preface
