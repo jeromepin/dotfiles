@@ -33,6 +33,7 @@ in
       wireguard-go
       wireguard-tools
     ] ++ [
+      unstable.helix
       unstable.kubectx
     ];
 
