@@ -45,6 +45,7 @@
       unstable.jq
       unstable.most
       unstable.neovim
+      unstable.nix-index
       unstable.nodejs_22 # for neovim
       unstable.nodePackages.neovim # for neovim
       unstable.pdm

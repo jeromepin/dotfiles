@@ -1,3 +1,4 @@
+set -gx NIX_PATH "nixpkgs=flake:nixpkgs"
 set -gx TERM xterm
 set -gx EDITOR "nvim"
 
