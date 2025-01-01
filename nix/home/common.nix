@@ -74,6 +74,7 @@
       ".config/fish/conf.d/50_shell.fish".source = ../../.config/fish/conf.d/50_shell.fish;
       ".config/fish/functions/base64.fish".source = ../../.config/fish/functions/base64.fish;
       ".config/fish/functions/misc.fish".source = ../../.config/fish/functions/misc.fish;
+      ".config/ghostty/config".source = ../../.config/ghostty/config;
       ".config/gitu".source = ../../.config/gitu;
       ".config/nvim" = {
         source = ../../.config/nvim;

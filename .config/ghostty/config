@@ -1,0 +1,54 @@
+#######################################################
+#                   APPEARANCE
+#######################################################
+# Default theme
+theme = "Monokai Soda"
+
+# Normal colors
+palette = 0=#212121
+palette = 1=#f82a71
+palette = 2=#a6e12d
+palette = 3=#fd971e
+palette = 4=#ae80fe
+palette = 5=#f82a71
+palette = 6=#66d8ee
+palette = 7=#cfcfc1
+
+# Bright colors
+palette = 8=#74705d
+palette = 9=#f82a71
+palette = 10=#a6e12d
+palette = 11=#e6db73
+palette = 12=#ae80fe
+palette = 13=#f82a71
+palette = 14=#66d8ee
+palette = 15=#f7f7f1
+
+background = #2e323b
+foreground = #cfcfc1
+cursor-color = #f8f8f0
+selection-background = #e1dfdf
+selection-foreground = #474747
+
+font-family = "FiraCode Nerd Font Mono Med"
+font-size = 14
+
+#######################################################
+#                   KEY BINDINGS
+#######################################################
+keybind = command+left=previous_tab
+keybind = command+right=next_tab
+
+#######################################################
+#                   STARTUP
+#######################################################
+# If true, new windows and tabs will inherit the working directory of the previously focused window.
+window-inherit-working-directory = false
+
+#######################################################
+#                   MISC
+#######################################################
+shell-integration = fish
+copy-on-select = true
+
+config-file = ?config_local
