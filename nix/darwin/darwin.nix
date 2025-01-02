@@ -26,6 +26,7 @@
     brews = [];
     casks = [
       "firefox"
+      "ghostty"
       "google-chrome"
       "lunar"
       "mark-text"
