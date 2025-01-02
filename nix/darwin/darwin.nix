@@ -27,7 +27,6 @@
     casks = [
       "firefox"
       "google-chrome"
-      "iterm2"
       "lunar"
       "mark-text"
       "music-decoy"
