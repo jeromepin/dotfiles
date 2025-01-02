@@ -31,7 +31,7 @@ selection-background = #e1dfdf
 selection-foreground = #474747
 
 font-family = "FiraCode Nerd Font Mono Med"
-font-size = 14
+font-size = 13
 
 #######################################################
 #                   KEY BINDINGS
