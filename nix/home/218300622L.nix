@@ -35,8 +35,8 @@ in
     ] ++ [
       unstable.basedpyright # Python LSP
       unstable.delve
+      unstable.eget
       unstable.helix
-      unstable.kubectx
       unstable.nmap
       unstable.pgcli
       unstable.rdap
