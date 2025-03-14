@@ -38,6 +38,7 @@ in
       unstable.helix
       unstable.kubectx
       unstable.nmap
+      unstable.pgcli
       unstable.terraform-ls # Terraform LSP
     ];
 
