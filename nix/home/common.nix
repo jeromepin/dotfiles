@@ -49,15 +49,12 @@
       unstable.nodejs_22 # for neovim
       # unstable.nodePackages.neovim # for neovim
       unstable.pdm
-      unstable.pre-commit
       unstable.python311Packages.pynvim # for neovim
       unstable.ripgrep
       unstable.ruff
       unstable.serpl
       unstable.tree-sitter
       unstable.uv
-      unstable.wabt
-      unstable.wasmtime
       unstable.wget
       unstable.zola
     ];
