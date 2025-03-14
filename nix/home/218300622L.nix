@@ -40,6 +40,7 @@ in
       unstable.nmap
       unstable.pgcli
       unstable.rdap
+      unstable.sttr
       unstable.terraform-ls # Terraform LSP
     ];
 
