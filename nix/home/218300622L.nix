@@ -26,6 +26,7 @@ in
       gcsfuse
       ipcalc
       kubectl
+      kubectx
       kubelogin
       kubernetes-helm
       postgresql_16
