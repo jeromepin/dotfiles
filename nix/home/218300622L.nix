@@ -33,12 +33,12 @@ in
       wireguard-go
       wireguard-tools
     ] ++ [
+      unstable.basedpyright # Python LSP
+      unstable.delve
       unstable.helix
       unstable.kubectx
       unstable.nmap
-      unstable.vit
-      unstable.taskwarrior3
-      unstable.taskwarrior-tui
+      unstable.terraform-ls # Terraform LSP
     ];
 
     file = common.home.files;
