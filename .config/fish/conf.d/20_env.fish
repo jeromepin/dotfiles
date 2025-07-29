@@ -2,10 +2,10 @@ set -gx NIX_PATH "nixpkgs=flake:nixpkgs"
 set -gx TERM xterm
 set -gx EDITOR hx
 
-set -gx BAT_PAGER "most"
+set -gx BAT_PAGER most
 set -gx PAGER "less -eiRMX"
-set -gx MANPAGER "most"
-set -gx MANROFFOPT "-c"
+set -gx MANPAGER most
+set -gx MANROFFOPT -c
 
 set -gx FZF_DEFAULT_COMMAND 'fd --follow --exclude .git'
 set -gx GOPATH $HOME/go
