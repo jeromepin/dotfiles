@@ -51,4 +51,6 @@ window-inherit-working-directory = false
 shell-integration = fish
 copy-on-select = clipboard
 
+scrollback-limit = 4294967295
+
 config-file = ?config_local
