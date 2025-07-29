@@ -25,6 +25,7 @@
     taps = [];
     brews = [];
     casks = [
+      "brave-browser"
       "firefox"
       "ghostty"
       "google-chrome"
