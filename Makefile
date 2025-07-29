@@ -8,7 +8,7 @@ check:
 	nix flake check nix/
 
 install:
-	nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --show-trace --flake nix/
+	sudo nix --extra-experimental-features "nix-command flakes" run nix-darwin -- switch --show-trace --flake nix/
 
 update:
 	cd nix/ && nix flake update --commit-lock-file --show-trace
