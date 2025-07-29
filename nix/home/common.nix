@@ -76,6 +76,8 @@
       ".config/fish/functions/misc.fish".source = ../../.config/fish/functions/misc.fish;
       ".config/ghostty/config".source = ../../.config/ghostty/config;
       ".config/gitu".source = ../../.config/gitu;
+      ".config/helix/config.toml".source = ../../.config/helix/config.toml;
+      ".config/helix/languages.toml".source = ../../.config/helix/languages.toml;
       ".config/nvim" = {
         source = ../../.config/nvim;
         recursive = true;

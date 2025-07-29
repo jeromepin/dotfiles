@@ -1,0 +1,37 @@
+theme = "onedark"
+
+[editor]
+mouse = false
+shell = ["fish", "-c"]
+bufferline = "multiple"
+color-modes = true
+text-width = 120
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+# https://docs.helix-editor.com/keymap.html
+# https://docs.helix-editor.com/commands.html
+[keys.normal]
+C-r = ":config-reload"
+V = ["select_mode", "extend_to_line_bounds"] # Select the whole line
+A-up = ["goto_line_start", "extend_to_line_end_newline", "yank", "delete_selection", "move_line_up", "paste_before"] # Move the whole line up
+A-down = ["goto_line_start", "extend_to_line_end_newline", "yank", "delete_selection", "move_line_down", "paste_before"] # Move the whole line down
+esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
+
+[keys.normal.d]
+d = ["goto_line_start", "extend_to_line_end_newline", "delete_selection_noyank"] # Delete the whole line
+"$" = ["extend_to_line_end", "delete_selection_noyank"] # Delete until end of line
+
+
+[keys.normal.space]
+f = "file_picker_in_current_buffer_directory"
+F = "file_picker"
+
+# buffer keymaps : b-*
+[keys.normal.b]
+d = ":buffer-close!"
+n = "goto_next_buffer"
+p = "goto_previous_buffer"
