@@ -43,7 +43,7 @@
 	verbose = true
 [core]
 	whitespace = -trailing-space
-	editor = nvim
+	editor = hx
 	excludesfile = ~/.gitignore_global
 [credential]
 	helper = cache --timeout=86400

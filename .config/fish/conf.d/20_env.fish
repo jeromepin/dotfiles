@@ -1,6 +1,6 @@
 set -gx NIX_PATH "nixpkgs=flake:nixpkgs"
 set -gx TERM xterm
-set -gx EDITOR "nvim"
+set -gx EDITOR hx
 
 set -gx BAT_PAGER "most"
 set -gx PAGER "less -eiRMX"
