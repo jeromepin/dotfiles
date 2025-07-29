@@ -36,6 +36,7 @@ in
     ] ++ [
       unstable.basedpyright # Python LSP
       unstable.delve
+      unstable.dogdns
       unstable.eget
       unstable.helix
       unstable.nmap
