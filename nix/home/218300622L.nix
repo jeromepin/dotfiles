@@ -44,6 +44,7 @@ in
       unstable.rdap
       unstable.sttr
       unstable.terraform-ls # Terraform LSP
+      unstable.tealdeer
     ];
 
     file = common.home.files;
