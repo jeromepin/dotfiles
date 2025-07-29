@@ -82,15 +82,14 @@
   };
 
   # Use TouchID to sudo
-  security.pam.enableSudoTouchIdAuth = true;
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # Inspiration from https://medium.com/@zmre/nix-darwin-quick-tip-activate-your-preferences-f69942a93236
   system = {
+    primaryUser = "$SUDO_USER";
+
     # This should avoid a logout/login cycle to take into account system.* changes
-    activationScripts.postUserActivation.text = ''
+    activationScripts.activateSettings.text = ''
       #! /run/current-system/sw/bin/bash
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
       killall Finder

@@ -19,7 +19,7 @@
       tree
       tudu
       unixtools.watch
-      zig_0_11
+      zig_0_12
     ] ++ [
       unstable.ast-grep
       unstable.bat
