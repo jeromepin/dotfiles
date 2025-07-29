@@ -30,7 +30,6 @@
       "ghostty"
       "google-chrome"
       "lunar"
-      "music-decoy"
       "obsidian"
       "orbstack"
       "rectangle"
@@ -38,7 +37,6 @@
       "spotify"
       "visual-studio-code"
       "vlc"
-      "zed"
     ];
   };
 
