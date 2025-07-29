@@ -1,4 +1,4 @@
-# Paths are prepended to $PATH, therefore deeper in this file means lower "priority"
+# Paths are prepended to $PATH, therefore deeper in this file means higher "priority"
 
 # Nix
 fish_add_path --move $HOME/.nix-profile/bin
@@ -14,6 +14,9 @@ fish_add_path --move $HOME/.cargo/bin
 
 # OrbStack's binaries (docker)
 fish_add_path --move $HOME/.orbstack/bin/docker
+
+# Eget binaries
+fish_add_path --move $HOME/eget-bin
 
 # Personal scripts
 fish_add_path --move $HOME/bin
