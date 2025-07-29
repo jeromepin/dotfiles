@@ -54,6 +54,7 @@
       unstable.ruff
       unstable.starship
       unstable.serpl
+      unstable.tig
       unstable.tree-sitter
       unstable.uv
       unstable.wget
