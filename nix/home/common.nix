@@ -15,7 +15,7 @@
       pipx
       python3
       python311Packages.pip
-      starship
+      socat
       tree
       tudu
       unixtools.watch
@@ -52,6 +52,7 @@
       unstable.python311Packages.pynvim # for neovim
       unstable.ripgrep
       unstable.ruff
+      unstable.starship
       unstable.serpl
       unstable.tree-sitter
       unstable.uv
