@@ -1,0 +1,10 @@
+[metadata]
+name = "state"
+description = "A channel to inspect a Terragrunt state"
+requirements = ["bat", "jq"]
+
+[source]
+command = "jq -r '(.resources.[] | select(.mode == \"data\") | (\"data.\" + .type + \".\" + .name)), (.resources.[] | select(.mode == \"managed\") | (.type + \".\" + .name)), (.outputs | to_entries[] | (\"output.\" + .key))' state.json"
+
+[preview]
+command = "jq --arg s '{}' -r '. as $in | $s | split(\".\") as $c | $in | if $c.[0] == \"data\" then (.resources[] | select(.mode == \"data\" and .type == $c.[1] and .name == $c.[2])) elif $c.[0] == \"output\" then (.outputs | to_entries[] | select(.key == $c.[1]) | .value.value) else (.resources[] | select(.mode == \"managed\" and .type == $c.[0] and .name == $c.[1])) end' state.json | bat --color=always --language=json"

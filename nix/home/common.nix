@@ -54,6 +54,7 @@
       unstable.ruff
       unstable.starship
       unstable.serpl
+      unstable.television
       unstable.tig
       unstable.tree-sitter
       unstable.uv
@@ -80,6 +81,10 @@
       ".config/helix/languages.toml".source = ../../.config/helix/languages.toml;
       ".config/nvim" = {
         source = ../../.config/nvim;
+        recursive = true;
+      };
+      ".config/television" = {
+        source = ../../.config/television;
         recursive = true;
       };
       ".config/.ripgreprc".source = ../../.config/.ripgreprc;
