@@ -1,5 +1,5 @@
 set -gx NIX_PATH "nixpkgs=flake:nixpkgs"
-set -gx TERM xterm
+set -gx TERM xterm-ghostty
 set -gx EDITOR hx
 
 set -gx BAT_PAGER most
