@@ -20,6 +20,12 @@ make update # or update-unstable
 brew remove --force --cask ...
 ```
 
+### Temporary use a package from another channel
+
+```
+nix run nixpkgs/nixpkgs-unstable#<PACKAGE>
+```
+
 ## Useful links
 
 - https://nixos-and-flakes.thiscute.world/preface
