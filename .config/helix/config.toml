@@ -21,7 +21,7 @@ C-r = ":config-reload"
 "$" = "goto_line_end"
 G = "goto_file_end"
 V = ["select_mode", "extend_to_line_bounds"] # Select the whole line
-C = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection", "insert_mode"]
+C = ["extend_to_line_end", "yank_to_clipboard", "delete_selection", "insert_mode"]
 D = ["extend_to_line_end", "delete_selection"]
 p = ["paste_clipboard_after", "collapse_selection"]
 P = ["paste_clipboard_before", "collapse_selection"]
@@ -31,7 +31,7 @@ A-up = ["goto_line_start", "extend_to_line_end_newline", "yank", "delete_selecti
 A-down = ["goto_line_start", "extend_to_line_end_newline", "yank", "delete_selection", "move_line_down", "paste_before"] # Move the whole line down
 
 [keys.normal.d]
-d = ["extend_to_line_bounds", "yank_main_selection_to_clipboard", "delete_selection"]
+d = ["extend_to_line_bounds", "yank_to_clipboard", "delete_selection"]
 t = ["extend_till_char"]
 s = ["surround_delete"]
 
@@ -40,9 +40,10 @@ s = ["surround_delete"]
 "$" = "goto_line_end"
 up = ["extend_line_up", "extend_to_line_bounds"]
 down = ["extend_line_down", "extend_to_line_bounds"]
-A-up = ["yank", "delete_selection", "move_line_up", "paste_before"] # Move the whole line up
-A-down = ["yank", "delete_selection", "move_line_down", "paste_before"] # Move the whole line down
+A-up = ["yank", "delete_selection", "move_line_up", "paste_before", "exit_select_mode"] # Move the whole line up
+A-down = ["yank", "delete_selection", "move_line_down", "paste_before", "exit_select_mode"] # Move the whole line down
 esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
+y = ["yank_to_clipboard", "exit_select_mode"]
 
 [keys.normal.space]
 f = "file_picker_in_current_buffer_directory"
