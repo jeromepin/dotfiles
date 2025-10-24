@@ -20,3 +20,6 @@ alias pip="python3 -m pip"
 alias delta="delta --side-by-side --line-numbers"
 alias gcm="git checkout master"
 alias dotfiles="cd $HOME/git/github/jeromepin/dotfiles"
+
+# ctrl-e shows a list of repositories found in ~/git/github and cd on the selected one
+bind ctrl-e "cd ~/git/github/\$(find ~/git/github -type d -depth 2 -prune | sed \"s|^$HOME/git/github/||\" | fzf)" repaint
