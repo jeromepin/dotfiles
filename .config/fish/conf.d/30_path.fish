@@ -2,7 +2,6 @@
 
 # Nix
 fish_add_path --move $HOME/.nix-profile/bin
-fish_add_path --move /etc/profiles/per-user/$USER/bin
 fish_add_path --move /run/current-system/sw/bin
 fish_add_path --move /nix/var/nix/profiles/default/bin
 
