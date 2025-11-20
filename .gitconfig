@@ -7,15 +7,15 @@
 	ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
 	d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
 	dc = diff --cached
-    fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' origin/master.. | fzf --ansi | cut -d"-" -f1 | xargs git commit --fixup; };f"
+    fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' $(git symbolic-ref refs/remotes/origin/HEAD --short).. | fzf --ansi | cut -d"-" -f1 | xargs git commit ${1} --fixup; };f"
     gen = "!f(){ git commit --message=\"$(git show-branch --no-name HEAD | sed -E 's/^[a-z]{1,5}/gen/')\"; };f"
 	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
-    merged-branches = "!git branch --merged master"
+    merged-branches = "!git branch --merged $(basename $(git symbolic-ref refs/remotes/origin/HEAD))"
     p = push
     pl = push --force-with-lease
-    r = rebase origin/master
+    r = "!f(){ git fetch && git rebase origin/${1:-master}; };f"
 	radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
-    ri = rebase --autosquash --interactive origin/master
+    ri = "!f(){ git rebase --autosquash --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short); };f"
     ru = remote update
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
     sri = "!f(){ git remote update && git stash && git rebase --interactive origin/${1:-master} && git stash pop; };f"
@@ -90,3 +90,5 @@
 [user]
     name = "Jérôme Pin"
 	email = jeromepin@users.noreply.github.com
+[init]
+	defaultBranch = master
