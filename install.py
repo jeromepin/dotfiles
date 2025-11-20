@@ -23,6 +23,7 @@ class CommonPackageList(IPackageList):
     ]
 
     COMMON_NIX_PACKAGES = [
+        "bash",
         "bash-completion",
         "cmake",
         "file",
