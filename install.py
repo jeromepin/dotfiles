@@ -91,7 +91,7 @@ class WorkLaptopPackages(CommonPackageList):
         "git-crypt",
         "gnupg",
         # "(google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])",
-        "gcsfuse",
+        "nixpkgs/nixpkgs-24.05-darwin#gcsfuse",
         "ipcalc",
         "kubectl",
         "kubectx",
