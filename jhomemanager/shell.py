@@ -1,13 +1,32 @@
 import os
 import pathlib
+import pty
 import shutil
 import subprocess
+import sys
 
 def binary_path(binary: str) -> pathlib.Path:
     possible_path = shutil.which(binary)
     if not possible_path:
         raise RuntimeError(f"{binary} : not found")
     return pathlib.Path(possible_path)
+
+def run_shell_command_with_pty(command: list[str]):
+    """
+    Runs a command in a pseudo-terminal, passing output directly to stdout.
+    This preserves progress bars and formatting.
+    """
+    # The master_read function is called whenever the process produces output
+    def master_read(fd):
+        data = os.read(fd, 1024)
+        if data:
+            # Write directly to stdout buffer to preserve binary data/colors
+            sys.stdout.buffer.write(data)
+            sys.stdout.flush()
+        return data
+    
+    # pty.spawn handles the fork and connecting the pty
+    return pty.spawn(command, master_read)
 
 def run_shell_command(
     command: list[str], env: dict[str, str] | None = None, shell: bool = False

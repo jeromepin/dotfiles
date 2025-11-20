@@ -1,9 +1,17 @@
 import dataclasses
+import json
 import tempfile
 import typing
 
-from .shell import TermincalColors, run_shell_command, tree_print, binary_path
+from .shell import (
+    TermincalColors,
+    run_shell_command,
+    run_shell_command_with_pty,
+    tree_print,
+    binary_path,
+)
 
+# TODO: write NixPackageManager and HomebrewPackageManager classes
 
 @dataclasses.dataclass
 class IPackageList:
@@ -91,7 +99,7 @@ class IPackageList:
         #     )
 
     def install_nix_packages(self, upgrade: bool = False):
-        tree_print("Installing Nix packages")
+        tree_print("Installing Nix packages (https://status.nixos.org/)")
 
         def group_by_channels(packages: list[str]) -> dict[str, list[str]]:
             channels: dict[str, list[str]] = {}
@@ -104,6 +112,28 @@ class IPackageList:
 
             return channels
 
+        def get_installed_packages():
+            installed_packages = []
+            for _, package_attr in (
+                typing.cast(
+                    dict[str, dict[str, typing.Any]],
+                    json.loads(
+                        run_shell_command(
+                            ["nix", "profile", "list", "--json"]
+                        ).stdout.decode("utf-8")
+                    ),
+                )
+                .get("elements", {})
+                .items()
+            ):
+                channel = package_attr["originalUrl"]
+                name = package_attr["attrPath"].removeprefix(
+                    "legacyPackages.aarch64-darwin."
+                )
+                installed_packages.append(f"{channel}#{name}".removeprefix("flake:"))
+
+            return group_by_channels(installed_packages)
+
         # TODO: handle override. For example : (P and unstable.P) or (P and nixpkgs/COMMIT_SHA#P)
         packages_by_channel = group_by_channels(
             sorted(
@@ -114,12 +144,30 @@ class IPackageList:
             )
         )
 
-        for channel, packages in packages_by_channel.items():
+        grouped_installed_packages = get_installed_packages()
+
+        for channel, wanted_packages in packages_by_channel.items():
             tree_print(
                 f"From channel {TermincalColors.CYAN}{channel}{TermincalColors.RESET}",
                 indent_level=1,
             )
-            run_shell_command(["nix", "profile", "install"] + packages)
+
+            missing_packages = set(wanted_packages) - set(grouped_installed_packages.get(channel, []))
+            leftover_packages = set(grouped_installed_packages.get(channel, [])) - set(wanted_packages)
+
+            for package in missing_packages:
+                tree_print(
+                    f"Installing {TermincalColors.GREEN}{package.split("#")[1]}{TermincalColors.RESET}",
+                    indent_level=2,
+                )
+                run_shell_command_with_pty(["nix", "profile", "install", package])
+            
+            for package in leftover_packages:
+                tree_print(
+                    f"Removing {TermincalColors.RED}{package.split("#")[1]}{TermincalColors.RESET}",
+                    indent_level=2,
+                )
+                run_shell_command_with_pty(["nix", "profile", "remove", package.split("#")[1]])
 
     def install(self, upgrade: bool = False):
         self.install_homebrew_packages(upgrade)
