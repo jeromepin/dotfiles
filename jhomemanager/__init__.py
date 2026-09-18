@@ -5,7 +5,7 @@ import typing
 from .cli import build_parser
 from .dotfiles import DotFilesInstallationStage
 from .installationstage import InstallationStage
-from .packages import IPackageList
+from .packagelist import IPackageList
 from .shell import TermincalColors, run_shell_command, tree_print
 from .systemconfig import MacOSUserLaunchAgent
 

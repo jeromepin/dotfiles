@@ -1,174 +1,35 @@
 import dataclasses
-import json
-import tempfile
-import typing
 
-from .shell import (
-    TermincalColors,
-    run_shell_command,
-    run_shell_command_with_pty,
-    tree_print,
-    binary_path,
-)
-
-# TODO: write NixPackageManager and HomebrewPackageManager classes
 
 @dataclasses.dataclass
-class IPackageList:
-    CURRENT_NIX_STABLE_BRANCH: typing.ClassVar[str]
-    COMMON_HOMEBREW_CASKS: typing.ClassVar[list[str]] = dataclasses.field(
-        init=False, repr=False
-    )
-    COMMON_NIX_PACKAGES: typing.ClassVar[list[str]] = dataclasses.field(
-        init=False, repr=False
-    )
+class IPackage: ...
 
-    HOMEBREW_CASKS: typing.ClassVar[list[str]] = dataclasses.field(
-        init=False, repr=False
-    )
-    NIX_PACKAGES: typing.ClassVar[list[str]] = dataclasses.field(init=False, repr=False)
 
-    HOMEBREW_BIN_PATH = str(binary_path("brew"))
+class NixPackage(IPackage):
+    def __init__(self, full_name: str):
+        self.org, rest = full_name.split("/")
+        self.channel_or_commit, self.name = rest.split("#")
+        self.reference = f"{self.org}/{self.channel_or_commit}#{self.name}"
 
-    def _transform_nix_package_into_full_reference(self, package_name: str) -> str:
-        # https://status.nixos.org/
-        # P -> nixpkgs/nixpkgs-25.05-darwin#P
+    @staticmethod
+    def new_from_str(string: str, current_stable_branch: str) -> "NixPackage":
         # unstable.P -> nixpkgs/nixpkgs-unstable#P
+        if string.startswith("unstable."):
+            return NixPackage(
+                f"nixpkgs/nixpkgs-unstable#{string.removeprefix('unstable.')}"
+            )
+
+        # P -> nixpkgs/nixpkgs-25.05-darwin#P
+        elif "#" not in string:
+            return NixPackage(
+                f"nixpkgs/nixpkgs-{current_stable_branch}-darwin#{string}"
+            )
+
         # nixpkgs/COMMIT_SHA#P -> nixpkgs/COMMIT_SHA#P
+        return NixPackage(string)
 
-        if not isinstance(self.CURRENT_NIX_STABLE_BRANCH, str):
-            raise RuntimeError("`CURRENT_NIX_STABLE_BRANCH` constant not provided")
+    def __repr__(self) -> str:
+        return self.reference
 
-        if package_name.startswith("unstable."):
-            return f"nixpkgs/nixpkgs-unstable#{package_name.removeprefix('unstable.')}"
-
-        elif "#" not in package_name:
-            return f"nixpkgs/nixpkgs-{self.CURRENT_NIX_STABLE_BRANCH}-darwin#{package_name}"
-
-        return package_name
-
-    def install_homebrew_packages(self, upgrade: bool = False):
-        tree_print("Installing Homebrew Casks")
-
-        with tempfile.NamedTemporaryFile(delete=False) as f:
-            for cask in sorted(self.COMMON_HOMEBREW_CASKS + self.HOMEBREW_CASKS):
-                tree_print(
-                    f"{TermincalColors.CYAN}{cask}{TermincalColors.RESET}", indent_level=1
-                )
-                f.write(f"cask \"{cask}\"\n".encode("utf-8"))
-
-            # TODO: stdout keep being : `brew bundle` complete! 0 Brewfile dependencies now installed.
-            # while it should list `12` instead of `0`
-            output = run_shell_command(
-                [self.HOMEBREW_BIN_PATH, "bundle", "install", "--no-upgrade" if not upgrade else "", f"--file={str(f.name)}"]
-            )
-
-            if len(output.stdout.decode("utf-8")) > 0:
-                tree_print(
-                    f"{TermincalColors.GREEN}{output.stdout.decode("utf-8")}{TermincalColors.RESET}", indent_level=1
-                )
-            if len(output.stderr.decode("utf-8")) > 0:
-                tree_print(
-                    f"{TermincalColors.RED}{output.stderr.decode("utf-8")}{TermincalColors.RESET}", indent_level=1
-                )
-
-        # installed_casks = []
-        # if not upgrade:
-        #     installed_casks: list[str] = (
-        #         run_shell_command(
-        #             [self.HOMEBREW_BIN_PATH, "list", "--cask", "-1"],
-        #         )
-        #         .stdout.decode("utf-8")
-        #         .split("\n")
-        #     )
-
-        # for cask in sorted(self.COMMON_HOMEBREW_CASKS + self.HOMEBREW_CASKS):
-        #     tree_print(
-        #         f"{TermincalColors.CYAN}{cask}{TermincalColors.RESET}", indent_level=1
-        #     )
-
-        #     if not upgrade and cask in installed_casks:
-        #         tree_print(
-        #             f"{TermincalColors.GREEN}Already installed !{TermincalColors.RESET}",
-        #             indent_level=2,
-        #         )
-        #         continue
-
-        #     run_shell_command(
-        #         [self.HOMEBREW_BIN_PATH, "install", "--cask", cask],
-        #     )
-
-    def install_nix_packages(self, upgrade: bool = False):
-        tree_print("Installing Nix packages (https://status.nixos.org/)")
-
-        def group_by_channels(packages: list[str]) -> dict[str, list[str]]:
-            channels: dict[str, list[str]] = {}
-            for p in packages:
-                channel = p.split("#")[0].replace("nixpkgs/", "")
-                if channel not in channels:
-                    channels[channel] = []
-
-                channels[channel].append(p)
-
-            return channels
-
-        def get_installed_packages():
-            installed_packages = []
-            for _, package_attr in (
-                typing.cast(
-                    dict[str, dict[str, typing.Any]],
-                    json.loads(
-                        run_shell_command(
-                            ["nix", "profile", "list", "--json"]
-                        ).stdout.decode("utf-8")
-                    ),
-                )
-                .get("elements", {})
-                .items()
-            ):
-                channel = package_attr["originalUrl"]
-                name = package_attr["attrPath"].removeprefix(
-                    "legacyPackages.aarch64-darwin."
-                )
-                installed_packages.append(f"{channel}#{name}".removeprefix("flake:"))
-
-            return group_by_channels(installed_packages)
-
-        # TODO: handle override. For example : (P and unstable.P) or (P and nixpkgs/COMMIT_SHA#P)
-        packages_by_channel = group_by_channels(
-            sorted(
-                [
-                    self._transform_nix_package_into_full_reference(p)
-                    for p in self.COMMON_NIX_PACKAGES + self.NIX_PACKAGES
-                ]
-            )
-        )
-
-        grouped_installed_packages = get_installed_packages()
-
-        for channel, wanted_packages in packages_by_channel.items():
-            tree_print(
-                f"From channel {TermincalColors.CYAN}{channel}{TermincalColors.RESET}",
-                indent_level=1,
-            )
-
-            missing_packages = set(wanted_packages) - set(grouped_installed_packages.get(channel, []))
-            leftover_packages = set(grouped_installed_packages.get(channel, [])) - set(wanted_packages)
-
-            for package in missing_packages:
-                tree_print(
-                    f"Installing {TermincalColors.GREEN}{package.split("#")[1]}{TermincalColors.RESET}",
-                    indent_level=2,
-                )
-                run_shell_command_with_pty(["nix", "profile", "install", package])
-            
-            for package in leftover_packages:
-                tree_print(
-                    f"Removing {TermincalColors.RED}{package.split("#")[1]}{TermincalColors.RESET}",
-                    indent_level=2,
-                )
-                run_shell_command_with_pty(["nix", "profile", "remove", package.split("#")[1]])
-
-    def install(self, upgrade: bool = False):
-        self.install_homebrew_packages(upgrade)
-        self.install_nix_packages(upgrade)
+    def __hash__(self) -> int:
+        return hash((self.org, self.channel_or_commit, self.name))

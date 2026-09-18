@@ -2,8 +2,11 @@ import argparse
 
 from .installationstage import InstallationStage
 
+
 def build_parser(stages: dict[str, InstallationStage]) -> None:
-    parser = argparse.ArgumentParser(description="Configure my system (apps, packages, dotfiles, etc...)")
+    parser = argparse.ArgumentParser(
+        description="Configure my system (apps, packages, dotfiles, etc...)"
+    )
     parser.add_argument(
         dest="stage",
         default="all",
@@ -14,6 +17,7 @@ def build_parser(stages: dict[str, InstallationStage]) -> None:
     args = parser.parse_args()
 
     if args.stage == "all":
+        del stages["update-packages"]
         del stages["upgrade-packages"]
         selected_stages = list(stages)
     else:
