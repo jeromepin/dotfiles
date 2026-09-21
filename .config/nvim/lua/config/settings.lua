@@ -36,7 +36,12 @@ vim.o.completeopt = 'menu,menuone,noinsert'
 -- Enable auto completion menu after pressing TAB.
 vim.o.wildmenu = true
 
-vim.o.wildmode = 'list:longest,full'
+vim.o.wildmode = 'list:longest,list:full'
+-- vim.o.wildignore:append({".javac", "node_modules", "*.pyc", "zig-cache", "zig-out"})
+-- vim.o.wildignore:append({
+--     ".o", ".obj", ".dll", ".exe", ".so", ".a", ".lib", ".pyc", ".pyo", ".pyd",
+--     ".swp", ".swo", ".class", ".DS_Store", ".git", ".hg", ".orig"
+-- })
 
 vim.o.laststatus = 2
 
@@ -102,3 +107,11 @@ vim.o.autochdir = true
 vim.o.clipboard = "unnamed"
 
 vim.g.mapleader = " "
+
+vim.o.foldmethod = "expr" -- treesiter
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- treesiter
+-- Don't take extra columns to display folds' informations
+vim.o.foldcolumn = "0"
+-- Hightlight the first line of the fold
+vim.o.foldtext = ""
+vim.o.foldlevel = 99

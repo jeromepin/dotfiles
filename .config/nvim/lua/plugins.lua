@@ -302,34 +302,66 @@ require("lazy").setup({
 
     -- Completion & LSP
     {
-        -- A completion plugin for neovim coded in Lua.
-        -- https://github.com/hrsh7th/nvim-cmp
+        -- Performant, batteries-included completion plugin for Neovim
+        -- https://github.com/saghen/blink.cmp
         {
-            'hrsh7th/nvim-cmp',
-            dependencies = {
-                'neovim/nvim-lspconfig',
-                'hrsh7th/cmp-nvim-lsp',
-                'hrsh7th/cmp-buffer',
-                'hrsh7th/cmp-path',
-                'lukas-reineke/cmp-rg',
+            'saghen/blink.cmp',
+            version = 'v0.*',
+            opts = {
+                -- 'default' for mappings similar to built-in completion
+                -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+                -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+                -- see the "default configuration" section below for full documentation on how to define
+                -- your own keymap.
+                keymap = { preset = 'super-tab' },
+            
+                appearance = {
+                    -- Sets the fallback highlight groups to nvim-cmp's highlight groups
+                    -- Useful for when your theme doesn't support blink.cmp
+                    -- will be removed in a future release
+                    use_nvim_cmp_as_default = true,
+                    -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+                    -- Adjusts spacing to ensure icons are aligned
+                    nerd_font_variant = 'mono'
+                },
+            
+                -- default list of enabled providers defined so that you can extend it
+                -- elsewhere in your config, without redefining it, via `opts_extend`
+                sources = {
+                    default = { 'lsp', 'path', 'snippets', 'buffer' },
+                    -- optionally disable cmdline completions
+                    -- cmdline = {},
+                },
+            
+                -- experimental signature help support
+                -- signature = { enabled = true }
             },
-            config = function()
-                require('plugins.completion')
-            end,
+            -- allows extending the providers array elsewhere in your config
+            -- without having to redefine it
+            opts_extend = { "sources.default" }
         },
 
         -- A collection of common configurations for Neovim's built-in language server client.
         -- https://github.com/neovim/nvim-lspconfig
         {
             'neovim/nvim-lspconfig',
-            version = '0.1.*',
+            version = '1.1.*',
             dependencies = {
-                -- A tree like view for symbols in Neovim using LSP.
-                'simrat39/symbols-outline.nvim'
+                'saghen/blink.cmp'
             },
-            config = function()
-                require('plugins.lsp')
-            end,
+            opts = {
+                servers = {
+                    ruff = {},
+                }
+            },
+            config = function(_, opts)
+                local lspconfig = require('lspconfig')
+                local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+                for server, config in pairs(opts.servers) do
+                    require('lspconfig')[server].setup({capabilities = capabilities})
+                end
+            end
         },
 
         -- Easily install and manage LSP servers, DAP servers, linters, and formatters.
