@@ -120,6 +120,7 @@ class WorkLaptopPackages(CommonPackageList):
         "unstable.delve",
         "unstable.dogdns",
         "unstable.eget",
+        "unstable.graphviz",
         "unstable.git-revise",
         "unstable.k9s",
         "unstable.nmap",
