@@ -110,6 +110,8 @@ class WorkLaptopPackages(CommonPackageList):
         "kubectx",
         "kubelogin",
         "kubernetes-helm",
+        "kustomize",
+        "pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin",
         "postgresql_16",
         "sops",
         "wireguard-go",
