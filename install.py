@@ -118,6 +118,7 @@ class WorkLaptopPackages(CommonPackageList):
         "wireguard-tools",
         "unstable.basedpyright",
         "unstable.delve",
+        "unstable.docker-credential-gcr",
         "unstable.dogdns",
         "unstable.eget",
         "unstable.graphviz",
