@@ -99,6 +99,7 @@ class WorkLaptopPackages(CommonPackageList):
         "slack",
     ]
     NIX_PACKAGES = [
+        "argocd",
         "kubectl",
         "git-crypt",
         "gnupg",
