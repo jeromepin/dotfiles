@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Used as a shortcut to kubectl get -o yaml ...:
+# k y pods/foo -> kubectl get pods/foo -o yaml
+
+kubectl get -o yaml $@
