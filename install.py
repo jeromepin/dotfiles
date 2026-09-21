@@ -70,6 +70,7 @@ class CommonPackageList(IPackageList):
         "unstable.hexyl",
         "unstable.hyperfine",
         "unstable.htop",
+        "unstable.httpie",
         "unstable.ijq",
         "unstable.jujutsu",
         "unstable.jq",
