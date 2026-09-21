@@ -1,5 +1,5 @@
 [alias]
-	a = "!f(){ git diff --name-only $@ | fzf -m --print0 --ansi --preview \"git diff --color=always -- {-1}\" | xargs -0 git add; };f"
+    a = add
     bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
     c = commit
     ca = commit --amend
@@ -20,11 +20,10 @@
     rc = rebase --continue
     radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
     ri = "!f(){ git rebase --autosquash --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short); };f"
-    ru = remote update
-    sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
-    sri = "!f(){ git remote update && git stash && git rebase --interactive origin/${1:-master} && git stash pop; };f"
-	s = "!f(){ gitu; };f"
-	st = status
+    sru = "!f(){ git remote update && git stash && git rebase $(git symbolic-ref refs/remotes/origin/HEAD --short) && git stash pop; };f"
+    sri = "!f(){ git remote update && git stash && git rebase --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short) && git stash pop; };f"
+    s = "!f(){ gitu; };f"
+    st =  -c core.quotePath=false status
     unstage = reset HEAD --
     uncommit = reset HEAD~
 [color]
