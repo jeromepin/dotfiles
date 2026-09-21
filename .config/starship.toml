@@ -6,7 +6,12 @@ add_newline = false
 # Timeout for commands executed by starship (in milliseconds).
 command_timeout = 1000
 
-format = """$python $kubernetes $username at $hostname in $directory$git_branch
+# # Both custom entries shall live until `kubernetes` entry works again properly
+# Currently, it doesn't show anything and no insightful logs
+# format = """$python $kubernetes $username at $hostname in $directory$git_branch
+# [❭❭](green) 
+# """
+format = """$python (${custom.kubecontext}:${custom.kubenamespace}) $username at $hostname in $directory$git_branch
 [❭❭](green) 
 """
 
@@ -36,3 +41,17 @@ format = "on [$symbol$branch]($style) "
 
 [python]
 format = '(\($virtualenv\))'
+
+[custom.kubecontext]
+description = "Show current active k8s context"
+command = "grep 'current-context' ~/.kube/config | cut -d: -f2 | sttr remove-spaces"
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+format = '[$output](red)'
+
+[custom.kubenamespace]
+description = "Show current active k8s NS"
+command = "kubectl config view --minify --output 'jsonpath={..namespace}'"
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+format = '[$output](cyan)'
