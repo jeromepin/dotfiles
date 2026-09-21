@@ -1,20 +1,24 @@
 [alias]
 	a = "!f(){ git diff --name-only $@ | fzf -m --print0 --ansi --preview \"git diff --color=always -- {-1}\" | xargs -0 git add; };f"
     bt = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset%n' --abbrev-commit --date=relative --branches
-	c = commit
+    c = commit
     ca = commit --amend
     cae = commit --amend --no-edit
-	ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
-	d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
-	dc = diff --cached
+    ch = "!f(){ git branch --sort=-committerdate | fzf --height=20 | xargs git checkout; };f"
+    d = "!f(){ git diff --name-only $@ | fzf -m --ansi --preview \"git diff --color=always -- {-1}\"; };f"
+    dc = diff --cached
     fixup = "!f(){ git log --color=always --reverse --pretty=tformat:'%Cred%h%Creset - %s %Cgreen(%an %ar)%Creset' $(git symbolic-ref refs/remotes/origin/HEAD --short).. | fzf --ansi | cut -d"-" -f1 | xargs git commit ${1} --fixup; };f"
     gen = "!f(){ git commit --message=\"$(git show-branch --no-name HEAD | sed -E 's/^[a-z]{1,5}/gen/')\"; };f"
-	l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
+    ia = "!f(){ git diff --name-only $@ | fzf -m --print0 --ansi --preview \"git diff --color=always -- {-1}\" | xargs -0 git add; };f"
+    l = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'
     merged-branches = "!git branch --merged $(basename $(git symbolic-ref refs/remotes/origin/HEAD))"
-    p = push
-    pl = push --force-with-lease
-    r = "!f(){ git fetch && git rebase origin/${1:-master}; };f"
-	radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
+	open = "!f() { url=$(git remote get-url origin | sed \"s|\\.git$||; s|git@github.com:|https://github.com/|; s|ssh://git@github.com/|https://github.com/|\"); default=$(git symbolic-ref refs/remotes/origin/HEAD | sed \"s|refs/remotes/origin/||\"); if [ -z \"$1\" ]; then open -u \"$url\"; else prefix=$(git rev-parse --show-prefix); open -u \"$url/blob/$default/${prefix}$1\"; fi; }; f"
+    p = push origin
+    pl = push --force-with-lease origin
+    r = "!f(){ git fetch && git rebase $(git symbolic-ref refs/remotes/origin/HEAD --short); };f"
+    ra = rebase --abort
+    rc = rebase --continue
+    radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
     ri = "!f(){ git rebase --autosquash --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short); };f"
     ru = remote update
     sru = "!f(){ git remote update && git stash && git rebase origin/${1:-master} && git stash pop; };f"
@@ -24,55 +28,57 @@
     unstage = reset HEAD --
     uncommit = reset HEAD~
 [color]
-	ui = true
+    ui = true
 [color "branch"]
-	upstream = cyan
+    upstream = cyan
 [color "diff"]
-	meta = yellow
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+    meta = yellow
+    frag = magenta bold
+    commit = yellow bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
 [commit]
 	verbose = true
 [core]
-	whitespace = -trailing-space
-	editor = hx
-	excludesfile = ~/.gitignore_global
+    whitespace = -trailing-space
+    editor = hx
+    excludesfile = ~/.gitignore_global
 [credential]
-	helper = cache --timeout=86400
+    helper = cache --timeout=86400
 [diff]
-	algorithm = histogram
-	colorMoved = plain
-	colormovedws = allow-indentation-change
-	# external = "difft"
-	mnemonicPrefix = true
-	renames = true
-	submodule = log
-	wordRegex = .
+    algorithm = histogram
+    colorMoved = plain
+    colormovedws = allow-indentation-change
+    # external = "difft"
+    mnemonicPrefix = true
+    renames = true
+    submodule = log
+    wordRegex = .
 [fetch]
-	recurseSubmodules = on-demand
+    recurseSubmodules = on-demand
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
 [grep]
-	extendedRegexp = true
+    extendedRegexp = true
+[interactive]
+    singleKey = true
 [log]
-	abbrevCommit = true
+    abbrevCommit = true
 [merge]
-	conflictStyle = zdiff3
+    conflictStyle = zdiff3
 [mergetool]
-	keepBackup = false
-	keepTemporaries = false
-	prompt = false
+    keepBackup = false
+    keepTemporaries = false
+    prompt = false
 [protocol]
     version = 2
 [pull]
@@ -80,15 +86,15 @@
 [push]
     default = current
 [rebase]
-	autosquash = true
-	autostash = true
+    autosquash = true
+    autostash = true
 [status]
-	submoduleSummary = true
-	showUntrackedFiles = all
+    submoduleSummary = true
+    showUntrackedFiles = all
 [tag]
-	sort = version:refname
+    sort = version:refname
 [user]
     name = "Jérôme Pin"
-	email = jeromepin@users.noreply.github.com
+    email = jeromepin@users.noreply.github.com
 [init]
 	defaultBranch = master
