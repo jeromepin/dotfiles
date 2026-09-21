@@ -12,7 +12,7 @@ install:
 	./install.py all
 
 update:
-	./install upgrade-packages
+	./install.py upgrade-packages
 
 # update-unstable:
 # 	cd nix/ && nix flake update nixpkgs-unstable --commit-lock-file --show-trace

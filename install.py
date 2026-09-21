@@ -3,23 +3,33 @@
 import dataclasses
 import pathlib
 
-from jhomemanager import IPackageList, get_machine_name, InstallationStage, DotFilesInstallationStage, MacOSUserLaunchAgent, tree_print, run_shell_command, build_parser, TermincalColors
+from jhomemanager import (
+    DotFilesInstallationStage,
+    InstallationStage,
+    IPackageList,
+    MacOSUserLaunchAgent,
+    TermincalColors,
+    build_parser,
+    get_machine_name,
+    run_shell_command,
+    tree_print,
+)
 
-CURRENT_NIX_STABLE_BRANCH = "25.05"
+CURRENT_NIX_STABLE_BRANCH = "25.11"
 
 
 class CommonPackageList(IPackageList):
-    COMMON_HOMEBREW_CASKS = [
-        "brave-browser",
-        "firefox",
-        "ghostty",
-        "google-chrome",
-        "lunar",
-        "orbstack",
-        "rectangle",
-        "spotify",
-        "visual-studio-code",
-        "vlc",
+    COMMON_HOMEBREW_PACKAGES = [
+        "cask brave-browser",
+        "cask firefox",
+        "cask ghostty",
+        "cask google-chrome",
+        "cask lunar",
+        "cask orbstack",
+        "cask rectangle",
+        "cask spotify",
+        "cask vlc",
+        "cask zed",
     ]
 
     COMMON_NIX_PACKAGES = [
@@ -113,19 +123,22 @@ class WorkLaptopPackages(CommonPackageList):
         "unstable.terraform-ls",
     ]
 
+
 @dataclasses.dataclass
 class Packages(InstallationStage):
+    update: bool = dataclasses.field(init=True, default=False)
     upgrade: bool = dataclasses.field(init=True, default=False)
 
     def exec(self) -> None:
         super().exec()
-        {
-            "218300622L": WorkLaptopPackages()
-        }[get_machine_name()].install(upgrade=self.upgrade)
+        {"218300622L": WorkLaptopPackages()}[get_machine_name()].install(
+            update=self.update, upgrade=self.upgrade
+        )
+
 
 class Home(DotFilesInstallationStage):
     # destination: source
-    FILES : dict[str, str | DotFilesInstallationStage.SourceDotfile] = {
+    FILES: dict[str, str | DotFilesInstallationStage.SourceDotfile] = {
         ".bashrc.d": DotFilesInstallationStage.SourceDotfile(
             source=".bashrc.d",
             recursive=True,
@@ -168,28 +181,38 @@ class System(InstallationStage):
         tree_print("Enabling sudo using TouchID")
         pam_file = pathlib.Path("/etc/pam.d/sudo_local")
         if pam_file.exists():
-            tree_print(f"{TermincalColors.GREEN}Already enabled !{TermincalColors.RESET}", indent_level=1)
+            tree_print(
+                f"{TermincalColors.GREEN}Already enabled !{TermincalColors.RESET}",
+                indent_level=1,
+            )
             return
 
         run_shell_command(["sudo", "cp", pam_file.name, str(pam_file)])
 
     def exec(self) -> None:
         super().exec()
-        MacOSUserLaunchAgent(filename="org.nixos.add-to-ssh-agent.plist", attributes={
-            "KeepAlive": False,
-            "Label": "org.nixos.add-to-ssh-agent",
-            "ProgramArguments": [
-                "/bin/sh",
-                "-c",
-                "/bin/wait4path /nix/store &amp;&amp; exec ssh-add --apple-use-keychain",
-            ],
-            "RunAtLoad": True
-        })
+        MacOSUserLaunchAgent(
+            filename="org.nixos.add-to-ssh-agent.plist",
+            attributes={
+                "KeepAlive": False,
+                "Label": "org.nixos.add-to-ssh-agent",
+                "ProgramArguments": [
+                    "/bin/sh",
+                    "-c",
+                    "/bin/wait4path /nix/store &amp;&amp; exec ssh-add --apple-use-keychain",
+                ],
+                "RunAtLoad": True,
+            },
+        )
         self.sudo_with_touchid()
 
-build_parser({
-    "home": Home(),
-    "packages": Packages(upgrade=False),
-    "upgrade-packages": Packages(upgrade=True),
-    "system": System(),
-})
+
+build_parser(
+    {
+        "home": Home(),
+        "packages": Packages(update=False, upgrade=False),
+        "update-packages": Packages(update=True, upgrade=False),
+        "upgrade-packages": Packages(update=False, upgrade=True),
+        "system": System(),
+    }
+)
