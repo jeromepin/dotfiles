@@ -1,8 +1,9 @@
+background-opacity = 1.00
 #######################################################
 #                   APPEARANCE
 #######################################################
 # Default theme
-theme = "Monokai Soda"
+theme = Monokai Soda
 
 # Normal colors
 palette = 0=#212121
@@ -44,6 +45,8 @@ keybind = command+right=next_tab
 #######################################################
 # If true, new windows and tabs will inherit the working directory of the previously focused window.
 window-inherit-working-directory = false
+tab-inherit-working-directory = false
+split-inherit-working-directory = true
 
 #######################################################
 #                   MISC
