@@ -37,6 +37,7 @@ class CommonPackageList(IPackageList):
         "bash-completion",
         "cmake",
         "file",
+        "findutils",
         "fira-code",
         "fira-code-nerdfont",
         "getopt",
