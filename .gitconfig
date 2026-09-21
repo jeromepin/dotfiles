@@ -20,6 +20,7 @@
     rc = rebase --continue
     radd = "!f(){ git add $(git diff --cached --name-only --diff-filter=ACMRTU); };f"
     ri = "!f(){ git rebase --autosquash --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short); };f"
+    split = revise -c
     sru = "!f(){ git remote update && git stash && git rebase $(git symbolic-ref refs/remotes/origin/HEAD --short) && git stash pop; };f"
     sri = "!f(){ git remote update && git stash && git rebase --interactive $(git symbolic-ref refs/remotes/origin/HEAD --short) && git stash pop; };f"
     s = "!f(){ gitu; };f"
