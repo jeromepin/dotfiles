@@ -1,58 +1,41 @@
+from __future__ import annotations
+
 import dataclasses
 import os
 import pathlib
+import plistlib
+import typing
 
-from .shell import TermincalColors, tree_print, run_shell_command
-
-HOME = pathlib.Path(os.path.expanduser("~"))
+from .paths import HOME
+from .shell import TerminalColors, is_dry_run, run, tree_print
 
 
 @dataclasses.dataclass
 class MacOSUserLaunchAgent:
-    filename: str
-    attributes: dict[str, bool | str | list[str]]
+    label: str
+    attributes: dict[str, typing.Any]
 
-    LAUNCH_AGENT_LIBRARY_PATH = HOME / pathlib.Path("Library/LaunchAgents")
+    LAUNCH_AGENTS_DIR = HOME / "Library/LaunchAgents"
 
-    def __post_init__(self):
-        tree_print(
-            f"Installing LaunchAgent {TermincalColors.CYAN}{self.filename}{TermincalColors.RESET}"
-        )
-        self.write()
-        run_shell_command(["launchctl", "load", self.filename])
+    @property
+    def path(self) -> pathlib.Path:
+        return self.LAUNCH_AGENTS_DIR / f"{self.label}.plist"
 
-    def to_plist(self) -> str:
-        dict_section: list[str] = []
-        for key, value in self.attributes.items():
-            dict_section.append(f"\t<key>{key}</key>")
-            if isinstance(value, bool):
-                dict_section.append(f"\t<{str(value).lower()}/>")
-            elif isinstance(value, str):
-                dict_section.append(f"\t<string>{value}</string>")
-            elif isinstance(value, list):
-                dict_section.append("\t<array>")
-                for element in value:
-                    dict_section.append(f"\t\t<string>{element}</string>")
-                dict_section.append("\t</array>")
+    def to_plist(self) -> bytes:
+        return plistlib.dumps({"Label": self.label, **self.attributes})
 
-        return "\n".join(
-            [
-                '<?xml version="1.0" encoding="UTF-8"?>',
-                '<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',
-                '<plist version="1.0">',
-                "<dict>",
-            ]
-            + dict_section
-            + [
-                "</dict>",
-                "</plist>",
-            ]
-        )
+    def install(self) -> None:
+        tree_print(f"LaunchAgent {TerminalColors.CYAN}{self.label}{TerminalColors.RESET}")
+        content = self.to_plist()
+        if self.path.exists() and self.path.read_bytes() == content:
+            tree_print(f"{TerminalColors.GREEN}Already up to date{TerminalColors.RESET}", indent_level=1)
+            return
 
-    def write(self):
-        filename = self.filename
-        if not self.filename.endswith(".plist"):
-            filename = f"{self.filename}.plist"
-
-        with open(self.LAUNCH_AGENT_LIBRARY_PATH / filename, "w") as f:
-            f.write(self.to_plist())
+        domain = f"gui/{os.getuid()}"
+        # bootout fails when the agent isn't loaded yet, which is fine
+        run(["launchctl", "bootout", f"{domain}/{self.label}"], check=False)
+        tree_print(f"Writing {self.path}", indent_level=1)
+        if not is_dry_run():
+            self.LAUNCH_AGENTS_DIR.mkdir(parents=True, exist_ok=True)
+            self.path.write_bytes(content)
+        run(["launchctl", "bootstrap", domain, str(self.path)])

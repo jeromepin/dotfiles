@@ -1,43 +1,69 @@
-import dataclasses
+from __future__ import annotations
+
+import pathlib
+import tempfile
 import typing
 
-from .packages import IPackage
-from .shell import (
-    TermincalColors,
-    run_shell_command,
-    run_shell_command_with_pty,
-    tree_print,
-)
+from .shell import TerminalColors, binary_path, run, run_interactive, tree_print
+
+HOMEBREW_KINDS = ("tap", "brew", "cask")
 
 
-@dataclasses.dataclass
-class IPackageManager:
-    package_type: typing.ClassVar[type[IPackage]]
+class HomebrewPackageManager:
+    def __init__(self, packages: typing.Iterable[str]):
+        self.lines = []
+        for entry in sorted(set(packages)):
+            kind, _, name = entry.partition(" ")
+            if kind not in HOMEBREW_KINDS or not name:
+                raise ValueError(f"Invalid Homebrew entry {entry!r}, expected one of {HOMEBREW_KINDS} followed by a name")
+            self.lines.append(f'{kind} "{name}"')
 
-    def list_installed_packages(self) -> list: ...
+    def apply(self, upgrade: bool = False) -> None:
+        tree_print(f"Homebrew packages [{len(self.lines)}]")
+        brew = str(binary_path("brew"))
 
-    def install(self): ...
+        with tempfile.TemporaryDirectory() as tmp:
+            brewfile = pathlib.Path(tmp) / "Brewfile"
+            brewfile.write_text("\n".join(self.lines) + "\n")
 
-    def remove(self): ...
+            check = run([brew, "bundle", "check", f"--file={brewfile}", "--no-upgrade"], mutates=False, check=False)
+            if check.returncode == 0 and not upgrade:
+                tree_print(f"{TerminalColors.GREEN}Everything installed{TerminalColors.RESET}", indent_level=1)
+            else:
+                cmd = [brew, "bundle", "install", f"--file={brewfile}"]
+                if not upgrade:
+                    cmd.append("--no-upgrade")
+                run_interactive(cmd)
 
-    def _run(self, command: list[str]): ...
+            # Never remove automatically: Homebrew also holds things installed by hand
+            # Exits 1 both when something would be removed and on real errors
+            cleanup = run([brew, "bundle", "cleanup", f"--file={brewfile}"], mutates=False, check=False)
+            if cleanup.returncode != 0 and not cleanup.stdout.strip():
+                tree_print(
+                    f"{TerminalColors.YELLOW}Could not list undeclared packages: "
+                    f"{cleanup.stderr.decode('utf-8').strip()}{TerminalColors.RESET}",
+                    indent_level=1,
+                )
+            undeclared = [
+                line for line in cleanup.stdout.decode("utf-8").splitlines()
+                if line and not line.startswith(("Would ", "Run `brew bundle cleanup"))
+            ]
+            if undeclared:
+                tree_print(
+                    f"{TerminalColors.YELLOW}Installed but not declared: {', '.join(undeclared)}{TerminalColors.RESET}",
+                    indent_level=1,
+                )
 
 
-@dataclasses.dataclass
-class EgetPackageManager(IPackageManager):
-    binaries: list[str]
+class EgetPackageManager:
+    def __init__(self, binaries: typing.Iterable[str]):
+        self.binaries = sorted(set(binaries))
 
-    def _run(self, command: list[str]):
-        run_shell_command_with_pty(["eget"] + command)
-
-    def _install(self, repository: str):
-        tree_print(
-            f"Installing {TermincalColors.GREEN}{repository}{TermincalColors.RESET}",
-            indent_level=2,
-        )
-        self._run([repository])
-
-    def install(self, update: bool = False):
-        tree_print("Installing Eget binaries")
+    def apply(self, upgrade: bool = False) -> None:
+        if not self.binaries:
+            return
+        tree_print(f"Eget binaries [{len(self.binaries)}]")
+        eget = str(binary_path("eget"))
         for binary in self.binaries:
-            self._install(binary)
+            tree_print(f"{TerminalColors.CYAN}{binary}{TerminalColors.RESET}", indent_level=1)
+            run_interactive([eget, "--upgrade-only", binary])

@@ -1,14 +1,12 @@
-from abc import ABC
-import dataclasses
+from __future__ import annotations
 
 from .shell import binary_path
 
 
-@dataclasses.dataclass
-class InstallationStage(ABC):
-    def __post_init__(self):
-        for binary in ["brew", "nix"]:
-            binary_path(binary)
+class InstallationStage:
+    REQUIRED_BINARIES: tuple[str, ...] = ()
 
     def exec(self) -> None:
         print(f"\n[{self.__class__.__name__.upper()}]")
+        for binary in self.REQUIRED_BINARIES:
+            binary_path(binary)

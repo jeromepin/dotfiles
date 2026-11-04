@@ -1,176 +1,92 @@
+from __future__ import annotations
+
 import dataclasses
 import json
 import typing
 
-from .packagemanager import IPackageManager
 from .packages import NixPackage
-from .shell import (
-    TermincalColors,
-    run_shell_command,
-    run_shell_command_with_pty,
-    tree_print,
-)
+from .shell import CommandError, JHomeManagerError, TerminalColors, is_dry_run, run, run_interactive, tree_print
 
 
-@dataclasses.dataclass
-class NixPackageManager(IPackageManager):
-    packages: list[str]
-    current_stable_branch: str
-    installed_packages: list[NixPackage] = dataclasses.field(
-        init=False, repr=False, default_factory=lambda: []
-    )
-    wanted_packages_by_channel: dict[str, list[NixPackage]] = dataclasses.field(
-        init=False, repr=False, default_factory=lambda: {}
-    )
-    installed_packages_by_channel: dict[str, list[NixPackage]] = dataclasses.field(
-        init=False, repr=False, default_factory=lambda: {}
-    )
+@dataclasses.dataclass(frozen=True)
+class ProfileElement:
+    name: str  # what `nix profile remove/upgrade` expects, e.g. `fira-code-1`
+    package: NixPackage | None  # None when not installed from a `legacyPackages` attribute (not managed here)
 
-    def __post_init__(self):
-        if not isinstance(self.current_stable_branch, str):
-            raise RuntimeError("`CURRENT_NIX_STABLE_BRANCH` constant not provided")
 
-        self.installed_packages = self.list_installed_packages()
-        self.packages.sort()
+class NixPackageManager:
+    """
+    Reconciles the user's Nix profile with the wanted package list:
+    every package installed from a `legacyPackages` attribute that is not wanted is removed.
+    """
 
-        # TODO: handle override. For example : (P and unstable.P) or (P and nixpkgs/COMMIT_SHA#P)
-        self.wanted_packages_by_channel = self.group_by_channels(
-            [
-                NixPackage.new_from_str(p, self.current_stable_branch)
-                for p in self.packages
-            ]
-        )
-        self.installed_packages_by_channel = self.group_by_channels(
-            self.installed_packages
-        )
+    def __init__(self, packages: typing.Iterable[str], stable_branch: str):
+        if not stable_branch:
+            raise JHomeManagerError("`CURRENT_NIX_STABLE_BRANCH` is not set")
+        self.wanted = {NixPackage.from_spec(p, stable_branch) for p in packages}
 
-    def group_by_channels(
-        self, packages: list[NixPackage]
-    ) -> dict[str, list[NixPackage]]:
-        channels = {}
-        for p in packages:
-            if p.channel_or_commit not in channels:
-                channels[p.channel_or_commit] = []
+    @staticmethod
+    def installed() -> list[ProfileElement]:
+        data = json.loads(run(["nix", "profile", "list", "--json"], mutates=False).stdout)
+        elements = data.get("elements", {})
+        if not isinstance(elements, dict):
+            raise JHomeManagerError("Unsupported `nix profile list --json` format, Nix >= 2.20 is required")
 
-            channels[p.channel_or_commit].append(p)
+        result = []
+        for name, attrs in elements.items():
+            # attrPath = legacyPackages.<system>.<attr>
+            parts = (attrs.get("attrPath") or "").split(".", 2)
+            package = None
+            if len(parts) == 3 and parts[0] == "legacyPackages" and attrs.get("originalUrl"):
+                package = NixPackage(attrs["originalUrl"].removeprefix("flake:"), parts[2])
+            result.append(ProfileElement(name, package))
+        return result
 
-        return channels
+    def apply(self, upgrade: bool = False) -> None:
+        tree_print("Nix packages (https://status.nixos.org/)")
 
-    def list_installed_packages(self) -> list[NixPackage]:
-        installed_packages = []
-        for _, package_attr in (
-            typing.cast(
-                dict[str, dict[str, typing.Any]],
-                json.loads(
-                    run_shell_command(
-                        ["nix", "profile", "list", "--json"]
-                    ).stdout.decode("utf-8")
-                ),
-            )
-            .get("elements", {})
-            .items()
-        ):
-            channel = package_attr["originalUrl"]
-            name = package_attr["attrPath"].removeprefix(
-                "legacyPackages.aarch64-darwin."
-            )
-            installed_packages.append(
-                NixPackage(f"{channel}#{name}".removeprefix("flake:"))
-            )
+        present: set[NixPackage] = set()
+        kept: list[ProfileElement] = []
+        to_remove: list[ProfileElement] = []
+        unmanaged: list[ProfileElement] = []
+        for element in self.installed():
+            if element.package is None:
+                unmanaged.append(element)
+            elif element.package in self.wanted and element.package not in present:
+                present.add(element.package)
+                kept.append(element)
+            else:  # unwanted, or a duplicate of a wanted package
+                to_remove.append(element)
+        to_install = sorted(self.wanted - present)
 
-        return installed_packages
-
-    def _run(self, command: list[str]):
-        run_shell_command_with_pty(["nix", "profile"] + command)
-
-    def _update(self, package: NixPackage):
-        tree_print(
-            f"Updating {TermincalColors.GREEN}{package.name}{TermincalColors.RESET} within the same channel",
-            indent_level=2,
-        )
-        self._run(["upgrade", package.name])
-
-    def _install(self, package: NixPackage):
-        tree_print(
-            f"Installing {TermincalColors.GREEN}{package.name}{TermincalColors.RESET}",
-            indent_level=2,
-        )
-        self._run(["install", package.reference])
-
-    def install(self, update: bool = False):
-        tree_print("Installing Nix packages (https://status.nixos.org/)")
-
-        for channel, wanted_packages in self.wanted_packages_by_channel.items():
+        for element in unmanaged:
             tree_print(
-                f"From channel {TermincalColors.CYAN}{channel}{TermincalColors.RESET}",
+                f"{TerminalColors.YELLOW}Ignoring {element.name} (not installed from a nixpkgs attribute){TerminalColors.RESET}",
                 indent_level=1,
             )
 
-            missing_packages = set(wanted_packages) - set(
-                self.installed_packages_by_channel.get(channel, [])
-            )
+        if not to_remove and not to_install and not upgrade:
+            tree_print(f"{TerminalColors.GREEN}{len(present)} packages up to date{TerminalColors.RESET}", indent_level=1)
+            return
 
-            for package in missing_packages:
-                if update:
-                    self._update(package)
-                else:
-                    self._install(package)
+        if to_remove:
+            tree_print(f"Removing [{len(to_remove)}]", indent_level=1)
+            for element in to_remove:
+                tree_print(f"{TerminalColors.RED}- {element.name}{TerminalColors.RESET} ({element.package})", indent_level=2)
+            run_interactive(["nix", "profile", "remove", *(e.name for e in to_remove)])
 
-    def _remove(self, package: NixPackage):
-        tree_print(
-            f"Removing {TermincalColors.GREEN}{package.name}{TermincalColors.RESET}",
-            indent_level=2,
-        )
-        self._run(["remove", package.name])
+        if to_install:
+            tree_print(f"Installing [{len(to_install)}]", indent_level=1)
+            for package in to_install:
+                tree_print(f"{TerminalColors.GREEN}+ {package}{TerminalColors.RESET}", indent_level=2)
+            try:
+                run_interactive(["nix", "profile", "install", *(p.reference for p in to_install)])
+            except CommandError:
+                if to_remove and not is_dry_run():
+                    tree_print(f"{TerminalColors.RED}Install failed, rolling back the removals{TerminalColors.RESET}", indent_level=1)
+                    run_interactive(["nix", "profile", "rollback"])
+                raise
 
-    def remove(self):
-        tree_print("Removing Nix packages (https://status.nixos.org/)")
-
-        for channel, wanted_packages in self.wanted_packages_by_channel.items():
-            tree_print(
-                f"From channel {TermincalColors.CYAN}{channel}{TermincalColors.RESET}",
-                indent_level=1,
-            )
-
-            leftover_packages = set(
-                self.installed_packages_by_channel.get(channel, [])
-            ) - set(wanted_packages)
-
-            for package in leftover_packages:
-                self._remove(package)
-
-    def upgrade(self):
-        packages = {
-            c: p
-            for c, p in self.group_by_channels(self.list_installed_packages()).items()
-            if c.startswith("nixpkgs-") and c.endswith("-darwin")
-        }
-        main_channel = sorted(packages, key=lambda k: len(packages[k]), reverse=True)[0]
-        installed_packages_from_main_channel = self.group_by_channels(
-            self.list_installed_packages()
-        )[main_channel]
-
-        if f"nixpkgs-{self.current_stable_branch}-darwin" == main_channel:
-            raise Exception(
-                f"CURRENT_NIX_STABLE_BRANCH is the same as the one from which packages are installed : {self.current_stable_branch}"
-            )
-
-        tree_print(
-            f"From channel {TermincalColors.CYAN}{main_channel}{TermincalColors.RESET}",
-            indent_level=1,
-        )
-        for package in installed_packages_from_main_channel:
-            self._remove(package)
-
-        tree_print(
-            f"From channel {TermincalColors.CYAN}nixpkgs-{self.current_stable_branch}-darwin{TermincalColors.RESET}",
-            indent_level=1,
-        )
-        for package in installed_packages_from_main_channel:
-            self._install(
-                NixPackage(
-                    package.reference.replace(
-                        main_channel, f"nixpkgs-{self.current_stable_branch}-darwin"
-                    )
-                )
-            )
+        if upgrade and kept:
+            tree_print(f"Upgrading [{len(kept)}] within their channel", indent_level=1)
+            run_interactive(["nix", "profile", "upgrade", *(e.name for e in kept)])

@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import dataclasses
 import pathlib
 
 from jhomemanager import (
+    REPO_ROOT,
     DotFilesInstallationStage,
     InstallationStage,
     IPackageList,
     MacOSUserLaunchAgent,
-    TermincalColors,
-    build_parser,
-    get_machine_name,
-    run_shell_command,
+    TerminalColors,
+    for_this_machine,
+    main,
+    run_interactive,
     tree_print,
 )
 
@@ -100,9 +103,7 @@ class WorkLaptopPackages(CommonPackageList):
     ]
     NIX_PACKAGES = [
         "argocd",
-        "kubectl",
         "git-crypt",
-        "gnupg",
         # "(google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])",
         "nixpkgs/nixpkgs-24.05-darwin#gcsfuse",
         "ipcalc",
@@ -134,16 +135,21 @@ class WorkLaptopPackages(CommonPackageList):
     ]
 
 
+# Key: `scutil --get ComputerName`
+MACHINES: dict[str, type[IPackageList]] = {
+    "218300622L": WorkLaptopPackages,
+}
+
+
 @dataclasses.dataclass
 class Packages(InstallationStage):
-    update: bool = dataclasses.field(init=True, default=False)
-    upgrade: bool = dataclasses.field(init=True, default=False)
+    upgrade: bool = False
+
+    REQUIRED_BINARIES = ("brew", "nix")
 
     def exec(self) -> None:
         super().exec()
-        {"218300622L": WorkLaptopPackages()}[get_machine_name()].install(
-            update=self.update, upgrade=self.upgrade
-        )
+        for_this_machine(MACHINES)().install(upgrade=self.upgrade)
 
 
 class Home(DotFilesInstallationStage):
@@ -189,40 +195,38 @@ class Home(DotFilesInstallationStage):
 class System(InstallationStage):
     def sudo_with_touchid(self) -> None:
         tree_print("Enabling sudo using TouchID")
+        source = REPO_ROOT / "sudo_local"
         pam_file = pathlib.Path("/etc/pam.d/sudo_local")
-        if pam_file.exists():
+        if pam_file.exists() and pam_file.read_bytes() == source.read_bytes():
             tree_print(
-                f"{TermincalColors.GREEN}Already enabled !{TermincalColors.RESET}",
+                f"{TerminalColors.GREEN}Already enabled !{TerminalColors.RESET}",
                 indent_level=1,
             )
             return
 
-        run_shell_command(["sudo", "cp", pam_file.name, str(pam_file)])
+        run_interactive(
+            ["sudo", "install", "-m", "0444", "-o", "root", "-g", "wheel", str(source), str(pam_file)]
+        )
 
     def exec(self) -> None:
         super().exec()
         MacOSUserLaunchAgent(
-            filename="org.nixos.add-to-ssh-agent.plist",
+            label="org.nixos.add-to-ssh-agent",
             attributes={
                 "KeepAlive": False,
-                "Label": "org.nixos.add-to-ssh-agent",
-                "ProgramArguments": [
-                    "/bin/sh",
-                    "-c",
-                    "/bin/wait4path /nix/store &amp;&amp; exec ssh-add --apple-use-keychain",
-                ],
+                "ProgramArguments": ["/usr/bin/ssh-add", "--apple-load-keychain"],
                 "RunAtLoad": True,
             },
-        )
+        ).install()
         self.sudo_with_touchid()
 
 
-build_parser(
-    {
+main(
+    stages={
         "home": Home(),
-        "packages": Packages(update=False, upgrade=False),
-        "update-packages": Packages(update=True, upgrade=False),
-        "upgrade-packages": Packages(update=False, upgrade=True),
+        "packages": Packages(),
+        "upgrade-packages": Packages(upgrade=True),
         "system": System(),
-    }
+    },
+    default_stages=["home", "packages", "system"],
 )

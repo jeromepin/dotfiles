@@ -4,13 +4,18 @@
 * Run `make init`
 * Run `make install`
 
-## Upgrading packages
-
-If wanted, change the version in `nix/flake.nix` first
+## Day to day
 
 ```
-make update # or update-unstable
+make plan     # dry-run: show what would change
+make install  # converge dotfiles, packages and system settings
+make update   # upgrade every package within its channel/branch
 ```
+
+To move to a new NixOS stable release, bump `CURRENT_NIX_STABLE_BRANCH` in `install.py` and run `make install`:
+packages from the old branch are removed and reinstalled from the new one (rolled back if the install fails).
+
+A new machine must be added to `MACHINES` in `install.py` (key: `scutil --get ComputerName`).
 
 ## Common issues
 

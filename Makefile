@@ -1,12 +1,13 @@
+.PHONY: init plan install update gc
+
 init:
-	wget -O "${HOME}/Downloads/DeterminateNix.pkg" https://install.determinate.systems/nix-installer-pkg/stable/Universal
-	open "${HOME}/Downloads/DeterminateNix.pkg"
-	sudo mv /etc/nix/nix.conf /etc/nix/nix.conf.before-nix-darwin
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	curl -fsSL -o "$(HOME)/Downloads/DeterminateNix.pkg" https://install.determinate.systems/nix-installer-pkg/stable/Universal
+	sudo installer -pkg "$(HOME)/Downloads/DeterminateNix.pkg" -target /
+	/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	@echo "Open a new shell for the next step"
 
-# check:
-# 	nix flake check nix/
+plan:
+	./install.py --dry-run all
 
 install:
 	./install.py all
@@ -14,10 +15,6 @@ install:
 update:
 	./install.py upgrade-packages
 
-# update-unstable:
-# 	cd nix/ && nix flake update nixpkgs-unstable --commit-lock-file --show-trace
-# 	$(MAKE) install
-
 gc:
-	nix-store --gc
+	nix profile wipe-history --older-than 30d
 	nix-collect-garbage
