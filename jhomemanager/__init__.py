@@ -15,7 +15,7 @@ from .shell import (
     run_interactive,
     tree_print,
 )
-from .systemconfig import MacOSUserLaunchAgent
+from .systemconfig import MacOSDefault, MacOSDefaults, MacOSUserLaunchAgent
 
 __all__ = [
     "HOME",
@@ -24,6 +24,8 @@ __all__ = [
     "InstallationStage",
     "IPackageList",
     "JHomeManagerError",
+    "MacOSDefault",
+    "MacOSDefaults",
     "MacOSUserLaunchAgent",
     "TerminalColors",
     "for_this_machine",

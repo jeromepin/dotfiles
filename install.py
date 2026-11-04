@@ -6,10 +6,13 @@ import dataclasses
 import pathlib
 
 from jhomemanager import (
+    HOME,
     REPO_ROOT,
     DotFilesInstallationStage,
     InstallationStage,
     IPackageList,
+    MacOSDefault,
+    MacOSDefaults,
     MacOSUserLaunchAgent,
     TerminalColors,
     for_this_machine,
@@ -192,6 +195,60 @@ class Home(DotFilesInstallationStage):
         "bin": "bin",
     }
 
+MACOS_SETTINGS = [
+    # Dock: hide automatically, show instantly, small icons, no magnification, no recent apps,
+    # minimize windows into their app icon
+    MacOSDefault("com.apple.dock", "autohide", True),
+    MacOSDefault("com.apple.dock", "autohide-delay", 0.0),
+    MacOSDefault("com.apple.dock", "tilesize", 31.0),
+    MacOSDefault("com.apple.dock", "magnification", False),
+    MacOSDefault("com.apple.dock", "show-recents", False),
+    MacOSDefault("com.apple.dock", "minimize-to-application", True),
+    # Hot corners: top-left locks the screen (13), bottom-right does nothing (1)
+    MacOSDefault("com.apple.dock", "wvous-tl-corner", 13),
+    MacOSDefault("com.apple.dock", "wvous-tl-modifier", 0),
+    MacOSDefault("com.apple.dock", "wvous-br-corner", 1),
+    MacOSDefault("com.apple.dock", "wvous-br-modifier", 0),
+    # Windows: double-clicking a title bar minimizes, no gaps between tiled windows,
+    # hide Desktop items in Stage Manager
+    MacOSDefault("NSGlobalDomain", "AppleActionOnDoubleClick", "Minimize"),
+    MacOSDefault("com.apple.WindowManager", "EnableTiledWindowMargins", False),
+    MacOSDefault("com.apple.WindowManager", "HideDesktop", True),
+    # Finder: file extensions, path bar, column view by default, new windows open $HOME,
+    # folders open in windows (not tabs), no recent tags in the sidebar,
+    # Trash emptied after 30 days, internal disks and servers on the Desktop
+    MacOSDefault("NSGlobalDomain", "AppleShowAllExtensions", True, restart="Finder"),
+    MacOSDefault("com.apple.finder", "ShowPathbar", True),
+    MacOSDefault("com.apple.finder", "FXPreferredViewStyle", "clmv"),
+    MacOSDefault("com.apple.finder", "NewWindowTarget", "PfHm"),
+    MacOSDefault("com.apple.finder", "NewWindowTargetPath", f"file://{HOME}/"),
+    MacOSDefault("com.apple.finder", "FinderSpawnTab", False),
+    MacOSDefault("com.apple.finder", "ShowRecentTags", False),
+    MacOSDefault("com.apple.finder", "FXRemoveOldTrashItems", True),
+    MacOSDefault("com.apple.finder", "ShowHardDrivesOnDesktop", True),
+    MacOSDefault("com.apple.finder", "ShowMountedServersOnDesktop", True),
+    # No .DS_Store on network shares and USB drives
+    MacOSDefault("com.apple.desktopservices", "DSDontWriteNetworkStores", True),
+    MacOSDefault("com.apple.desktopservices", "DSDontWriteUSBStores", True),
+    # Keyboard: fast key repeat
+    MacOSDefault("NSGlobalDomain", "KeyRepeat", 2),
+    MacOSDefault("NSGlobalDomain", "InitialKeyRepeat", 15),
+    # Trackpad: tap to click (built-in and Bluetooth trackpads, login screen),
+    # no natural scrolling, fast pointer
+    MacOSDefault("com.apple.AppleMultitouchTrackpad", "Clicking", True),
+    MacOSDefault("com.apple.driver.AppleBluetoothMultitouch.trackpad", "Clicking", True),
+    MacOSDefault("NSGlobalDomain", "com.apple.mouse.tapBehavior", 1, current_host=True),
+    MacOSDefault("NSGlobalDomain", "com.apple.swipescrolldirection", False),
+    MacOSDefault("NSGlobalDomain", "com.apple.trackpad.scaling", 2.0),
+    # No interface sound effects
+    MacOSDefault("NSGlobalDomain", "com.apple.sound.uiaudio.enabled", 0),
+    # Safari: Develop menu (needs Full Disk Access for the terminal; applies at next Safari launch)
+    MacOSDefault("com.apple.Safari", "IncludeDevelopMenu", True),
+    MacOSDefault("com.apple.Safari", "WebKitDeveloperExtrasEnabledPreferenceKey", True),
+    MacOSDefault("com.apple.Safari", "WebKitPreferences.developerExtrasEnabled", True),
+]
+
+
 class System(InstallationStage):
     def sudo_with_touchid(self) -> None:
         tree_print("Enabling sudo using TouchID")
@@ -219,6 +276,7 @@ class System(InstallationStage):
             },
         ).install()
         self.sudo_with_touchid()
+        MacOSDefaults(MACOS_SETTINGS).apply()
 
 
 main(
