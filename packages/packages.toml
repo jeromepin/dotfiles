@@ -1,0 +1,144 @@
+# What to install, for every machine (`common`) and per machine (`hosts.<name>`).
+#
+# - nix: packages grouped by channel. Channels are the `inputs` of flake.nix, pinned in flake.lock
+#   (`make update` moves them forward). Nested attributes use dots: "nerd-fonts.fira-code".
+# - homebrew: taps, formulae and casks.
+# - eget: GitHub repositories to download a release binary from.
+
+[common.nix]
+stable = [
+    "bash",
+    "bash-completion",
+    "cmake",
+    "cook-cli",
+    "file",
+    "findutils",
+    "fira-code",
+    "getopt",
+    "gnupg",
+    "gnused",
+    "go",
+    "nerd-fonts.fira-code",
+    "pipx",
+    "python3",
+    "socat",
+    "tree",
+    "unixtools.watch",
+]
+unstable = [
+    "ast-grep",
+    "bat",
+    "bun",
+    "cargo",
+    "coreutils",
+    "delta",
+    "difftastic",
+    "eza",
+    "fd",
+    "fish",
+    "fzf",
+    "gh",
+    "git",
+    "git-absorb",
+    "gitu",
+    "glow",
+    "helix",
+    "hexyl",
+    "htop",
+    "httpie",
+    "hyperfine",
+    "ijq",
+    "jq",
+    "jujutsu",
+    "most",
+    "neovim",
+    "ripgrep",
+    "ruff",
+    "sd",
+    "serpl",
+    "starship",
+    "sttr",
+    "tealdeer",
+    "television",
+    "tig",
+    "tree-sitter",
+    "uv",
+    "wget",
+    "zig",
+    "zola",
+]
+
+[common.homebrew]
+casks = [
+    "brave-browser",
+    "firefox",
+    "ghostty",
+    "google-chrome",
+    "lunar",
+    "orbstack",
+    "rectangle",
+    "spotify",
+    "vlc",
+    "zed",
+]
+
+[hosts.work]
+computer_name = "218300622L"  # `scutil --get ComputerName`
+eget = [
+    "glincker/sslx",
+]
+
+[hosts.work.nix]
+stable = [
+    "argocd",
+    "git-crypt",
+    "google-cloud-sdk",
+    "google-cloud-sdk.components.gke-gcloud-auth-plugin",
+    "ipcalc",
+    "kubectl",
+    "kubectx",
+    "kubelogin",
+    "kubernetes-helm",
+    "kustomize",
+    "postgresql_16",
+    "sops",
+    "wireguard-go",
+    "wireguard-tools",
+]
+nixpkgs-24_05 = [
+    "gcsfuse",
+]
+unstable = [
+    "basedpyright",
+    "container",
+    "crane",
+    "cri-tools",
+    "delve",
+    "docker-credential-gcr",
+    "doggo",
+    "eget",
+    "git-revise",
+    "graphviz",
+    "k9s",
+    "nmap",
+    "pgcli",
+    "rdap",
+    "terminal-notifier",
+    "terraform-ls",
+]
+
+[hosts.work.homebrew]
+taps = [
+    "vjeantet/tap",
+]
+formulae = [
+    "Arthur-Ficial/tap/apfel",
+    "rtk",
+    "sem-cli",
+]
+casks = [
+    "macfuse",
+    "obsidian",
+    "okta-verify",
+    "slack",
+]

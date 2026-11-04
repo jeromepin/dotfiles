@@ -1,21 +1,42 @@
 ## On a new machine
 
-* Clone this repository
-* Run `make init`
-* Run `make install`
+1. Clone this repository.
+2. Add the machine to `packages/packages.toml`: a `[hosts.<name>]` section with its `computer_name` (`scutil --get ComputerName`).
+3. Install Nix and Homebrew (the Mac's built-in Python is enough):
+   ```
+   ./install.py bootstrap
+   ```
+4. In a new shell, check the plan, then apply it:
+   ```
+   ./install.py -n
+   ./install.py
+   ```
 
-## Day to day
+## Usage
+
+`./install.py --help` lists the commands, `./install.py <command> --help` details one.
+Every command only changes what differs from this repository, and accepts `-n`/`--dry-run` to show what that would be.
 
 ```
-make plan     # dry-run: show what would change
-make install  # converge dotfiles, packages and system settings
-make update   # upgrade every package within its channel/branch
+./install.py -n                 # show what would change
+./install.py                    # apply everything: home, packages, system
+./install.py packages           # one part only: home, packages or system
+./install.py upgrade-packages   # upgrade packages, then commit packages/flake.lock
+./install.py gc                 # free disk space used by Nix
 ```
 
-To move to a new NixOS stable release, bump `CURRENT_NIX_STABLE_BRANCH` in `install.py` and run `make install`:
-packages from the old branch are removed and reinstalled from the new one (rolled back if the install fails).
+| What | Where |
+|---|---|
+| Packages (Homebrew, Nix, eget), for every machine and per machine | `packages/packages.toml` |
+| Versions of the Nix channels | `packages/flake.lock` |
+| Dotfiles to link, LaunchAgents, macOS settings | `install.py` |
 
-A new machine must be added to `MACHINES` in `install.py` (key: `scutil --get ComputerName`).
+`packages/flake.nix` turns `packages.toml` into a single Nix profile entry per machine.
+It doesn't need editing, except to add a channel (an `input`).
+Since `packages/flake.lock` pins the versions, every machine gets the same ones: commit it after `upgrade-packages`.
+
+- Undo the last Nix change: `nix profile rollback`
+- Move to a new NixOS stable release: change the `stable` input URL in `packages/flake.nix`, then `./install.py upgrade-packages`
 
 ## Common issues
 

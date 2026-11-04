@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import dataclasses
 import pathlib
 
 from jhomemanager import (
@@ -10,152 +9,25 @@ from jhomemanager import (
     REPO_ROOT,
     DotFilesInstallationStage,
     InstallationStage,
-    IPackageList,
     MacOSDefault,
     MacOSDefaults,
+    BootstrapInstallationStage,
+    GarbageCollectionStage,
     MacOSUserLaunchAgent,
+    PackagesInstallationStage,
     TerminalColors,
-    for_this_machine,
     main,
     run_interactive,
     tree_print,
 )
 
-CURRENT_NIX_STABLE_BRANCH = "25.11"
-
-
-class CommonPackageList(IPackageList):
-    COMMON_HOMEBREW_PACKAGES = [
-        "cask brave-browser",
-        "cask firefox",
-        "cask ghostty",
-        "cask google-chrome",
-        "cask lunar",
-        "cask orbstack",
-        "cask rectangle",
-        "cask spotify",
-        "cask vlc",
-        "cask zed",
-    ]
-
-    COMMON_NIX_PACKAGES = [
-        "bash",
-        "bash-completion",
-        "cmake",
-        "file",
-        "findutils",
-        "fira-code",
-        "fira-code-nerdfont",
-        "getopt",
-        "gnused",
-        "gnupg",
-        "go",
-        "pipx",
-        "python3",
-        "socat",
-        "tree",
-        "unixtools.watch",
-        "zig_0_12",
-        "unstable.ast-grep",
-        "unstable.bat",
-        "unstable.bun",
-        "unstable.cargo",
-        "unstable.coreutils",
-        "unstable.delta",
-        "unstable.difftastic",
-        "unstable.fd",
-        "unstable.fish",
-        "unstable.fzf",
-        "unstable.eza",
-        "unstable.gh",
-        "unstable.git",
-        "unstable.git-absorb",
-        "unstable.gitu",
-        "unstable.glow",
-        "unstable.helix",
-        "unstable.hexyl",
-        "unstable.hyperfine",
-        "unstable.htop",
-        "unstable.httpie",
-        "unstable.ijq",
-        "unstable.jujutsu",
-        "unstable.jq",
-        "unstable.most",
-        "unstable.neovim",
-        "unstable.ripgrep",
-        "unstable.ruff",
-        "unstable.sd",
-        "unstable.serpl",
-        "unstable.starship",
-        "unstable.sttr",
-        "unstable.tealdeer",
-        "unstable.television",
-        "unstable.tig",
-        "unstable.tree-sitter",
-        "unstable.uv",
-        "unstable.wget",
-        "unstable.zola",
-    ]
-
-
-class WorkLaptopPackages(CommonPackageList):
-    CURRENT_NIX_STABLE_BRANCH = CURRENT_NIX_STABLE_BRANCH
-    HOMEBREW_CASKS = [
-        "obsidian",
-        "slack",
-    ]
-    NIX_PACKAGES = [
-        "argocd",
-        "git-crypt",
-        # "(google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])",
-        "nixpkgs/nixpkgs-24.05-darwin#gcsfuse",
-        "ipcalc",
-        "kubectl",
-        "kubectx",
-        "kubelogin",
-        "kubernetes-helm",
-        "kustomize",
-        "pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin",
-        "postgresql_16",
-        "sops",
-        "wireguard-go",
-        "wireguard-tools",
-        "unstable.basedpyright",
-        "unstable.container",
-        "unstable.crane",
-        "unstable.cri-tools",
-        "unstable.delve",
-        "unstable.docker-credential-gcr",
-        "unstable.dogdns",
-        "unstable.eget",
-        "unstable.graphviz",
-        "unstable.git-revise",
-        "unstable.k9s",
-        "unstable.nmap",
-        "unstable.pgcli",
-        "unstable.rdap",
-        "unstable.terraform-ls",
-    ]
-
-
-# Key: `scutil --get ComputerName`
-MACHINES: dict[str, type[IPackageList]] = {
-    "218300622L": WorkLaptopPackages,
-}
-
-
-@dataclasses.dataclass
-class Packages(InstallationStage):
-    upgrade: bool = False
-
-    REQUIRED_BINARIES = ("brew", "nix")
-
-    def exec(self) -> None:
-        super().exec()
-        for_this_machine(MACHINES)().install(upgrade=self.upgrade)
-
 
 class Home(DotFilesInstallationStage):
+    HELP = "link the dotfiles of this repository into ~"
+    DESCRIPTION = """\
+Link the dotfiles of this repository into ~, as listed in Home.FILES (install.py).
+Existing files are moved to <name>.backup-<timestamp>, never deleted."""
+
     # destination: source
     FILES: dict[str, str | DotFilesInstallationStage.SourceDotfile] = {
         ".bashrc.d": DotFilesInstallationStage.SourceDotfile(
@@ -194,6 +66,7 @@ class Home(DotFilesInstallationStage):
         ".inputrc": ".inputrc",
         "bin": "bin",
     }
+
 
 MACOS_SETTINGS = [
     # Dock: hide automatically, show instantly, small icons, no magnification, no recent apps,
@@ -250,6 +123,14 @@ MACOS_SETTINGS = [
 
 
 class System(InstallationStage):
+    HELP = "LaunchAgents, sudo with TouchID and macOS settings"
+    DESCRIPTION = """\
+Configure macOS for the current user, as declared in install.py:
+  - LaunchAgents (loaded with launchctl, reloaded only when changed),
+  - sudo with TouchID (/etc/pam.d/sudo_local, asks for your password once),
+  - macOS settings (MACOS_SETTINGS, written with `defaults` only when different;
+    Dock and Finder are restarted, some settings need a logout)."""
+
     def sudo_with_touchid(self) -> None:
         tree_print("Enabling sudo using TouchID")
         source = REPO_ROOT / "sudo_local"
@@ -282,9 +163,11 @@ class System(InstallationStage):
 main(
     stages={
         "home": Home(),
-        "packages": Packages(),
-        "upgrade-packages": Packages(upgrade=True),
+        "packages": PackagesInstallationStage(),
+        "upgrade-packages": PackagesInstallationStage(upgrade=True),
         "system": System(),
+        "bootstrap": BootstrapInstallationStage(),
+        "gc": GarbageCollectionStage(),
     },
     default_stages=["home", "packages", "system"],
 )

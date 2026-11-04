@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import typing
-
 from .cli import main
+from .config import get_machine_name
 from .dotfiles import DotFilesInstallationStage
 from .installationstage import InstallationStage
-from .packagelist import IPackageList
+from .maintenance import BootstrapInstallationStage, GarbageCollectionStage
+from .packagesstage import PackagesInstallationStage
 from .paths import HOME, REPO_ROOT
 from .shell import (
     JHomeManagerError,
@@ -20,15 +20,16 @@ from .systemconfig import MacOSDefault, MacOSDefaults, MacOSUserLaunchAgent
 __all__ = [
     "HOME",
     "REPO_ROOT",
+    "BootstrapInstallationStage",
     "DotFilesInstallationStage",
+    "GarbageCollectionStage",
     "InstallationStage",
-    "IPackageList",
     "JHomeManagerError",
     "MacOSDefault",
     "MacOSDefaults",
     "MacOSUserLaunchAgent",
+    "PackagesInstallationStage",
     "TerminalColors",
-    "for_this_machine",
     "get_machine_name",
     "is_dry_run",
     "main",
@@ -36,18 +37,3 @@ __all__ = [
     "run_interactive",
     "tree_print",
 ]
-
-T = typing.TypeVar("T")
-
-
-def get_machine_name() -> str:
-    return run(["scutil", "--get", "ComputerName"], mutates=False).stdout.decode("utf-8").strip()
-
-
-def for_this_machine(mapping: dict[str, T]) -> T:
-    name = get_machine_name()
-    if name not in mapping:
-        raise JHomeManagerError(
-            f"Unknown machine {name!r} (from `scutil --get ComputerName`). Known machines: {', '.join(mapping)}"
-        )
-    return mapping[name]
